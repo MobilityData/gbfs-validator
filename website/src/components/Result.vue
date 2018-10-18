@@ -1,6 +1,6 @@
 <template>
   <div class="result">
-    <div v-if="isValidating">validating</div>
+    <div v-if="isValidating" class="validating">Validating...</div>
     <div v-if="result.summary">
       <h2>Result</h2>
       <div>
@@ -41,6 +41,12 @@ export default {
 </script>
 
 <style>
+.validating {
+  text-align: center;
+  margin: 50px 0;
+  font-size: 2rem;
+}
+
 .alert {
   font-size: 1rem;
   position: relative;
