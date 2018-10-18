@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "station_information.json",
+  "description": "Mostly static list ofall stations, their capacities and locations. Required ofsystems utilizing docks",
+  "type": "object",
+  "properties": {
+    "last_updated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ttl": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "stations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "station_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "short_name": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "address": {
+                "type": "string"
+              },
+              "cross_street": {
+                "type": "string"
+              },
+              "region_id": {
+                "type": "string"
+              },
+              "post_code": {
+                "type": "string"
+              },
+              "rental_methods": {
+                "type": "string",
+                "enum": [
+                  "KEY",
+                  "CREDITCARD",
+                  "PAYPASS",
+                  "APPLEPAY",
+                  "ANDROIDPAY",
+                  "TRANSITCARD",
+                  "ACCOUNTNUMBER",
+                  "PHONE"
+                ]
+              },
+              "capacity": {
+                "type": "string"
+              }
+            },
+            "required": ["station_id", "name", "lat", "lon"]
+          }
+        }
+      },
+      "required": ["stations"]
+    }
+  },
+  "required": ["last_updated", "ttl", "data"]
+}

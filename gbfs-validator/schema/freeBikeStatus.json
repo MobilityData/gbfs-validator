@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "free_bikes_status.json",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "last_updated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ttl": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "bikes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bike_id": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "is_reserved": {
+                "type": ["boolean", "number"]
+              },
+              "is_disabled": {
+                "type": ["boolean", "number"]
+              }
+            },
+            "required": ["bike_id", "lat", "lon", "is_reserved", "is_disabled"]
+          }
+        }
+      },
+      "required": ["bikes"]
+    }
+  },
+  "required": ["last_updated", "ttl", "data"]
+}

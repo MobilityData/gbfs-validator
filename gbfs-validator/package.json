@@ -1,0 +1,12 @@
+{
+  "name": "gbfs-validator",
+  "version": "1.0.0",
+  "author": "Pierrick <mulotmail@gmail.com>",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": "./cli.js",
+  "dependencies": {
+    "ajv": "^6.5.4",
+    "axios": "^0.18.0"
+  }
+}
