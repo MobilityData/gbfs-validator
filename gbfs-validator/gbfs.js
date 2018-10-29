@@ -20,17 +20,21 @@ function snakeToCamel (s) {
 }
 
 function hasErrors (data, required) {
-  let plop = false
+  let hasError = false
 
   data.forEach(el => {
     if (Array.isArray(el)) {
-      plop = hasErrors(el, required)
+      if (hasErrors(el, required)) {
+        hasError = true
+      }
     } else {
-      plop = required && !el.exists ? true : !!el.errors
+      if (required && !el.exists ? true : !!el.errors || el.hasErrors) {
+        hasError = true
+      }
     }
   })
 
-  return plop
+  return hasError
 }
 
 class GBFS {

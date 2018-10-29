@@ -61,7 +61,7 @@
                 ]
               },
               "capacity": {
-                "type": "string"
+                "type": "number"
               }
             },
             "required": ["station_id", "name", "lat", "lon"]
