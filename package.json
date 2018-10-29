@@ -21,6 +21,7 @@
   },
   "workspaces": [
     "website",
-    "gbfs-validator"
+    "gbfs-validator",
+    "check-systems"
   ]
 }
