@@ -48,17 +48,20 @@
                 "type": "string"
               },
               "rental_methods": {
-                "type": "string",
-                "enum": [
-                  "KEY",
-                  "CREDITCARD",
-                  "PAYPASS",
-                  "APPLEPAY",
-                  "ANDROIDPAY",
-                  "TRANSITCARD",
-                  "ACCOUNTNUMBER",
-                  "PHONE"
-                ]
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "KEY",
+                    "CREDITCARD",
+                    "PAYPASS",
+                    "APPLEPAY",
+                    "ANDROIDPAY",
+                    "TRANSITCARD",
+                    "ACCOUNTNUMBER",
+                    "PHONE"
+                  ]
+                }
               },
               "capacity": {
                 "type": "number"
