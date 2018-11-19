@@ -1,10 +1,16 @@
 <template>
-  <div class="result" v-if="file.hasErrors || (file.recommanded && !file.exists)">
+  <div class="result" v-if="file.hasErrors || (!file.exists && (file.recommanded || file.required))">
     <h3>{{ file.file }}</h3>
 
     <div v-if="file.recommanded && !file.exists">
       <div class="alert warning">
         Missing file. Recommanded
+      </div>
+    </div>
+
+    <div v-if="file.required && !file.exists">
+      <div class="alert danger">
+        Missing file. Required
       </div>
     </div>
 

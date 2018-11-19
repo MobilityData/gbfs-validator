@@ -13,13 +13,7 @@ const validators = {
   system_alerts: require('./validation/systemAlerts')
 }
 
-function snakeToCamel (s) {
-  return s.replace(/(\_\w)/g, function (m) {
-    return m[1].toUpperCase()
-  })
-}
-
-function hasErrors (data, required) {
+function hasErrors(data, required) {
   let hasError = false
 
   data.forEach(el => {
@@ -38,11 +32,11 @@ function hasErrors (data, required) {
 }
 
 class GBFS {
-  constructor (url) {
+  constructor(url) {
     this.url = url
   }
 
-  alternativeAutoDiscovery (url) {
+  alternativeAutoDiscovery(url) {
     return axios(url, { json: true })
       .then(({ data }) => {
         if (typeof data !== 'object') {
@@ -83,7 +77,7 @@ class GBFS {
       })
   }
 
-  checkAutodiscovery () {
+  checkAutodiscovery() {
     return axios(this.url, { json: true })
       .then(({ status, data }) => {
         if (typeof data !== 'object') {
@@ -102,10 +96,24 @@ class GBFS {
           hasErrors: !!errors
         }
       })
-      .catch(() => this.alternativeAutoDiscovery(`${this.url}/gbfs.json`))
+      .catch(() => {
+        if (!this.url.match(/gbfs.json$/)) {
+          return this.alternativeAutoDiscovery(`${this.url}/gbfs.json`)
+        }
+
+        return {
+          url: this.url,
+          recommanded: true,
+          required: false,
+          errors: false,
+          exists: false,
+          file: `gbfs.json`,
+          hasErrors: false
+        }
+      })
   }
 
-  checkFile (type, required) {
+  checkFile(type, required) {
     if (this.autoDiscovery) {
       const urls = Object.entries(this.autoDiscovery.data).map(key => {
         return Object.assign(
@@ -119,40 +127,48 @@ class GBFS {
           lang =>
             lang && lang.url
               ? axios(lang.url).then(({ data }) => ({
-                errors: validators[type](data),
-                exists: true,
-                lang: lang.lang,
-                url: lang.url
-              }))
+                  errors: validators[type](data),
+                  exists: true,
+                  lang: lang.lang,
+                  url: lang.url
+                }))
               : {
-                errors: false,
-                exists: false,
-                lang: lang.lang,
-                url: null
-              }
+                  errors: false,
+                  exists: false,
+                  lang: lang.lang,
+                  url: null
+                }
         )
       ).then(languages => {
         return {
           languages,
           required,
+          exists: languages.reduce((acc, l) => acc && l.exists, true),
           file: `${type}.json`,
           hasErrors: hasErrors(languages, required)
         }
       })
     } else {
-      return axios(`${this.url}/${type}.json`).then(({ data }) => ({
-        required,
-        errors: validators[type](data),
-        exists: true,
-        file: `${type}.json`,
-        url: `${this.url}/${type}.json`
-      }))
+      return axios(`${this.url}/${type}.json`)
+        .then(({ data }) => ({
+          required,
+          errors: validators[type](data),
+          exists: true,
+          file: `${type}.json`,
+          url: `${this.url}/${type}.json`
+        }))
+        .catch(err => ({
+          required,
+          errors: required ? err : null,
+          exists: false,
+          file: `${type}.json`,
+          url: `${this.url}/${type}.json`
+        }))
     }
   }
 
-  async validation () {
+  async validation() {
     const gbfsResult = await this.checkAutodiscovery()
-
     return Promise.all([
       Promise.resolve(gbfsResult),
       this.checkFile('system_information', true),
