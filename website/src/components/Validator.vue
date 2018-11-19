@@ -20,21 +20,27 @@ export default {
   },
   data() {
     return {
-      result: {},
+      result: false,
       isValidating: false,
       url: ''
     }
   },
   methods: {
     valid() {
-      this.result = {}
+      this.result = false
       this.isValidating = true
       const gbfs = new GBFS(this.url)
 
-      gbfs.validation().then(result => {
-        this.isValidating = false
-        this.result = result
-      })
+      gbfs
+        .validation()
+        .then(result => {
+          this.isValidating = false
+          this.result = result
+        })
+        .catch(err => {
+          this.isValidating = false
+          this.result = err
+        })
     }
   }
 }
