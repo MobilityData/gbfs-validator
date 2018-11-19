@@ -18,7 +18,7 @@ export default {
   components: {
     Result
   },
-  data () {
+  data() {
     return {
       result: {},
       isValidating: false,
@@ -26,16 +26,15 @@ export default {
     }
   },
   methods: {
-    valid () {
+    valid() {
       this.result = {}
       this.isValidating = true
       const gbfs = new GBFS(this.url)
 
-      gbfs.validation()
-        .then((result) => {
-          this.isValidating = false
-          this.result = result
-        })
+      gbfs.validation().then(result => {
+        this.isValidating = false
+        this.result = result
+      })
     }
   }
 }
