@@ -1,0 +1,8 @@
+{
+  "name": "validator",
+  "description": "validator-functions",
+  "private": true,
+  "dependencies": {
+    "gbfs-validator": "1.0.0"
+  }
+}

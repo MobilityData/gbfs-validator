@@ -8,7 +8,7 @@ if (!process.argv[2]) {
   process.exit(1)
 }
 
-function checkGBFS (line) {
+function checkGBFS(line) {
   const gbfs = new gbfsValidator(line[5])
 
   return gbfs
@@ -32,7 +32,7 @@ fs.readFile(path.resolve(__dirname, process.argv[2]), (err, file) => {
     process.exit(1)
   }
 
-  parse(file, function (err, output) {
+  parse(file, function(err, output) {
     Promise.all(output.slice(1).map(checkGBFS))
   })
 })
