@@ -5,12 +5,11 @@
       <button @click="valid" class="button">Valid me !</button>
     </div>
 
-    <Result :isValidating="isValidating" :result="result" />
+    <Result :isValidating="isValidating" :result="result"/>
   </div>
 </template>
 
 <script>
-import GBFS from 'gbfs-validator'
 import Result from './Result'
 
 export default {
@@ -29,17 +28,19 @@ export default {
     valid() {
       this.result = false
       this.isValidating = true
-      const gbfs = new GBFS(this.url)
 
-      gbfs
-        .validation()
+      fetch('/.netlify/functions/validator', {
+        method: 'POST',
+        body: this.url
+      })
+        .then(resp => resp.json())
         .then(result => {
           this.isValidating = false
           this.result = result
         })
-        .catch(err => {
+        .catch(result => {
           this.isValidating = false
-          this.result = err
+          this.result = result
         })
     }
   }

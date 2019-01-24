@@ -1,10 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "dev": "cd website && webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "yarn run dev:website & yarn run dev:functions",
+    "dev:website": "cd website && yarn run serve",
+    "dev:functions": "netlify-lambda serve functions",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue website/src",
-    "build": "cd website && node build/build.js"
+    "build": "yarn run build:website && yarn run build:functions",
+    "build:website": "cd website && yarn run build",
+    "build:functions": "netlify-lambda build functions"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -15,11 +19,13 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-vue": "^4.0.0"
+    "eslint-plugin-vue": "^4.0.0",
+    "netlify-lambda": "^1.3.0"
   },
   "workspaces": [
     "website",
     "gbfs-validator",
-    "check-systems"
+    "check-systems",
+    "functions"
   ]
 }
