@@ -5,6 +5,17 @@
       <button @click="valid" class="button">Valid me !</button>
     </div>
 
+    <div class="options alert info">
+      <h3>Options</h3>
+      <p>Allows you to force files requirements.</p>
+      <label for="freefloating">
+        <input type="checkbox" name="freefloating" id="freefloating" v-model="options.freefloating">&nbsp;Free-floating
+      </label>
+      <label for="docked">
+        <input type="checkbox" name="docked" id="docked" v-model="options.docked">&nbsp;Docked
+      </label>
+    </div>
+
     <Result :isValidating="isValidating" :result="result"/>
   </div>
 </template>
@@ -21,7 +32,11 @@ export default {
     return {
       result: false,
       isValidating: false,
-      url: ''
+      url: '',
+      options: {
+        freefloating: false,
+        docked: false
+      }
     }
   },
   methods: {
@@ -31,7 +46,10 @@ export default {
 
       fetch('/.netlify/functions/validator', {
         method: 'POST',
-        body: this.url
+        body: JSON.stringify({
+          url: this.url,
+          options: this.options
+        })
       })
         .then(resp => resp.json())
         .then(result => {
@@ -57,6 +75,7 @@ export default {
 
 .input-bar {
   display: flex;
+  margin-bottom: 10px;
 }
 
 .button {
@@ -88,5 +107,11 @@ export default {
   line-height: 1.5;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
+}
+
+.options h3 {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 10px 0;
 }
 </style>

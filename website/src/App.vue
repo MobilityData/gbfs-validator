@@ -2,7 +2,7 @@
   <div id="app">
     <h1>GBFS-Validator</h1>
     <Validator/>
-    <Footer />
+    <Footer/>
   </div>
 </template>
 
@@ -37,5 +37,38 @@ body {
 
 h1 {
   text-align: center;
+}
+
+.alert {
+  font-size: 1rem;
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
 }
 </style>

@@ -32,8 +32,12 @@ function hasErrors(data, required) {
 }
 
 class GBFS {
-  constructor(url) {
+  constructor(url, { docked = false, freefloating = false } = {}) {
     this.url = url
+    this.options = {
+      docked,
+      freefloating
+    }
   }
 
   alternativeAutoDiscovery(url) {
@@ -172,9 +176,9 @@ class GBFS {
     return Promise.all([
       Promise.resolve(gbfsResult),
       this.checkFile('system_information', true),
-      this.checkFile('station_information', false),
-      this.checkFile('station_status', false),
-      this.checkFile('free_bike_status', false),
+      this.checkFile('station_information', this.options.docked),
+      this.checkFile('station_status', this.options.docked),
+      this.checkFile('free_bike_status', this.options.freefloating),
       this.checkFile('system_hours', false),
       this.checkFile('system_calendar', false),
       this.checkFile('system_regions', false),

@@ -1,7 +1,18 @@
 const GBFS = require('gbfs-validator')
 
 exports.handler = function(event, context, callback) {
-  const gbfs = new GBFS(event.body)
+  let body
+
+  try {
+    body = JSON.parse(event.body)
+  } catch (err) {
+    callback(err, {
+      statusCode: 500,
+      body: JSON.stringify(err)
+    })
+  }
+
+  const gbfs = new GBFS(body.url, body.options)
 
   gbfs
     .validation()
