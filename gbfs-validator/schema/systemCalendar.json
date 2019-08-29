@@ -6,7 +6,8 @@
   "properties": {
     "last_updated": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "maximum": 1924988399
     },
     "ttl": {
       "type": "integer",
