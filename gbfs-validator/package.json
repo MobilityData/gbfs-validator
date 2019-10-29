@@ -7,6 +7,6 @@
   "bin": "./cli.js",
   "dependencies": {
     "ajv": "^6.5.4",
-    "axios": "^0.18.0"
+    "axios": "^0.18.1"
   }
 }
