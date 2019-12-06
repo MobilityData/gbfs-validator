@@ -13,6 +13,10 @@
       "type": "integer",
       "minimum": 0
     },
+    "version": {
+      "type": "string",
+      "pattern": "^d+\\.d+$"
+    },
     "data": {
       "type": "object",
       "properties": {
@@ -85,5 +89,5 @@
       "required": ["alerts"]
     }
   },
-  "required": ["last_updated", "ttl", "data"]
+  "required": ["last_updated", "ttl", "version", "data"]
 }

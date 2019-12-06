@@ -13,6 +13,10 @@
       "type": "integer",
       "minimum": 0
     },
+    "version": {
+      "type": "string",
+      "pattern": "^d+\\.d+$"
+    },
     "data": {
       "type": "object",
       "properties": {
@@ -51,5 +55,5 @@
       "required": ["rental_hours"]
     }
   },
-  "required": ["last_updated", "ttl", "data"]
+  "required": ["last_updated", "ttl", "version", "data"]
 }

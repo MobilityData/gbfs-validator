@@ -127,21 +127,20 @@ class GBFS {
       })
 
       return Promise.all(
-        urls.map(
-          lang =>
-            lang && lang.url
-              ? axios(lang.url).then(({ data }) => ({
-                  errors: validators[type](data),
-                  exists: true,
-                  lang: lang.lang,
-                  url: lang.url
-                }))
-              : {
-                  errors: false,
-                  exists: false,
-                  lang: lang.lang,
-                  url: null
-                }
+        urls.map(lang =>
+          lang && lang.url
+            ? axios(lang.url).then(({ data }) => ({
+                errors: validators[type](data),
+                exists: true,
+                lang: lang.lang,
+                url: lang.url
+              }))
+            : {
+                errors: false,
+                exists: false,
+                lang: lang.lang,
+                url: null
+              }
         )
       ).then(languages => {
         return {
@@ -175,6 +174,7 @@ class GBFS {
     const gbfsResult = await this.checkAutodiscovery()
     return Promise.all([
       Promise.resolve(gbfsResult),
+      this.checkFile('gbfs_versions', false),
       this.checkFile('system_information', true),
       this.checkFile('station_information', this.options.docked),
       this.checkFile('station_status', this.options.docked),

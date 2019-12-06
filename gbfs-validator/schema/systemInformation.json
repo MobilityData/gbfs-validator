@@ -13,6 +13,10 @@
       "type": "integer",
       "minimum": 0
     },
+    "version": {
+      "type": "string",
+      "pattern": "^d+\\.d+$"
+    },
     "data": {
       "type": "object",
       "properties": {
@@ -58,5 +62,5 @@
       "required": ["system_id", "language", "name", "timezone"]
     }
   },
-  "required": ["last_updated", "ttl", "data"]
+  "required": ["last_updated", "ttl", "version", "data"]
 }
