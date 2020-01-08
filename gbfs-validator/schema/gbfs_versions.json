@@ -14,7 +14,7 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^d+\\.d+$"
+      "pattern": "^\\d+\\.\\d+$"
     },
     "data": {
       "type": "object",
@@ -26,7 +26,7 @@
             "properties": {
               "version": {
                 "type": "string",
-                "pattern": "^d+\\.d+$"
+                "pattern": "^\\d+\\.\\d+$"
               },
               "url": {
                 "type": "string"

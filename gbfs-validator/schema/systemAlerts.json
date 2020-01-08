@@ -15,7 +15,7 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^d+\\.d+$"
+      "pattern": "^\\d+\\.\\d+$"
     },
     "data": {
       "type": "object",
