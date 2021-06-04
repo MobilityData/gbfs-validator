@@ -38,7 +38,7 @@ class GBFS {
         if (typeof data !== 'object') {
           return {
             recommanded: true,
-            required: false,
+            required: this.isGBFSFileRequire(this.options.version),
             errors: false,
             exists: false,
             file: `gbfs.json`,
@@ -48,7 +48,7 @@ class GBFS {
         }
 
         this.autoDiscovery = data
-        const errors = this.validateFileTEMP(
+        const errors = this.validateFile(
           this.options.version || data.version,
           'gbfs',
           this.autoDiscovery
@@ -59,7 +59,9 @@ class GBFS {
           url,
           version: data.version,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(
+            this.options.version || data.version
+          ),
           exists: true,
           file: `gbfs.json`,
           hasErrors: !!errors
@@ -69,7 +71,7 @@ class GBFS {
         return {
           url,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -89,7 +91,7 @@ class GBFS {
 
         this.autoDiscovery = data
 
-        const errors = this.validateFileTEMP(
+        const errors = this.validateFile(
           this.options.version || data.version,
           'gbfs',
           this.autoDiscovery
@@ -100,13 +102,15 @@ class GBFS {
           url: this.url,
           version: data.version,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(
+            this.options.version || data.version
+          ),
           exists: true,
           file: `gbfs.json`,
           hasErrors: !!errors
         }
       })
-      .catch(() => {
+      .catch(e => {
         if (!this.url.match(/gbfs.json$/)) {
           return this.alternativeAutoDiscovery(
             new URL('gbfs.json', this.url).toString()
@@ -116,7 +120,7 @@ class GBFS {
         return {
           url: this.url,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -125,7 +129,7 @@ class GBFS {
       })
   }
 
-  validateFileTEMP(version, file, data) {
+  validateFile(version, file, data) {
     let schema
 
     try {
@@ -151,7 +155,7 @@ class GBFS {
           lang =>
             lang && lang.url
               ? axios(lang.url).then(({ data }) => ({
-                  errors: this.validateFileTEMP(version, type, data),
+                  errors: this.validateFile(version, type, data),
                   exists: true,
                   lang: lang.lang,
                   url: lang.url
@@ -176,7 +180,7 @@ class GBFS {
       return axios(`${this.url}/${type}.json`)
         .then(({ data }) => ({
           required,
-          errors: this.validateFileTEMP(version, type, data),
+          errors: this.validateFile(version, type, data),
           exists: true,
           file: `${type}.json`,
           url: `${this.url}/${type}.json`
@@ -207,7 +211,7 @@ class GBFS {
     }
 
     let files = require(`./schema/v${this.options.version ||
-      gbfsResult.version}`)(this.options)
+      gbfsResult.version}`).files(this.options)
 
     return Promise.all([
       Promise.resolve(gbfsResult),
@@ -230,6 +234,14 @@ class GBFS {
         files: result
       }
     })
+  }
+
+  isGBFSFileRequire(version) {
+    if (!version) {
+      return false
+    } else {
+      return require(`./schema/v${version}`).gbfsRequired
+    }
   }
 }
 
