@@ -1,28 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://github.com/NABSA/gbfs/blob/master/gbfs.md#gbfsjson",
-  "description": "Auto-discovery file that links to all of the other files publiished by the system.",
+  "description":
+    "Auto-discovery file that links to all of the other files publiished by the system.",
   "type": "object",
   "properties": {
     "last_updated": {
-      "description": "Last time the data in the feed was updated in POSIX time.",
+      "description":
+        "Last time the data in the feed was updated in POSIX time.",
       "type": "integer",
       "minimum": 1450155600
     },
     "ttl": {
-      "description": "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
+      "description":
+        "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
       "type": "integer",
       "minimum": 0
     },
     "version": {
-      "description": "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
+      "description":
+        "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
       "type": "string",
-      "enum": [
-        "1.1-RC",
-        "1.1",
-        "2.0-RC",
-        "2.0"
-      ]
+      "const": "2.0"
     },
     "data": {
       "description": "Response data in the form of name:value pairs.",
@@ -32,13 +31,15 @@
           "type": "object",
           "properties": {
             "feeds": {
-              "description": "An array of all of the feeds that are published by the auto-discovery file. Each element in the array is an object with the keys below.",
+              "description":
+                "An array of all of the feeds that are published by the auto-discovery file. Each element in the array is an object with the keys below.",
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "description": "Key identifying the type of feed this is. The key must be the base file name defined in the spec for the corresponding feed type.",
+                    "description":
+                      "Key identifying the type of feed this is. The key must be the base file name defined in the spec for the corresponding feed type.",
                     "type": "string",
                     "enum": [
                       "gbfs",
@@ -60,10 +61,7 @@
                     "format": "uri"
                   }
                 },
-                "required": [
-                  "name",
-                  "url"
-                ]
+                "required": ["name", "url"]
               }
             },
             "required": true
@@ -74,10 +72,5 @@
       "additionalProperties": false
     }
   },
-  "required": [
-    "last_updated",
-    "ttl",
-    "version",
-    "data"
-  ]
+  "required": ["last_updated", "ttl", "version", "data"]
 }
