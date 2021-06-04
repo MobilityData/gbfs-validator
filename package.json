@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "yarn run dev:website & yarn run dev:functions",
     "dev:website": "cd website && yarn run serve",
-    "dev:functions": "netlify-lambda serve functions",
+    "dev:functions": "netlify-lambda serve functions --config ./webpack.dev.config.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue website/src",
     "build": "yarn run build:website && yarn run build:functions",

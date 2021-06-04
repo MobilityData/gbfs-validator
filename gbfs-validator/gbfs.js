@@ -1,17 +1,5 @@
 const axios = require('axios')
-
-const validators = {
-  gbfs: require('./validation/gbfs'),
-  system_information: require('./validation/systemInformation'),
-  station_information: require('./validation/stationInformation'),
-  station_status: require('./validation/stationStatus'),
-  free_bike_status: require('./validation/freeBikeStatus'),
-  system_hours: require('./validation/systemHours'),
-  system_calendar: require('./validation/systemCalendar'),
-  system_regions: require('./validation/systemRegions'),
-  system_pricing_plans: require('./validation/systemPricingPlans'),
-  system_alerts: require('./validation/systemAlerts')
-}
+const validate = require('./validate')
 
 function hasErrors(data, required) {
   let hasError = false
@@ -32,11 +20,15 @@ function hasErrors(data, required) {
 }
 
 class GBFS {
-  constructor(url, { docked = false, freefloating = false } = {}) {
+  constructor(
+    url,
+    { docked = false, freefloating = false, version = null } = {}
+  ) {
     this.url = url
     this.options = {
       docked,
-      freefloating
+      freefloating,
+      version
     }
   }
 
@@ -56,11 +48,16 @@ class GBFS {
         }
 
         this.autoDiscovery = data
-        const errors = validators.gbfs(this.autoDiscovery)
+        const errors = this.validateFileTEMP(
+          this.options.version || data.version,
+          'gbfs',
+          this.autoDiscovery
+        )
 
         return {
           errors,
           url,
+          version: data.version,
           recommanded: true,
           required: false,
           exists: true,
@@ -85,14 +82,22 @@ class GBFS {
     return axios(this.url, { json: true })
       .then(({ status, data }) => {
         if (typeof data !== 'object') {
-          return this.alternativeAutoDiscovery(`${this.url}/gbfs.json`)
+          return this.alternativeAutoDiscovery(
+            new URL('gbfs.json', this.url).toString()
+          )
         }
 
         this.autoDiscovery = data
-        const errors = validators.gbfs(this.autoDiscovery)
+        const errors = this.validateFileTEMP(
+          this.options.version || data.version,
+          'gbfs',
+          this.autoDiscovery
+        )
+
         return {
           errors,
           url: this.url,
+          version: data.version,
           recommanded: true,
           required: false,
           exists: true,
@@ -102,8 +107,12 @@ class GBFS {
       })
       .catch(() => {
         if (!this.url.match(/gbfs.json$/)) {
-          return this.alternativeAutoDiscovery(`${this.url}/gbfs.json`)
+          return this.alternativeAutoDiscovery(
+            new URL('gbfs.json', this.url).toString()
+          )
         }
+
+        console.log('ici')
 
         return {
           url: this.url,
@@ -117,7 +126,19 @@ class GBFS {
       })
   }
 
-  checkFile(type, required) {
+  validateFileTEMP(version, file, data) {
+    let schema
+
+    try {
+      schema = require(`./schema/v${version}/${file}`)
+    } catch (e) {
+      throw new Error('can not require')
+    }
+
+    return validate(schema, data)
+  }
+
+  checkFile(version, type, required) {
     if (this.autoDiscovery) {
       const urls = Object.entries(this.autoDiscovery.data).map(key => {
         return Object.assign(
@@ -127,20 +148,21 @@ class GBFS {
       })
 
       return Promise.all(
-        urls.map(lang =>
-          lang && lang.url
-            ? axios(lang.url).then(({ data }) => ({
-                errors: validators[type](data),
-                exists: true,
-                lang: lang.lang,
-                url: lang.url
-              }))
-            : {
-                errors: false,
-                exists: false,
-                lang: lang.lang,
-                url: null
-              }
+        urls.map(
+          lang =>
+            lang && lang.url
+              ? axios(lang.url).then(({ data }) => ({
+                  errors: this.validateFileTEMP(version, type, data),
+                  exists: true,
+                  lang: lang.lang,
+                  url: lang.url
+                }))
+              : {
+                  errors: false,
+                  exists: false,
+                  lang: lang.lang,
+                  url: null
+                }
         )
       ).then(languages => {
         return {
@@ -155,7 +177,7 @@ class GBFS {
       return axios(`${this.url}/${type}.json`)
         .then(({ data }) => ({
           required,
-          errors: validators[type](data),
+          errors: this.validateFileTEMP(version, type, data),
           exists: true,
           file: `${type}.json`,
           url: `${this.url}/${type}.json`
@@ -171,22 +193,36 @@ class GBFS {
   }
 
   async validation() {
-    const gbfsResult = await this.checkAutodiscovery()
+    const gbfsResult = await this.checkAutodiscovery().catch(err => {
+      console.log('ICI', typeof err, err)
+    })
+
+    if (!gbfsResult.version) {
+      return {
+        summary: {
+          versionUnimplemented: true
+        }
+      }
+    }
+
+    let files = require(`./schema/v${gbfsResult.version}`)(this.options)
+
     return Promise.all([
       Promise.resolve(gbfsResult),
-      this.checkFile('gbfs_versions', false),
-      this.checkFile('system_information', true),
-      this.checkFile('station_information', this.options.docked),
-      this.checkFile('station_status', this.options.docked),
-      this.checkFile('free_bike_status', this.options.freefloating),
-      this.checkFile('system_hours', false),
-      this.checkFile('system_calendar', false),
-      this.checkFile('system_regions', false),
-      this.checkFile('system_pricing_plans', false),
-      this.checkFile('system_alerts', false)
+      ...files.map(f =>
+        this.checkFile(
+          this.options.version || gbfsResult.version,
+          f.file,
+          f.required
+        )
+      )
     ]).then(result => {
       return {
         summary: {
+          version: {
+            detected: result[0].version,
+            validated: this.options.version || result[0].version
+          },
           hasErrors: hasErrors(result)
         },
         files: result
