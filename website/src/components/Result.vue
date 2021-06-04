@@ -6,7 +6,7 @@
         <h2>Result</h2>
 
         <div v-if="result.summary.versionUnimplemented" class="alert warning">
-          Sorry, this version is not yet implemented
+          Sorry, this version is not yet implemented or not detectable !
         </div>
         <div v-else>
           <div class="alert info">

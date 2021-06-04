@@ -88,6 +88,7 @@ class GBFS {
         }
 
         this.autoDiscovery = data
+
         const errors = this.validateFileTEMP(
           this.options.version || data.version,
           'gbfs',
@@ -111,8 +112,6 @@ class GBFS {
             new URL('gbfs.json', this.url).toString()
           )
         }
-
-        console.log('ici')
 
         return {
           url: this.url,
@@ -193,9 +192,11 @@ class GBFS {
   }
 
   async validation() {
-    const gbfsResult = await this.checkAutodiscovery().catch(err => {
-      console.log('ICI', typeof err, err)
-    })
+    if (!this.url) {
+      throw new Error('Missing URL')
+    }
+
+    const gbfsResult = await this.checkAutodiscovery()
 
     if (!gbfsResult.version) {
       return {
@@ -205,7 +206,8 @@ class GBFS {
       }
     }
 
-    let files = require(`./schema/v${gbfsResult.version}`)(this.options)
+    let files = require(`./schema/v${this.options.version ||
+      gbfsResult.version}`)(this.options)
 
     return Promise.all([
       Promise.resolve(gbfsResult),
