@@ -10,6 +10,7 @@
       <p>Version</p>
       <select name="version" id="version" v-model="options.version">
         <option :value="null" selected>auto-detection</option>
+        <option value="2.2">2.2</option>
         <option value="2.1">2.1</option>
         <option value="2.0">2.0</option>
         <option value="1.0">1.0</option>
