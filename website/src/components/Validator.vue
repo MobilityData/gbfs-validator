@@ -13,6 +13,7 @@
         <option value="2.2">2.2</option>
         <option value="2.1">2.1</option>
         <option value="2.0">2.0</option>
+        <option value="1.1">1.1</option>
         <option value="1.0">1.0</option>
       </select>
       <p>Allows you to force files requirements.</p>
