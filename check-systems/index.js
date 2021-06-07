@@ -4,7 +4,7 @@ const gbfsValidator = require('gbfs-validator')
 const parse = require('csv-parse')
 
 if (!process.argv[2]) {
-  console.error('Usage: gbfs-validator GBFS_URL')
+  console.error('Usage: check-systems FILE')
   process.exit(1)
 }
 
@@ -14,11 +14,15 @@ function checkGBFS(line) {
   return gbfs
     .validation()
     .then(result => {
-      if (result.summary.hasErrors) {
-        console.log(`${line[3]} ERROR`)
-        fs.writeFileSync(`out-${line[3]}.log`, JSON.stringify(result, ' ', 2))
+      if (result.summary.versionUnimplemented) {
+        console.log(`${line[3]} PASS (Version not implemented)`)
       } else {
-        console.log(`${line[3]} OK`)
+        if (result.summary.hasErrors) {
+          console.log(`${line[3]} KO (${result.summary.errorsCount} errors)`)
+          fs.writeFileSync(`out-${line[3]}.log`, JSON.stringify(result, ' ', 2))
+        } else {
+          console.log(`${line[3]} OK`)
+        }
       }
     })
     .catch(err => {
