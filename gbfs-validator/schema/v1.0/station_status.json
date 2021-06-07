@@ -45,13 +45,13 @@
                 "minimum": 0
               },
               "is_installed": {
-                "type": ["boolean", "number"]
+                "oneOf": [{ "type": "boolean" }, { "type": "number" }]
               },
               "is_renting": {
-                "type": ["boolean", "number"]
+                "oneOf": [{ "type": "boolean" }, { "type": "number" }]
               },
               "is_returning": {
-                "type": ["boolean", "number"]
+                "oneOf": [{ "type": "boolean" }, { "type": "number" }]
               },
               "last_reported": {
                 "type": "number"

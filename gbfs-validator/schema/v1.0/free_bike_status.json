@@ -39,10 +39,10 @@
                 "maximum": 180
               },
               "is_reserved": {
-                "type": ["boolean", "number"]
+                "oneOf": [{ "type": "boolean" }, { "type": "number" }]
               },
               "is_disabled": {
-                "type": ["boolean", "number"]
+                "oneOf": [{ "type": "boolean" }, { "type": "number" }]
               }
             },
             "required": ["bike_id", "lat", "lon", "is_reserved", "is_disabled"]
