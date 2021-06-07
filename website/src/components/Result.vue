@@ -14,12 +14,15 @@
           </div>
 
           <div>
-            <div v-if="result.summary.hasErrors" class="alert danger">Invalid GBFS</div>
+            <div v-if="result.summary.hasErrors" class="alert danger">
+              Invalid GBFS feed <br>
+              <b>{{ result.summary.errorsCount }} errors</b>
+            </div>
             <div v-else class="alert success">Valid !</div>
           </div>
 
           <div v-for="file in result.files" :key="file.filename">
-            <SubResult :file="file"/>
+            <SubResult :file="file" />
           </div>
         </div>
       </div>

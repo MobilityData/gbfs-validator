@@ -19,6 +19,30 @@ function hasErrors(data, required) {
   return hasError
 }
 
+function countErrors(file) {
+  let count = 0
+
+  if (file.hasErrors) {
+    if (file.errors) {
+      count = file.errors.length
+    } else if (file.languages) {
+      if (file.required) {
+        count += file.languages.filter(l => !l.exists).length
+      }
+
+      count += file.languages.reduce((acc, l) => {
+        if (l.exists) {
+          acc += l.errors.length
+        }
+
+        return acc
+      }, 0)
+    }
+  }
+
+  return count
+}
+
 class GBFS {
   constructor(
     url,
@@ -223,15 +247,24 @@ class GBFS {
         )
       )
     ]).then(result => {
+      const files = result.map(file => ({
+        ...file,
+        errorsCount: countErrors(file)
+      }))
+
       return {
         summary: {
           version: {
             detected: result[0].version,
             validated: this.options.version || result[0].version
           },
-          hasErrors: hasErrors(result)
+          hasErrors: hasErrors(result),
+          errorsCount: files.reduce((acc, file) => {
+            acc += file.errorsCount
+            return acc
+          }, 0)
         },
-        files: result
+        files
       }
     })
   }

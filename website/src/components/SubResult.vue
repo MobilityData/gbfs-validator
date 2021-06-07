@@ -10,7 +10,7 @@
 
     <div v-if="file.required && !file.exists">
       <div class="alert danger">
-        Missing file. Required
+        <b>Missing</b> file and <b>required</b>
       </div>
     </div>
 
@@ -19,23 +19,33 @@
         <div v-for="lang in file.languages" :key="lang.lang">
           <div v-if="file.required && !lang.exists">
             <div class="alert danger">
-            <h4>Missing file {{lang.lang}}/{{file.file}}</h4>
+              <b>Missing</b> file {{lang.lang}}/{{file.file}}
             </div>
           </div>
           <div v-else-if="lang.errors">
             <div class="alert danger">
-            <h4>Errors in {{ lang.url }}</h4>
+              <b>{{ file.errorsCount }} errors</b> in {{ lang.url }}
               <pre><code>{{ lang.errors }}</code></pre>
             </div>
           </div>
         </div>
       </div>
       <div v-else class="alert danger">
-        <h4>Errors in {{ file.url }}</h4>
+        <b>{{ file.errorsCount }} errors</b> in {{ file.url }}
         <pre><code>{{ file.errors }}</code></pre>
       </div>
     </div>
-
+  </div>
+  <div v-else>
+    <h3>{{ file.file }}</h3>
+    <div class="alert success">
+      <div v-if="!file.exists && !file.required">
+        <b>Missing</b> file but <b>not</b> required
+      </div>
+      <div v-else>
+        <b>Valid</b> file
+      </div>
+    </div>
   </div>
 </template>
 
