@@ -30,6 +30,41 @@
             <b-form-checkbox id="input-docked" v-model="options.docked">&nbsp;Docked</b-form-checkbox>
           </b-form-group>
         </b-tab>
+        <b-tab title="Authentification">
+          <b-form-group
+            id="input-group-auth"
+            label="Authentification"
+            label-for="input-auth"
+            class="mb-3"
+          >
+            <b-form-select id="input-auth" :options="auths" v-model="options.auth.type"></b-form-select>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-basic_auth"
+            label="Authentification"
+            label-for="input-basic_auth"
+            v-if="options.auth.type === 'basic_auth'"
+          >
+            <b-row>
+              <b-col>
+                <b-form-input id="input-basic_auth-user" placeholder="user" v-model="options.auth.basicAuth.user"></b-form-input>
+              </b-col>
+              <b-col>
+                <b-form-input id="input-basic_auth-password" placeholder="password" v-model="options.auth.basicAuth.password"></b-form-input>
+              </b-col>
+            </b-row>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-bearer_token"
+            label="Authentification"
+            label-for="input-bearer_token"
+            v-if="options.auth.type === 'bearer_token'"
+          >
+            <b-form-input id="input-bearer_token" placeholder="token" v-model="options.auth.bearerToken.token"></b-form-input>
+          </b-form-group>
+        </b-tab>
       </b-tabs>
     </b-card>
 
@@ -53,7 +88,12 @@ export default {
       options: {
         freefloating: false,
         docked: false,
-        version: null
+        version: null,
+        auth: {
+          type: null,
+          basicAuth: { user: null, password: null },
+          bearerToken: { token: null }
+        }
       },
       versions: [
         { value: null, text: 'auto-detection' },
@@ -62,6 +102,20 @@ export default {
         { value: '2.0', text: 'v2.0' },
         { value: '1.1', text: 'v1.1' },
         { value: '1.0', text: 'v1.0' }
+      ],
+      auths: [
+        {
+          value: null,
+          text: 'none'
+        },
+        {
+          value: 'basic_auth',
+          text: 'Basic Auth'
+        },
+        {
+          value: 'bearer_token',
+          text: 'Bearer Token'
+        }
       ]
     }
   },

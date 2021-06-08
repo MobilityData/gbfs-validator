@@ -1,4 +1,4 @@
-const axios = require('axios')
+const got = require('got')
 const validate = require('./validate')
 
 function hasErrors(data, required) {
@@ -46,7 +46,7 @@ function countErrors(file) {
 class GBFS {
   constructor(
     url,
-    { docked = false, freefloating = false, version = null } = {}
+    { docked = false, freefloating = false, version = null, auth = {} } = {}
   ) {
     this.url = url
     this.options = {
@@ -54,12 +54,34 @@ class GBFS {
       freefloating,
       version
     }
+    this.auth = auth
+
+    this.gotOptions = {}
+
+    if (this.auth && this.auth.type) {
+      if (this.auth.type === 'basic_auth' && this.auth.basicAuth) {
+        this.gotOptions.headers = {
+          Authorization: `basic ${Buffer.from(
+            `${this.auth.basicAuth.user}:${this.auth.basicAuth.password}`,
+            'utf-8'
+          ).toString('base64')}`
+        }
+      }
+
+      if (this.auth.type === 'bearer_token' && this.auth.bearerToken) {
+        this.gotOptions.headers = {
+          Authorization: `Bearer ${this.auth.bearerToken.token}`
+        }
+      }
+    }
   }
 
   alternativeAutoDiscovery(url) {
-    return axios(url, { json: true })
-      .then(({ data }) => {
-        if (typeof data !== 'object') {
+    return got
+      .get(url, this.gotOptions)
+      .json()
+      .then(body => {
+        if (typeof body !== 'object') {
           return {
             recommanded: true,
             required: this.isGBFSFileRequire(this.options.version),
@@ -71,9 +93,9 @@ class GBFS {
           }
         }
 
-        this.autoDiscovery = data
+        this.autoDiscovery = body
         const errors = this.validateFile(
-          this.options.version || data.version,
+          this.options.version || body.version,
           'gbfs',
           this.autoDiscovery
         )
@@ -81,10 +103,10 @@ class GBFS {
         return {
           errors,
           url,
-          version: data.version,
+          version: body.version,
           recommanded: true,
           required: this.isGBFSFileRequire(
-            this.options.version || data.version
+            this.options.version || body.version
           ),
           exists: true,
           file: `gbfs.json`,
@@ -105,18 +127,20 @@ class GBFS {
   }
 
   checkAutodiscovery() {
-    return axios(this.url, { json: true })
-      .then(({ status, data }) => {
-        if (typeof data !== 'object') {
+    return got
+      .get(this.url, this.gotOptions)
+      .json()
+      .then(body => {
+        if (typeof body !== 'object') {
           return this.alternativeAutoDiscovery(
             new URL('gbfs.json', this.url).toString()
           )
         }
 
-        this.autoDiscovery = data
+        this.autoDiscovery = body
 
         const errors = this.validateFile(
-          this.options.version || data.version,
+          this.options.version || body.version,
           'gbfs',
           this.autoDiscovery
         )
@@ -124,10 +148,10 @@ class GBFS {
         return {
           errors,
           url: this.url,
-          version: data.version,
+          version: body.version,
           recommanded: true,
           required: this.isGBFSFileRequire(
-            this.options.version || data.version
+            this.options.version || body.version
           ),
           exists: true,
           file: `gbfs.json`,
@@ -178,12 +202,15 @@ class GBFS {
         urls.map(
           lang =>
             lang && lang.url
-              ? axios(lang.url).then(({ data }) => ({
-                  errors: this.validateFile(version, type, data),
-                  exists: true,
-                  lang: lang.lang,
-                  url: lang.url
-                }))
+              ? got
+                  .get(lang.url, this.gotOptions)
+                  .json()
+                  .then(body => ({
+                    errors: this.validateFile(version, type, body),
+                    exists: true,
+                    lang: lang.lang,
+                    url: lang.url
+                  }))
               : {
                   errors: false,
                   exists: false,
@@ -201,10 +228,12 @@ class GBFS {
         }
       })
     } else {
-      return axios(`${this.url}/${type}.json`)
-        .then(({ data }) => ({
+      return got
+        .get(`${this.url}/${type}.json`, this.gotOptions)
+        .json()
+        .then(body => ({
           required,
-          errors: this.validateFile(version, type, data),
+          errors: this.validateFile(version, type, body),
           exists: true,
           file: `${type}.json`,
           url: `${this.url}/${type}.json`
