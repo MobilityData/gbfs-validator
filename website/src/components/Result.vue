@@ -5,20 +5,20 @@
       <div v-if="result.summary">
         <h2>Result</h2>
 
-        <div v-if="result.summary.versionUnimplemented" class="alert warning">
+        <b-alert v-if="result.summary.versionUnimplemented" variant="danger" show>
           Sorry, this version is not yet implemented or not detectable !
-        </div>
+        </b-alert>
         <div v-else>
-          <div class="alert info">
+          <b-alert variant="info" show>
             Detected version <b>{{ result.summary.version.detected }} </b> and validate with <a :href="`https://github.com/NABSA/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"><b>{{ result.summary.version.validated}}</b></a>
-          </div>
+          </b-alert>
 
           <div>
-            <div v-if="result.summary.hasErrors" class="alert danger">
+            <b-alert v-if="result.summary.hasErrors" variant="danger" show>
               Invalid GBFS feed <br>
               <b>{{ result.summary.errorsCount }} errors</b>
-            </div>
-            <div v-else class="alert success">Valid !</div>
+            </b-alert>
+            <b-alert v-else variant="success" show>Valid !</b-alert>
           </div>
 
           <div v-for="file in result.files" :key="file.filename">
@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div v-else-if="result" class="alert danger">{{ result }}</div>
+      <b-alert v-else-if="result" variant="danger" show>{{ result }}</b-alert>
     </div>
   </div>
 </template>
