@@ -8,5 +8,12 @@ module.exports = {
         pathRewrite: { '^/.netlify/functions': '' }
       }
     }
+  },
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [require('autoprefixer')]
+      }
+    }
   }
 }

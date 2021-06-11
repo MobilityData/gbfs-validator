@@ -1,20 +1,72 @@
 <template>
-  <div class="content">
-    <div class="input-bar">
-      <input type="url" v-model="url" placeholder="https://exemple.com/gbfs.com" class="url-input">
-      <button @click="valid" class="button">Valid me !</button>
-    </div>
+  <div>
+    <b-row>
+      <b-col>
+        <b-form-input type="url" v-model="url" placeholder="https://exemple.com/gbfs.com"></b-form-input>
+      </b-col>
+      <b-col class="flex-grow-0">
+        <b-button @click="valid" variant="success" style="white-space: nowrap;">Valid me !</b-button>
+      </b-col>
+    </b-row>
 
-    <div class="options alert info">
-      <h3>Options</h3>
-      <p>Allows you to force files requirements.</p>
-      <label for="freefloating">
-        <input type="checkbox" name="freefloating" id="freefloating" v-model="options.freefloating">&nbsp;Free-floating
-      </label>
-      <label for="docked">
-        <input type="checkbox" name="docked" id="docked" v-model="options.docked">&nbsp;Docked
-      </label>
-    </div>
+    <b-card class="mt-4">
+      <b-tabs content-class="mt-3">
+        <b-tab title="Options" active>
+          <b-form-group
+            id="input-group-version"
+            label="Version"
+            label-for="input-version"
+          >
+            <b-form-select id="input-version" :options="versions" v-model="options.version"></b-form-select>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-requirement"
+            label="Allows you to force files requirements"
+            label-for="input-requirement"
+            class="mt-3"
+          >
+            <b-form-checkbox id="input-freefloating" v-model="options.freefloating">&nbsp;Free-floating</b-form-checkbox>
+            <b-form-checkbox id="input-docked" v-model="options.docked">&nbsp;Docked</b-form-checkbox>
+          </b-form-group>
+        </b-tab>
+        <b-tab title="Authentification">
+          <b-form-group
+            id="input-group-auth"
+            label="Authentification"
+            label-for="input-auth"
+            class="mb-3"
+          >
+            <b-form-select id="input-auth" :options="auths" v-model="options.auth.type"></b-form-select>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-basic_auth"
+            label="Authentification"
+            label-for="input-basic_auth"
+            v-if="options.auth.type === 'basic_auth'"
+          >
+            <b-row>
+              <b-col>
+                <b-form-input id="input-basic_auth-user" placeholder="user" v-model="options.auth.basicAuth.user"></b-form-input>
+              </b-col>
+              <b-col>
+                <b-form-input id="input-basic_auth-password" placeholder="password" v-model="options.auth.basicAuth.password"></b-form-input>
+              </b-col>
+            </b-row>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-bearer_token"
+            label="Authentification"
+            label-for="input-bearer_token"
+            v-if="options.auth.type === 'bearer_token'"
+          >
+            <b-form-input id="input-bearer_token" placeholder="token" v-model="options.auth.bearerToken.token"></b-form-input>
+          </b-form-group>
+        </b-tab>
+      </b-tabs>
+    </b-card>
 
     <Result :isValidating="isValidating" :result="result"/>
   </div>
@@ -35,8 +87,36 @@ export default {
       url: '',
       options: {
         freefloating: false,
-        docked: false
-      }
+        docked: false,
+        version: null,
+        auth: {
+          type: null,
+          basicAuth: { user: null, password: null },
+          bearerToken: { token: null }
+        }
+      },
+      versions: [
+        { value: null, text: 'auto-detection' },
+        { value: '2.2', text: 'v2.2' },
+        { value: '2.1', text: 'v2.1' },
+        { value: '2.0', text: 'v2.0' },
+        { value: '1.1', text: 'v1.1' },
+        { value: '1.0', text: 'v1.0' }
+      ],
+      auths: [
+        {
+          value: null,
+          text: 'none'
+        },
+        {
+          value: 'basic_auth',
+          text: 'Basic Auth'
+        },
+        {
+          value: 'bearer_token',
+          text: 'Bearer Token'
+        }
+      ]
     }
   },
   methods: {
@@ -64,54 +144,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.content {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 1000px;
-  flex-grow: 1;
-}
-
-.input-bar {
-  display: flex;
-  margin-bottom: 10px;
-}
-
-.button {
-  display: inline-block;
-  font-weight: 400;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  border: 1px solid transparent;
-  padding: 6px 12px;
-  padding: 0.375rem 0.75rem;
-  font-size: 16px;
-  font-size: 1rem;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  color: #fff;
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.url-input {
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  margin-right: 10px;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-}
-
-.options h3 {
-  font-weight: bold;
-  font-size: 1.5em;
-  margin: 10px 0;
-}
-</style>

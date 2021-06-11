@@ -1,7 +1,36 @@
 <template>
-  <div id="app">
-    <h1>GBFS-Validator</h1>
-    <Validator/>
+  <div>
+    <b-container>
+      <b-row class="mt-5 mb-4">
+        <b-col>
+          <b-row class="mb-2">
+            <b-col class="flex-grow-0">
+              <img src="/gbfs_validator.jpg" alt="">
+            </b-col>
+            <b-col>
+              <h1>gbfs-validator.netlify.com</h1>
+              <h2>A GBFS feed validator</h2>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <p>Validate any <a href="https://github.com/NABSA/gbfs/">GBFS</a> feed online. Based on official <a href="https://github.com/MobilityData/gbfs-json-schema">GBFS json schemas</a>. <br>
+          More details on <a href="https://github.com/fluctuo/gbfs-validator">https://github.com/fluctuo/gbfs-validator</a>.</p>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <Validator/>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+
+        </b-col>
+      </b-row>
+    </b-container>
     <Footer/>
   </div>
 </template>
@@ -20,55 +49,11 @@ export default {
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  font-size: 1.4rem;
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-h1 {
-  text-align: center;
-}
-
-.alert {
-  font-size: 1rem;
+html {
   position: relative;
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 1rem;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
+  min-height: 100%;
 }
-
-.success {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-.warning {
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
-}
-
-.danger {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-}
-
-.info {
-  color: #0c5460;
-  background-color: #d1ecf1;
-  border-color: #bee5eb;
+body {
+  margin-bottom: 60px;
 }
 </style>

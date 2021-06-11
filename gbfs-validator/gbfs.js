@@ -1,17 +1,5 @@
-const axios = require('axios')
-
-const validators = {
-  gbfs: require('./validation/gbfs'),
-  system_information: require('./validation/systemInformation'),
-  station_information: require('./validation/stationInformation'),
-  station_status: require('./validation/stationStatus'),
-  free_bike_status: require('./validation/freeBikeStatus'),
-  system_hours: require('./validation/systemHours'),
-  system_calendar: require('./validation/systemCalendar'),
-  system_regions: require('./validation/systemRegions'),
-  system_pricing_plans: require('./validation/systemPricingPlans'),
-  system_alerts: require('./validation/systemAlerts')
-}
+const got = require('got')
+const validate = require('./validate')
 
 function hasErrors(data, required) {
   let hasError = false
@@ -31,22 +19,72 @@ function hasErrors(data, required) {
   return hasError
 }
 
+function countErrors(file) {
+  let count = 0
+
+  if (file.hasErrors) {
+    if (file.errors) {
+      count = file.errors.length
+    } else if (file.languages) {
+      if (file.required) {
+        count += file.languages.filter(l => !l.exists).length
+      }
+
+      count += file.languages.reduce((acc, l) => {
+        if (l.exists) {
+          acc += l.errors.length
+        }
+
+        return acc
+      }, 0)
+    }
+  }
+
+  return count
+}
+
 class GBFS {
-  constructor(url, { docked = false, freefloating = false } = {}) {
+  constructor(
+    url,
+    { docked = false, freefloating = false, version = null, auth = {} } = {}
+  ) {
     this.url = url
     this.options = {
       docked,
-      freefloating
+      freefloating,
+      version
+    }
+    this.auth = auth
+
+    this.gotOptions = {}
+
+    if (this.auth && this.auth.type) {
+      if (this.auth.type === 'basic_auth' && this.auth.basicAuth) {
+        this.gotOptions.headers = {
+          Authorization: `basic ${Buffer.from(
+            `${this.auth.basicAuth.user}:${this.auth.basicAuth.password}`,
+            'utf-8'
+          ).toString('base64')}`
+        }
+      }
+
+      if (this.auth.type === 'bearer_token' && this.auth.bearerToken) {
+        this.gotOptions.headers = {
+          Authorization: `Bearer ${this.auth.bearerToken.token}`
+        }
+      }
     }
   }
 
   alternativeAutoDiscovery(url) {
-    return axios(url, { json: true })
-      .then(({ data }) => {
-        if (typeof data !== 'object') {
+    return got
+      .get(url, this.gotOptions)
+      .json()
+      .then(body => {
+        if (typeof body !== 'object') {
           return {
             recommanded: true,
-            required: false,
+            required: this.isGBFSFileRequire(this.options.version),
             errors: false,
             exists: false,
             file: `gbfs.json`,
@@ -55,14 +93,21 @@ class GBFS {
           }
         }
 
-        this.autoDiscovery = data
-        const errors = validators.gbfs(this.autoDiscovery)
+        this.autoDiscovery = body
+        const errors = this.validateFile(
+          this.options.version || body.version,
+          'gbfs',
+          this.autoDiscovery
+        )
 
         return {
           errors,
           url,
+          version: body.version,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(
+            this.options.version || body.version
+          ),
           exists: true,
           file: `gbfs.json`,
           hasErrors: !!errors
@@ -72,7 +117,7 @@ class GBFS {
         return {
           url,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -82,33 +127,48 @@ class GBFS {
   }
 
   checkAutodiscovery() {
-    return axios(this.url, { json: true })
-      .then(({ status, data }) => {
-        if (typeof data !== 'object') {
-          return this.alternativeAutoDiscovery(`${this.url}/gbfs.json`)
+    return got
+      .get(this.url, this.gotOptions)
+      .json()
+      .then(body => {
+        if (typeof body !== 'object') {
+          return this.alternativeAutoDiscovery(
+            new URL('gbfs.json', this.url).toString()
+          )
         }
 
-        this.autoDiscovery = data
-        const errors = validators.gbfs(this.autoDiscovery)
+        this.autoDiscovery = body
+
+        const errors = this.validateFile(
+          this.options.version || body.version,
+          'gbfs',
+          this.autoDiscovery
+        )
+
         return {
           errors,
           url: this.url,
+          version: body.version,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(
+            this.options.version || body.version
+          ),
           exists: true,
           file: `gbfs.json`,
           hasErrors: !!errors
         }
       })
-      .catch(() => {
+      .catch(e => {
         if (!this.url.match(/gbfs.json$/)) {
-          return this.alternativeAutoDiscovery(`${this.url}/gbfs.json`)
+          return this.alternativeAutoDiscovery(
+            new URL('gbfs.json', this.url).toString()
+          )
         }
 
         return {
           url: this.url,
           recommanded: true,
-          required: false,
+          required: this.isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -117,7 +177,19 @@ class GBFS {
       })
   }
 
-  checkFile(type, required) {
+  validateFile(version, file, data) {
+    let schema
+
+    try {
+      schema = require(`./schema/v${version}/${file}`)
+    } catch (e) {
+      throw new Error('can not require')
+    }
+
+    return validate(schema, data)
+  }
+
+  checkFile(version, type, required) {
     if (this.autoDiscovery) {
       const urls = Object.entries(this.autoDiscovery.data).map(key => {
         return Object.assign(
@@ -127,20 +199,24 @@ class GBFS {
       })
 
       return Promise.all(
-        urls.map(lang =>
-          lang && lang.url
-            ? axios(lang.url).then(({ data }) => ({
-                errors: validators[type](data),
-                exists: true,
-                lang: lang.lang,
-                url: lang.url
-              }))
-            : {
-                errors: false,
-                exists: false,
-                lang: lang.lang,
-                url: null
-              }
+        urls.map(
+          lang =>
+            lang && lang.url
+              ? got
+                  .get(lang.url, this.gotOptions)
+                  .json()
+                  .then(body => ({
+                    errors: this.validateFile(version, type, body),
+                    exists: true,
+                    lang: lang.lang,
+                    url: lang.url
+                  }))
+              : {
+                  errors: false,
+                  exists: false,
+                  lang: lang.lang,
+                  url: null
+                }
         )
       ).then(languages => {
         return {
@@ -152,10 +228,12 @@ class GBFS {
         }
       })
     } else {
-      return axios(`${this.url}/${type}.json`)
-        .then(({ data }) => ({
+      return got
+        .get(`${this.url}/${type}.json`, this.gotOptions)
+        .json()
+        .then(body => ({
           required,
-          errors: validators[type](data),
+          errors: this.validateFile(version, type, body),
           exists: true,
           file: `${type}.json`,
           url: `${this.url}/${type}.json`
@@ -171,27 +249,61 @@ class GBFS {
   }
 
   async validation() {
+    if (!this.url) {
+      throw new Error('Missing URL')
+    }
+
     const gbfsResult = await this.checkAutodiscovery()
-    return Promise.all([
-      Promise.resolve(gbfsResult),
-      this.checkFile('gbfs_versions', false),
-      this.checkFile('system_information', true),
-      this.checkFile('station_information', this.options.docked),
-      this.checkFile('station_status', this.options.docked),
-      this.checkFile('free_bike_status', this.options.freefloating),
-      this.checkFile('system_hours', false),
-      this.checkFile('system_calendar', false),
-      this.checkFile('system_regions', false),
-      this.checkFile('system_pricing_plans', false),
-      this.checkFile('system_alerts', false)
-    ]).then(result => {
+
+    if (!gbfsResult.version) {
       return {
         summary: {
-          hasErrors: hasErrors(result)
+          versionUnimplemented: true
+        }
+      }
+    }
+
+    let files = require(`./schema/v${this.options.version ||
+      gbfsResult.version}`).files(this.options)
+
+    return Promise.all([
+      Promise.resolve(gbfsResult),
+      ...files.map(f =>
+        this.checkFile(
+          this.options.version || gbfsResult.version,
+          f.file,
+          f.required
+        )
+      )
+    ]).then(result => {
+      const files = result.map(file => ({
+        ...file,
+        errorsCount: countErrors(file)
+      }))
+
+      return {
+        summary: {
+          version: {
+            detected: result[0].version,
+            validated: this.options.version || result[0].version
+          },
+          hasErrors: hasErrors(result),
+          errorsCount: files.reduce((acc, file) => {
+            acc += file.errorsCount
+            return acc
+          }, 0)
         },
-        files: result
+        files
       }
     })
+  }
+
+  isGBFSFileRequire(version) {
+    if (!version) {
+      return false
+    } else {
+      return require(`./schema/v${version}`).gbfsRequired
+    }
   }
 }
 

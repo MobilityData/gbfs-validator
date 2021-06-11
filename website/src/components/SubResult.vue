@@ -1,41 +1,54 @@
 <template>
-  <div class="result" v-if="file.hasErrors || (!file.exists && (file.recommanded || file.required))">
-    <h3>{{ file.file }}</h3>
+  <div class="subresult" v-if="file.hasErrors || (!file.exists && (file.recommanded || file.required))">
+    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
 
     <div v-if="file.recommanded && !file.exists">
-      <div class="alert warning">
+      <b-alert variant="warning" show>
         Missing file. Recommanded
-      </div>
+      </b-alert>
     </div>
 
     <div v-if="file.required && !file.exists">
-      <div class="alert danger">
-        Missing file. Required
-      </div>
+      <b-alert variant="danger" show>
+        <b>Missing</b> file and <b>required</b>
+      </b-alert>
     </div>
 
     <div v-if="file.hasErrors">
       <div v-if="file.languages">
         <div v-for="lang in file.languages" :key="lang.lang">
           <div v-if="file.required && !lang.exists">
-            <div class="alert danger">
-            <h4>Missing file {{lang.lang}}/{{file.file}}</h4>
-            </div>
+            <b-alert variant="danger" show>
+              <b>Missing</b> file {{lang.lang}}/{{file.file}}
+            </b-alert>
           </div>
           <div v-else-if="lang.errors">
-            <div class="alert danger">
-            <h4>Errors in {{ lang.url }}</h4>
-              <pre><code>{{ lang.errors }}</code></pre>
-            </div>
+            <b-alert variant="danger" show>
+              <div>
+                <b-button v-b-toggle="`${lang.lang}/${file.file}`" variant="danger" size="sm">Show errors</b-button>
+                &nbsp;<b>{{ file.errorsCount | formatNumber }} errors</b> in {{ lang.url }}
+              </div>
+              <b-collapse :id="`${lang.lang}/${file.file}`" class="mt-3">
+                <pre><code>{{ lang.errors }}</code></pre>
+              </b-collapse>
+            </b-alert>
           </div>
         </div>
       </div>
-      <div v-else class="alert danger">
-        <h4>Errors in {{ file.url }}</h4>
+      <b-alert v-else variant="danger" show>
+        <b>{{ file.errorsCount }} errors</b> in {{ file.url }}
         <pre><code>{{ file.errors }}</code></pre>
-      </div>
+      </b-alert>
     </div>
-
+  </div>
+  <div v-else>
+    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
+    <b-alert v-if="!file.exists && !file.required" variant="warning" show>
+      <b>Missing</b> file but <b>not</b> required
+    </b-alert>
+    <b-alert v-else variant="success" show>
+      <b>Valid</b> file
+    </b-alert>
   </div>
 </template>
 
