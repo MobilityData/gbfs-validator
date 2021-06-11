@@ -3,7 +3,7 @@
     <div v-if="isValidating" class="validating">Validating...</div>
     <div v-else>
       <div v-if="result.summary">
-        <h2>Result</h2>
+        <h3 class="mt-4 mb-4">Result</h3>
 
         <b-alert v-if="result.summary.versionUnimplemented" variant="danger" show>
           Sorry, this version is not yet implemented or not detectable !
@@ -16,11 +16,11 @@
           <div>
             <b-alert v-if="result.summary.hasErrors" variant="danger" show>
               Invalid GBFS feed <br>
-              <b>{{ result.summary.errorsCount }} errors</b>
+              <b>{{ result.summary.errorsCount | formatNumber }} errors</b>
             </b-alert>
             <b-alert v-else variant="success" show>Valid !</b-alert>
           </div>
-
+          <h4 class="mt-3 mb-3">Detail per files</h4>
           <div v-for="file in result.files" :key="file.filename">
             <SubResult :file="file" />
           </div>
@@ -53,6 +53,10 @@ export default {
 </script>
 
 <style scoped>
+.result {
+  margin-bottom: 80px;
+}
+
 .validating {
   text-align: center;
   margin: 50px 0;

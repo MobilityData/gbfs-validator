@@ -11,6 +11,10 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 
+Vue.filter('formatNumber', function(value) {
+  return new Intl.NumberFormat().format(value)
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

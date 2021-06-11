@@ -1,6 +1,6 @@
 <template>
-  <div class="result" v-if="file.hasErrors || (!file.exists && (file.recommanded || file.required))">
-    <h3>{{ file.file }}</h3>
+  <div class="subresult" v-if="file.hasErrors || (!file.exists && (file.recommanded || file.required))">
+    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
 
     <div v-if="file.recommanded && !file.exists">
       <b-alert variant="warning" show>
@@ -24,8 +24,13 @@
           </div>
           <div v-else-if="lang.errors">
             <b-alert variant="danger" show>
-              <b>{{ file.errorsCount }} errors</b> in {{ lang.url }}
-              <pre><code>{{ lang.errors }}</code></pre>
+              <div>
+                <b-button v-b-toggle="`${lang.lang}/${file.file}`" variant="danger" size="sm">Show errors</b-button>
+                &nbsp;<b>{{ file.errorsCount | formatNumber }} errors</b> in {{ lang.url }}
+              </div>
+              <b-collapse :id="`${lang.lang}/${file.file}`" class="mt-3">
+                <pre><code>{{ lang.errors }}</code></pre>
+              </b-collapse>
             </b-alert>
           </div>
         </div>
@@ -37,14 +42,12 @@
     </div>
   </div>
   <div v-else>
-    <h3>{{ file.file }}</h3>
-    <b-alert variant="success" show>
-      <div v-if="!file.exists && !file.required">
-        <b>Missing</b> file but <b>not</b> required
-      </div>
-      <div v-else>
-        <b>Valid</b> file
-      </div>
+    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
+    <b-alert v-if="!file.exists && !file.required" variant="warning" show>
+      <b>Missing</b> file but <b>not</b> required
+    </b-alert>
+    <b-alert v-else variant="success" show>
+      <b>Valid</b> file
     </b-alert>
   </div>
 </template>
