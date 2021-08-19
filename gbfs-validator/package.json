@@ -5,9 +5,26 @@
   "main": "index.js",
   "license": "MIT",
   "bin": "./cli.js",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "ajv": "^8.5.0",
     "ajv-formats": "^2.1.0",
     "got": "^11.8.2"
+  },
+  "devDependencies": {
+    "fastify": "^3.20.2",
+    "jest": "^27.0.6"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/__test__/**",
+      "!**/schema/**"
+    ]
   }
 }

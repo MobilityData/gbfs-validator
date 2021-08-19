@@ -8,6 +8,10 @@ if (!process.argv[2]) {
 
 const gbfs = new GBFS(process.argv[2])
 
-gbfs
-  .validation()
-  .then(result => console.log(inspect(result, { depth: null, colors: true })))
+if (require.main === module) {
+  gbfs
+    .validation()
+    .then(result => console.log(inspect(result, { depth: null, colors: true })))
+} else {
+  module.exports = gbfs.validation()
+}
