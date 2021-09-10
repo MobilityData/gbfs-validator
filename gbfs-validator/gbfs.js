@@ -48,6 +48,10 @@ class GBFS {
     url,
     { docked = false, freefloating = false, version = null, auth = {} } = {}
   ) {
+    if (!url) {
+      throw new Error('Missing URL')
+    }
+
     this.url = url
     this.options = {
       docked,
@@ -211,6 +215,12 @@ class GBFS {
                     lang: lang.lang,
                     url: lang.url
                   }))
+                  .catch(() => ({
+                    errors: null,
+                    exists: false,
+                    lang: lang.lang,
+                    url: lang.url
+                  }))
               : {
                   errors: false,
                   exists: false,
@@ -249,10 +259,6 @@ class GBFS {
   }
 
   async validation() {
-    if (!this.url) {
-      throw new Error('Missing URL')
-    }
-
     const gbfsResult = await this.checkAutodiscovery()
 
     if (!gbfsResult.version) {

@@ -1,0 +1,13 @@
+name: Run unit tests
+
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: yarn install && yarn workspaces run test
