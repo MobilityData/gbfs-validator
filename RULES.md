@@ -27,7 +27,7 @@ One additional conditionally required file has been added in  GBFS version 2.0.0
 vehicle_types.json
 The validator is currently considering this file as required, because the conditions are more complex and can’t be represented by the schema currently.
 
-# Fields presence
+# Fields presence and types
 ## Required fields
 Each file has to be structured in a specific output format. The fields `last_updated`, `ttl`, `version`, `data` are required and checked by the validator.
 In “data”, there is a nested JSON containing all the fields mentioned in the specification. All the fields that are described as “required” will be checked by the validator.
