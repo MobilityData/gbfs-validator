@@ -1,4 +1,4 @@
-# gbfs-validator
+# GBFS-validator
 A General [Bikeshare Feed Specification](https://github.com/NABSA/gbfs) dataset validator
 
 # Introduction
