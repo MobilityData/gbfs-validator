@@ -3,8 +3,11 @@ This project validates feeds up to version 2.2 of the [JSON Schemas](https://git
 The validator will display a message for all files that are present. A message will be displayed for each missing file. See examples below.
 
 Missing file but not required:
+
 ![missing_not_required](https://user-images.githubusercontent.com/63653518/133173202-459fc2e3-6c4b-4748-8a37-94ed362210c0.png)
+
 Missing file and required:
+
 ![missing_required](https://user-images.githubusercontent.com/63653518/133173256-d57d5b5a-4eb0-4114-89a6-fac60b3864a1.png)
 
 ## Required files
