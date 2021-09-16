@@ -4,11 +4,11 @@ The validator will display a message for all files that are present. A message w
 
 Missing file but not required:
 
-![missing_not_required](https://user-images.githubusercontent.com/63653518/133173202-459fc2e3-6c4b-4748-8a37-94ed362210c0.png)
+<img width="800" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/133173202-459fc2e3-6c4b-4748-8a37-94ed362210c0.png">
 
 Missing file and required:
 
-![missing_required](https://user-images.githubusercontent.com/63653518/133173256-d57d5b5a-4eb0-4114-89a6-fac60b3864a1.png)
+<img width="800" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/133173256-d57d5b5a-4eb0-4114-89a6-fac60b3864a1.png">
 
 ## Required files
 Two files are required for all GBFS versions
@@ -24,7 +24,7 @@ station_status.json: required for systems utilizing docks
 free_bike_status.json: required for free floating vehicles
 The validator will check for the presence of those files depending on the options “Free-floating” or Docked” that the user selected on the interface.
 
-<img width="215" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/133173329-fab3967d-5e4c-459f-bd2f-ec3415b98d44.png">
+<img width="350" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/133173329-fab3967d-5e4c-459f-bd2f-ec3415b98d44.png">
 
 One additional conditionally required file has been added in  GBFS version 2.0.0:
 vehicle_types.json
