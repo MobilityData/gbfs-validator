@@ -11,12 +11,9 @@ Missing file and required:
 <img width="800" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/133173256-d57d5b5a-4eb0-4114-89a6-fac60b3864a1.png">
 
 ## Required files
-Two files are required for all GBFS versions
-gbfs.json
-system_information.json
+system_information.json is required for all GBFS versions.
+gbfs.json is required as of v2.0
 
-The link to gbfs.json is the feed source link and is the input file for the validator.
-The presence of system_information.json will then be checked by the validator.
 ## Conditionally required files
 Three files are conditionally required for all GBFS versions:
 station_information.json: required for systems utilizing docks
