@@ -40,6 +40,6 @@ Check-systems is a CLI tool to validate the whole “systems.csv” from https:/
 # Adding a new version
 For adding a new version:
 - Create a new folder under “gbfs-validator/schema” with the version as name (Eg: “vX.Y”).
-- Add an “index.js” file. This file will define the possible JSON-schema to call for validation and the mandatory ones. See https://github.com/fluctuo/gbfs-validator/blob/master/gbfs-validator/schema/v2.2/index.js for an exemple
-- Fill the folder with all JSON-schemas for this version
-- Add an item on this array (https://github.com/MobilityData/gbfs-validator/blob/master/website/src/components/Validator.vue#L98) with the new version to be made available on the website.
+- Add an “index.js” file. This file will define the possible JSON-schema to call for validation and the mandatory ones. See [master/gbfs-validator/schema/v2.2/index.js](https://github.com/fluctuo/gbfs-validator/blob/master/gbfs-validator/schema/v2.2/index.js) for an exemple.
+- Fill the folder with all JSON-schemas for this version.
+- Add an item on this array: [master/website/src/components/Validator.vue#L98](https://github.com/MobilityData/gbfs-validator/blob/master/website/src/components/Validator.vue#L98) with the new version to be made available on the website.
