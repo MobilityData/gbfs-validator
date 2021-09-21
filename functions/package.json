@@ -1,8 +1,11 @@
 {
-  "name": "validator",
+  "name": "functions",
   "version": "1.0.0",
   "description": "validator-functions",
   "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
   "dependencies": {
     "gbfs-validator": "1.0.0"
   }
