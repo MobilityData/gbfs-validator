@@ -5,7 +5,7 @@
         <b-form-input type="url" v-model="url" placeholder="https://exemple.com/gbfs.com"></b-form-input>
       </b-col>
       <b-col class="flex-grow-0">
-        <b-button @click="valid" variant="success" style="white-space: nowrap;">Valid me !</b-button>
+        <b-button @click="valid" variant="success" style="white-space: nowrap;">Validate me !</b-button>
       </b-col>
     </b-row>
 
