@@ -15,7 +15,7 @@
           <b-row>
             <b-col>
               <p>Validate any <a href="https://github.com/NABSA/gbfs/">GBFS</a> feed online. Based on official <a href="https://github.com/MobilityData/gbfs-json-schema">GBFS json schemas</a>. <br>
-          More details on <a href="https://github.com/MobilityData/gbfs-validator">https://github.com/fluctuo/gbfs-validator</a>.</p>
+          More details on <a href="https://github.com/MobilityData/gbfs-validator">https://github.com/MobilityData/gbfs-validator</a>.</p>
             </b-col>
           </b-row>
         </b-col>
