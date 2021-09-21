@@ -8,7 +8,7 @@ The Canonical GBFS Validator is a tool to check the conformity of a GBFS feed ag
 It validates feeds up to version 2.2.
 This tool is built using the [JSON Schemas](https://github.com/NABSA/gbfs/blob/master/gbfs.md).
 
-![interface](https://user-images.githubusercontent.com/63653518/134183066-36bf2ff6-ceef-4099-9ade-acbf21e4bdc4.png)
+![interface](https://user-images.githubusercontent.com/63653518/134184388-3dca67a5-bd92-4101-bf5e-c6f07f42b44b.png)
 
 Currently, the schemas are reproduced per folder in [gbfs-validator/tree/master/gbfs-validator/schema](https://github.com/fluctuo/gbfs-validator/tree/master/gbfs-validator/schema).
 
