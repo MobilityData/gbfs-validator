@@ -8,7 +8,7 @@ All contributions to this project are welcome. To propose changes, we encourage 
 If you're looking for somewhere to start, check out the issues labeled "Good first issue" or Community.
 
 # Issue and PR templates
-We encourage contributors to format pull request titles following the [Conventional Commit Specification] (https://www.conventionalcommits.org/en/v1.0.0/).
+We encourage contributors to format pull request titles following the [Conventional Commit Specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 # Folder organization
 - gbfs-validator
@@ -42,4 +42,4 @@ For adding a new version:
 - Create a new folder under “gbfs-validator/schema” with the version as name (Eg: “vX.Y”).
 - Add an “index.js” file. This file will define the possible JSON-schema to call for validation and the mandatory ones. See https://github.com/fluctuo/gbfs-validator/blob/master/gbfs-validator/schema/v2.2/index.js for an exemple
 - Fill the folder with all JSON-schemas for this version
-- Add an item on this array (https://github.com/fluctuo/gbfs-validator/blob/master/website/src/components/Validator.vue#L98) with the new version to be made available on the website.
+- Add an item on this array (https://github.com/MobilityData/gbfs-validator/blob/master/website/src/components/Validator.vue#L98) with the new version to be made available on the website.
