@@ -68,4 +68,4 @@ yarn start
 Open `localhost:8080` on your browser
 
 # Acknowledgements
-This project was originally created by Pierrick Paul at [fluctuo](https://fluctuo.com/) - MobilityData started to maintain the project in September 2021.
+This project was originally created by Pierrick Paul at [fluctuo](https://fluctuo.com/) - MobilityData started maintaining the project in September 2021.
