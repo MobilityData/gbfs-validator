@@ -107,7 +107,7 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["Multipolygon"]
+                    "enum": ["MultiPolygon"]
                   },
                   "coordinates": {
                     "type": "array",
