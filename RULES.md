@@ -25,7 +25,7 @@ The validator will check for the presence of those files depending on the option
 
 One additional conditionally required file has been added in GBFS version 2.1:
 vehicle_types.json
-The validator is currently considering this file as required, because the conditions are more complex and can’t be represented by the schema currently.
+The validator is currently considering this file as not required, because the conditions are more complex and can’t be represented by the schema currently.
 
 # Fields presence and types
 ## Required fields
