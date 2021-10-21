@@ -12,7 +12,7 @@ This tool is built using the [JSON Schemas](https://github.com/NABSA/gbfs/blob/m
 
 Currently, the schemas are reproduced per folder in [gbfs-validator/tree/master/gbfs-validator/schema](https://github.com/fluctuo/gbfs-validator/tree/master/gbfs-validator/schema).
 
-Questions? Please open an issue or reach out to MobilityData on the gbfs slack channel!
+Questions? Please open an issue or reach out to MobilityData on the GBFS slack channel!
 
 # Run the app
 
@@ -45,9 +45,9 @@ To build the project locally, you need
 
 ### Node.js
 
-We recommand you to use [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
+We recommend you to use [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-You should use `v12.x.x` of Node.js, or higher. We recomend `v14.x.x`.
+You should use `v12.x.x` of Node.js, or higher. We recommend `v14.x.x`.
 
 ## Clone the repository
 
@@ -56,7 +56,7 @@ git clone https://github.com/fluctuo/gbfs-validator.git
 cd gbfs-validator
 ```
 
-## Run dev environnement
+## Run dev environment
 
 With Node.js
 
