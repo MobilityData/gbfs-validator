@@ -99,7 +99,7 @@ class GBFS {
 
         this.autoDiscovery = body
         const errors = this.validateFile(
-          this.options.version || body.version,
+          this.options.version || body.version || '1.0',
           'gbfs',
           this.autoDiscovery
         )
@@ -110,7 +110,7 @@ class GBFS {
           version: body.version,
           recommanded: true,
           required: this.isGBFSFileRequire(
-            this.options.version || body.version
+            this.options.version || body.version || '1.0'
           ),
           exists: true,
           file: `gbfs.json`,
@@ -144,7 +144,7 @@ class GBFS {
         this.autoDiscovery = body
 
         const errors = this.validateFile(
-          this.options.version || body.version,
+          this.options.version || body.version || '1.0',
           'gbfs',
           this.autoDiscovery
         )
@@ -152,10 +152,10 @@ class GBFS {
         return {
           errors,
           url: this.url,
-          version: body.version,
+          version: body.version || '1.0',
           recommanded: true,
           required: this.isGBFSFileRequire(
-            this.options.version || body.version
+            this.options.version || body.version || '1.0'
           ),
           exists: true,
           file: `gbfs.json`,
