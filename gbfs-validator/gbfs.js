@@ -258,7 +258,27 @@ class GBFS {
     }
   }
 
+  getToken() {
+    return got
+      .post(this.auth.oauthClientCredentialsGrant.tokenUrl, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        username: this.auth.oauthClientCredentialsGrant.user,
+        password: this.auth.oauthClientCredentialsGrant.password,
+        body: 'grant_type=client_credentials'
+      })
+      .json()
+      .then(auth => {
+        this.gotOptions.headers = {
+          Authorization: `Bearer ${auth.access_token}`
+        }
+      })
+  }
+
   async validation() {
+    if (this.auth && this.auth.type === 'oauth_client_credentials_grant') {
+      await this.getToken()
+    }
+
     const gbfsResult = await this.checkAutodiscovery()
 
     if (!gbfsResult.version) {

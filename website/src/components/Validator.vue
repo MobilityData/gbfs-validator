@@ -64,6 +64,25 @@
           >
             <b-form-input id="input-bearer_token" placeholder="token" v-model="options.auth.bearerToken.token"></b-form-input>
           </b-form-group>
+
+          <b-form-group
+            id="input-group-oauth_client_credentials_grant"
+            label="Authentification"
+            label-for="input-bearer_token"
+            v-if="options.auth.type === 'oauth_client_credentials_grant'"
+          >
+            <b-row>
+              <b-col>
+                <b-form-input id="input-oauth_client_credentials_grant-user" placeholder="user" v-model="options.auth.oauthClientCredentialsGrant.user"></b-form-input>
+              </b-col>
+              <b-col>
+                <b-form-input id="input-oauth_client_credentials_grant-password" placeholder="password" v-model="options.auth.oauthClientCredentialsGrant.password"></b-form-input>
+              </b-col>
+              <b-col>
+                <b-form-input id="input-oauth_client_credentials_grant-token_url" placeholder="https://example.com/oauth/token" v-model="options.auth.oauthClientCredentialsGrant.tokenUrl"></b-form-input>
+              </b-col>
+            </b-row>
+          </b-form-group>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -92,7 +111,8 @@ export default {
         auth: {
           type: null,
           basicAuth: { user: null, password: null },
-          bearerToken: { token: null }
+          bearerToken: { token: null },
+          oauthClientCredentialsGrant: { user: null, password: null, tokenUrl: null }
         }
       },
       versions: [
@@ -115,6 +135,10 @@ export default {
         {
           value: 'bearer_token',
           text: 'Bearer Token'
+        },
+        {
+          value: 'oauth_client_credentials_grant',
+          text: 'Oauth Client Credentials Grant'
         }
       ]
     }
