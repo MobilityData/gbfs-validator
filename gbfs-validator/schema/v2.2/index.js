@@ -4,7 +4,7 @@ module.exports = {
     return [
       { file: 'gbfs_versions', required: false },
       { file: 'system_information', required: true },
-      { file: 'vehicle_types', required: true }, // @TODO Conditionally REQUIRED complexe
+      { file: 'vehicle_types', required: false }, // @TODO Conditionally REQUIRED complexe
       { file: 'station_information', required: options.docked },
       { file: 'station_status', required: options.docked },
       { file: 'free_bike_status', required: options.freefloating },
