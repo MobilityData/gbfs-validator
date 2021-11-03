@@ -168,11 +168,17 @@ export default {
         .then(result => {
           this.isValidating = false
           this.result = result
+          this.updateURL()
         })
         .catch(result => {
           this.isValidating = false
           this.result = result
         })
+    },
+    updateURL() {
+      const searchParams = new URLSearchParams(window.location.search)
+      searchParams.set("url", this.url)
+      history.pushState(null, '', window.location.pathname + '?' + searchParams.toString())
     }
   }
 }
