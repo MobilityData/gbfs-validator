@@ -143,6 +143,15 @@ export default {
       ]
     }
   },
+  mounted() {
+    // When specifying ?url=https://example.com/gbfs.json, start
+    // directly a validation
+    const url_query_param = new URL(location.href).searchParams.get('url')
+    if (url_query_param) {
+      this.url = url_query_param
+      this.valid()
+    }
+  },
   methods: {
     valid() {
       this.result = false
