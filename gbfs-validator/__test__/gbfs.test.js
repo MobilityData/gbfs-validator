@@ -260,7 +260,17 @@ describe('checkFile method', () => {
         required: true,
         exists: true,
         file: 'system_information.json',
-        errors: false
+        errors: [
+          {
+            instancePath: '/data',
+            keyword: 'required',
+            message: "must have required property 'language'",
+            params: {
+              missingProperty: 'language'
+            },
+            schemaPath: '#/properties/data/required'
+          }
+        ]
       })
     })
   })

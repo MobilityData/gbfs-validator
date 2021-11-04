@@ -57,7 +57,7 @@ function build(opts = {}) {
       version: '2.2',
       data: {
         system_id: 'shared_bike',
-        language: 'en',
+        // language: 'en', // Missing language
         name: 'Shared Bike USA',
         timezone: 'UTC'
       }
