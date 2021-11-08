@@ -43,6 +43,76 @@ function countErrors(file) {
   return count
 }
 
+function getPartialSchema(version, partial, data = {}) {
+  let partialSchema
+
+  try {
+    partialSchema = require(`./schema/v${version}/partials/${partial}.js`)(data)
+  } catch (error) {
+    throw new Error(`Partial schema '${partial}' not found for 'v${version}'`)
+  }
+
+  return partialSchema
+}
+
+function getVehicleTypes({ body }) {
+  if (Array.isArray(body)) {
+    return body.reduce((acc, lang) => {
+      lang.body?.data?.vehicle_types.map(vt => {
+        if (!acc.find(f => f.vehicle_type_id === vt.vehicle_type_id)) {
+          acc.push({
+            vehicle_type_id: vt.vehicle_type_id,
+            form_factor: vt.form_factor,
+            propulsion_type: vt.propulsion_type
+          })
+        }
+      })
+
+      return acc
+    }, [])
+  } else {
+    return body?.data?.vehicle_types.map(vt => ({
+      vehicle_type_id: vt.vehicle_type_id,
+      form_factor: vt.form_factor,
+      propulsion_type: vt.propulsion_type
+    }))
+  }
+}
+
+function hadVehiclesId({ body }) {
+  if (Array.isArray(body)) {
+    body.forEach(lang => {
+      if (lang.body.data.bikes.find(b => b.vehicle_type_id)) {
+        return true
+      }
+    })
+  } else {
+    return !!body.data.bikes.find(b => b.vehicle_type_id)
+  }
+}
+
+function fileExist(file) {
+  if (file.exists) {
+    return true
+  } else if (Array.isArray(file.body)) {
+    file.body.forEach(lang => {
+      if (lang.exists) {
+        return true
+      }
+    })
+  }
+
+  return false
+}
+
+function isGBFSFileRequire(version) {
+  if (!version) {
+    return false
+  } else {
+    return require(`./schema/v${version}`).gbfsRequired
+  }
+}
+
 class GBFS {
   constructor(
     url,
@@ -88,7 +158,7 @@ class GBFS {
         if (typeof body !== 'object') {
           return {
             recommanded: true,
-            required: this.isGBFSFileRequire(this.options.version),
+            required: isGBFSFileRequire(this.options.version),
             errors: false,
             exists: false,
             file: `gbfs.json`,
@@ -109,7 +179,7 @@ class GBFS {
           url,
           version: body.version,
           recommanded: true,
-          required: this.isGBFSFileRequire(
+          required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
           exists: true,
@@ -121,7 +191,7 @@ class GBFS {
         return {
           url,
           recommanded: true,
-          required: this.isGBFSFileRequire(this.options.version),
+          required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -154,7 +224,7 @@ class GBFS {
           url: this.url,
           version: body.version || '1.0',
           recommanded: true,
-          required: this.isGBFSFileRequire(
+          required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
           exists: true,
@@ -172,7 +242,7 @@ class GBFS {
         return {
           url: this.url,
           recommanded: true,
-          required: this.isGBFSFileRequire(this.options.version),
+          required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
           file: `gbfs.json`,
@@ -181,19 +251,20 @@ class GBFS {
       })
   }
 
-  validateFile(version, file, data) {
+  validateFile(version, file, data, options) {
     let schema
 
     try {
       schema = require(`./schema/v${version}/${file}`)
     } catch (e) {
+      console.log(e)
       throw new Error('can not require')
     }
 
-    return validate(schema, data)
+    return validate(schema, data, options)
   }
 
-  checkFile(version, type, required) {
+  getFile(type, required) {
     if (this.autoDiscovery) {
       const urls = Object.entries(this.autoDiscovery.data).map(key => {
         return Object.assign(
@@ -209,32 +280,32 @@ class GBFS {
               ? got
                   .get(lang.url, this.gotOptions)
                   .json()
-                  .then(body => ({
-                    errors: this.validateFile(version, type, body),
-                    exists: true,
-                    lang: lang.lang,
-                    url: lang.url
-                  }))
+                  .then(body => {
+                    return {
+                      body,
+                      exists: true,
+                      lang: lang.lang,
+                      url: lang.url
+                    }
+                  })
                   .catch(() => ({
-                    errors: null,
+                    body: null,
                     exists: false,
                     lang: lang.lang,
                     url: lang.url
                   }))
               : {
-                  errors: false,
+                  body: null,
                   exists: false,
                   lang: lang.lang,
                   url: null
                 }
         )
-      ).then(languages => {
+      ).then(bodies => {
         return {
-          languages,
+          body: bodies,
           required,
-          exists: languages.reduce((acc, l) => acc && l.exists, true),
-          file: `${type}.json`,
-          hasErrors: hasErrors(languages, required)
+          type
         }
       })
     } else {
@@ -242,26 +313,50 @@ class GBFS {
         .get(`${this.url}/${type}.json`, this.gotOptions)
         .json()
         .then(body => ({
+          body,
           required,
-          errors: this.validateFile(version, type, body),
           exists: true,
-          file: `${type}.json`,
-          url: `${this.url}/${type}.json`
+          type
         }))
         .catch(err => ({
+          body: null,
           required,
           errors: required ? err : null,
           exists: false,
-          file: `${type}.json`,
-          url: `${this.url}/${type}.json`
+          type
         }))
+    }
+  }
+
+  validationFile(body, version, type, required, options) {
+    if (Array.isArray(body)) {
+      body = body.filter(b => b.exists || b.required).map(b => ({
+        ...b,
+        errors: this.validateFile(version, type, b.body, options)
+      }))
+
+      return {
+        languages: body,
+        required,
+        exists: body.reduce((acc, l) => acc && l.exists, true),
+        file: `${type}.json`,
+        hasErrors: hasErrors(body, required)
+      }
+    } else {
+      return {
+        required,
+        errors: this.validateFile(version, type, body, options),
+        exists: !!body,
+        file: `${type}.json`,
+        url: `${this.url}/${type}.json`
+      }
     }
   }
 
   getToken() {
     return got
       .post(this.auth.oauthClientCredentialsGrant.tokenUrl, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         username: this.auth.oauthClientCredentialsGrant.user,
         password: this.auth.oauthClientCredentialsGrant.password,
         body: 'grant_type=client_credentials'
@@ -292,43 +387,92 @@ class GBFS {
     let files = require(`./schema/v${this.options.version ||
       gbfsResult.version}`).files(this.options)
 
-    return Promise.all([
-      Promise.resolve(gbfsResult),
-      ...files.map(f =>
-        this.checkFile(
-          this.options.version || gbfsResult.version,
-          f.file,
-          f.required
-        )
-      )
-    ]).then(result => {
-      const files = result.map(file => ({
-        ...file,
-        errorsCount: countErrors(file)
-      }))
+    const t = await Promise.all(
+      files.map(f => this.getFile(f.file, f.required))
+    )
 
-      return {
-        summary: {
-          version: {
-            detected: result[0].version,
-            validated: this.options.version || result[0].version
-          },
-          hasErrors: hasErrors(result),
-          errorsCount: files.reduce((acc, file) => {
-            acc += file.errorsCount
-            return acc
-          }, 0)
-        },
-        files
+    const vehicleTypesFile = t.find(a => a.type === 'vehicle_types')
+    const freeBikeStatusFile = t.find(a => a.type === 'free_bike_status')
+    let vehicleTypes, freeBikeStatusHasVehicleId
+
+    const result = [gbfsResult]
+
+    if (fileExist(vehicleTypesFile)) {
+      vehicleTypes = getVehicleTypes(vehicleTypesFile)
+    }
+
+    if (fileExist(freeBikeStatusFile)) {
+      freeBikeStatusHasVehicleId = hadVehiclesId(freeBikeStatusFile)
+    }
+
+    t.forEach(f => {
+      switch (f.type) {
+        case 'free_bike_status':
+          result.push(
+            this.validationFile(
+              f.body,
+              this.options.version || gbfsResult.version,
+              f.type,
+              f.required,
+              {
+                addSchema:
+                  vehicleTypes && vehicleTypes.length
+                    ? getPartialSchema(
+                        this.options.version || gbfsResult.version,
+                        'required_vehicle_type_id',
+                        { vehicleTypes }
+                      )
+                    : getPartialSchema(
+                        this.options.version || gbfsResult.version,
+                        'no_required_vehicle_type_id'
+                      )
+              }
+            )
+          )
+          break
+
+        case 'vehicle_types':
+          result.push(
+            this.validationFile(
+              f.body,
+              this.options.version || gbfsResult.version,
+              f.type,
+              freeBikeStatusHasVehicleId || f.required
+            )
+          )
+          break
+
+        default:
+          result.push(
+            this.validationFile(
+              f.body,
+              this.options.version || gbfsResult.version,
+              f.type,
+              f.required
+            )
+          )
+          break
       }
     })
-  }
 
-  isGBFSFileRequire(version) {
-    if (!version) {
-      return false
-    } else {
-      return require(`./schema/v${version}`).gbfsRequired
+    const filesResult = result.map(file => ({
+      ...file,
+      errorsCount: countErrors(file)
+    }))
+
+    return {
+      summary: {
+        version: {
+          detected: result[0].version,
+          validated: this.options.version || result[0].version
+        },
+        hasErrors: hasErrors(result),
+        errorsCount: filesResult.reduce((acc, file) => {
+          acc += file.errorsCount
+          return acc
+        }, 0)
+      },
+      files: filesResult
     }
   }
 }
