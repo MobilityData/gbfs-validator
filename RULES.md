@@ -62,8 +62,8 @@ See examples for wrong field types below
 Wrong enum value:
 ![missing enum](https://user-images.githubusercontent.com/63653518/133173526-7d031fd3-30fb-412c-be9a-4a1dc4d6ae23.png)
 
-Wronf field type:
-![wonr type](https://user-images.githubusercontent.com/63653518/133173621-0043bc10-cf21-4502-8c09-b4fc5fd3e9c6.png)
+Wrong field type:
+![wrong type](https://user-images.githubusercontent.com/63653518/133173621-0043bc10-cf21-4502-8c09-b4fc5fd3e9c6.png)
 
 
 
