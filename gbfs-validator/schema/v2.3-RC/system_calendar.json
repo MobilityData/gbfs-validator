@@ -1,27 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id":
-  "https://github.com/NABSA/gbfs/blob/v1.1/gbfs.md#system_calendarjson",
+    "https://github.com/NABSA/gbfs/blob/v2.3-RC/gbfs.md#system_calendarjson",
   "description": "Describes the operating calendar for a system.",
   "type": "object",
   "properties": {
     "last_updated": {
       "description":
-      "Last time the data in the feed was updated in POSIX time.",
+        "Last time the data in the feed was updated in POSIX time.",
       "type": "integer",
       "minimum": 1450155600
     },
     "ttl": {
       "description":
-      "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
+        "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
       "type": "integer",
       "minimum": 0
     },
     "version": {
       "description":
-      "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
+        "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
       "type": "string",
-      "const": "1.1"
+      "const": "2.3-RC"
     },
     "data": {
       "description": "Array that contains opertions calendar for the system.",

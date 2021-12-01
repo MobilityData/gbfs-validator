@@ -1,26 +1,26 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id":
-    "https://github.com/NABSA/gbfs/blob/master/gbfs.md#vehicle_typesjson-added-in-v21-rc",
+  "https://github.com/NABSA/gbfs/blob/v2.2/gbfs.md#vehicle_typesjson-added-in-v21-rc",
   "description":
-    "Describes the types of vehicles that System operator has available for rent (added in v2.1-RC).",
+  "Describes the types of vehicles that System operator has available for rent (added in v2.1-RC).",
   "type": "object",
   "properties": {
     "last_updated": {
       "description":
-        "Last time the data in the feed was updated in POSIX time.",
+      "Last time the data in the feed was updated in POSIX time.",
       "type": "integer",
       "minimum": 1450155600
     },
     "ttl": {
       "description":
-        "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
+      "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
       "type": "integer",
       "minimum": 0
     },
     "version": {
       "description":
-        "GBFS version number to which the feed conforms, according to the versioning framework.",
+      "GBFS version number to which the feed conforms, according to the versioning framework.",
       "type": "string",
       "const": "2.2"
     },
@@ -30,7 +30,7 @@
       "properties": {
         "vehicle_types": {
           "description":
-            "Array that contains one object per vehicle type in the system as defined below.",
+          "Array that contains one object per vehicle type in the system as defined below.",
           "type": "array",
           "items": {
             "type": "object",
@@ -51,7 +51,7 @@
               },
               "max_range_meters": {
                 "description":
-                  "The furthest distance in meters that the vehicle can travel without recharging or refueling when it has the maximum amount of energy potential.",
+                "The furthest distance in meters that the vehicle can travel without recharging or refueling when it has the maximum amount of energy potential.",
                 "type": "number",
                 "minimum": 0
               },
