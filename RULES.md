@@ -31,12 +31,40 @@ The validator is currently considering this file as not required, because the co
 ## Required fields
 Each file has to be structured in a specific output format. The fields `last_updated`, `ttl`, `version`, `data` are required and checked by the validator.
 In “data”, there is a nested JSON containing all the fields mentioned in the specification. All the fields that are described as “required” will be checked by the validator.
+Some fields are required only if the parent field is defined, and this is considered a conditionally required field.
 
-Some of the fields are “required” but under an “optional” field. For example, the fields `per_km_pricing` in the file `system_pricing_plans` is optional but if it is defined, the child fields `start`, `rate`, and `interval` has to be defined.
-
-Those are described differently in the JSON Schemas (using dependencies) and those are not currently checked by the validator.
 ## Conditionally Required fields
-The fields described as “conditionally required” are not currently checked by the validator.
+This validator checks the simple "conditionally required" fields that are represented in the JSON Schemas. The following conditions are covered:
+- system_information.json
+
+`brand_assets.brand_last_modified`\
+`brand_assets.brand_image_url`\
+`terms_last_updated`\
+`privacy_last_updated`\
+`rental_apps.android.store_uri`\
+`rental_apps.android.discovery_uri`\
+`rental_apps.ios.store_uri`\
+`rental_apps.ios.discovery_uri`
+
+
+- vehicle_types.json
+
+`vehicle_types.max_range_meters`\
+`vehicle_types.vehicle_assets.icon_url`\
+`vehicle_types.vehicle_assets.icon_last_modified`
+
+- station_status.json
+
+`stations.vehicle_types_available.vehicle_type_id`\
+`stations.vehicle_types_available.count`\
+`stations.vehicle_docks_available.vehicle_type_ids`\
+`stations.vehicle_docks_available.count`
+
+- geofencing_zones.json
+
+`geofencing_zones.features.properties.rules.ride_allowed`\
+`geofencing_zones.features.properties.rules.ride_through_allowed`
+
 ## Field types
 Each field has a specific field type, as described in the specification.
 The validators will flag the following field type if they are invalid, as they are present in the JSON Schema:
