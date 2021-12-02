@@ -112,11 +112,16 @@ export default {
           type: null,
           basicAuth: { user: null, password: null },
           bearerToken: { token: null },
-          oauthClientCredentialsGrant: { user: null, password: null, tokenUrl: null }
+          oauthClientCredentialsGrant: {
+            user: null,
+            password: null,
+            tokenUrl: null
+          }
         }
       },
       versions: [
         { value: null, text: 'auto-detection' },
+        { value: '2.3-RC', text: 'v2.3-RC' },
         { value: '2.2', text: 'v2.2' },
         { value: '2.1', text: 'v2.1' },
         { value: '2.0', text: 'v2.0' },
@@ -177,8 +182,12 @@ export default {
     },
     updateURL() {
       const searchParams = new URLSearchParams(window.location.search)
-      searchParams.set("url", this.url)
-      history.pushState(null, '', window.location.pathname + '?' + searchParams.toString())
+      searchParams.set('url', this.url)
+      history.pushState(
+        null,
+        '',
+        window.location.pathname + '?' + searchParams.toString()
+      )
     }
   }
 }
