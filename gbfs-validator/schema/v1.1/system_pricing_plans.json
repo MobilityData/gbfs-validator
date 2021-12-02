@@ -1,31 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id":
-  "https://github.com/NABSA/gbfs/blob/v1.1/gbfs.md#system_pricing_plansjson",
+    "https://github.com/NABSA/gbfs/blob/master/gbfs.md#system_pricing_plansjson",
   "description": "Describes the pricing schemes of the system.",
   "type": "object",
   "properties": {
     "last_updated": {
       "description":
-      "Last time the data in the feed was updated in POSIX time.",
+        "Last time the data in the feed was updated in POSIX time.",
       "type": "integer",
       "minimum": 1450155600
     },
     "ttl": {
       "description":
-      "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
+        "Number of seconds before the data in the feed will be updated again (0 if the data should always be refreshed).",
       "type": "integer",
       "minimum": 0
     },
     "version": {
       "description":
-      "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
+        "GBFS version number to which the feed conforms, according to the versioning framework (added in v1.1).",
       "type": "string",
       "const": "1.1"
     },
     "data": {
       "description":
-      "Array that contains one object per plan as defined below.",
+        "Array that contains one object per plan as defined below.",
       "type": "object",
       "properties": {
         "plans": {
@@ -39,7 +39,7 @@
               },
               "url": {
                 "description":
-                "URL where the customer can learn more about this pricing plan.",
+                  "URL where the customer can learn more about this pricing plan.",
                 "type": "string",
                 "format": "uri"
               },
@@ -49,7 +49,7 @@
               },
               "currency": {
                 "description":
-                "Currency used to pay the fare in ISO 4217 code.",
+                  "Currency used to pay the fare in ISO 4217 code.",
                 "type": "string",
                 "pattern": "^\\w{3}$"
               },
@@ -60,14 +60,14 @@
               },
               "is_taxable": {
                 "description":
-                "Will additional tax be added to the base price?",
+                  "Will additional tax be added to the base price?",
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1
               },
               "description": {
                 "description":
-                "Customer-readable description of the pricing plan.",
+                  "Customer-readable description of the pricing plan.",
                 "type": "string"
               }
             },
