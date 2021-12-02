@@ -185,7 +185,7 @@ class GBFS {
     let schema
 
     try {
-      schema = require(`./schema/v${version}/${file}`)
+      schema = require(`./versions/schemas/v${version}/${file}`)
     } catch (e) {
       throw new Error('can not require')
     }
@@ -261,7 +261,7 @@ class GBFS {
   getToken() {
     return got
       .post(this.auth.oauthClientCredentialsGrant.tokenUrl, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         username: this.auth.oauthClientCredentialsGrant.user,
         password: this.auth.oauthClientCredentialsGrant.password,
         body: 'grant_type=client_credentials'
@@ -289,8 +289,8 @@ class GBFS {
       }
     }
 
-    let files = require(`./schema/v${this.options.version ||
-      gbfsResult.version}`).files(this.options)
+    let files = require(`./versions/v${this.options.version ||
+      gbfsResult.version}.js`).files(this.options)
 
     return Promise.all([
       Promise.resolve(gbfsResult),
@@ -328,7 +328,7 @@ class GBFS {
     if (!version) {
       return false
     } else {
-      return require(`./schema/v${version}`).gbfsRequired
+      return require(`./versions/v${version}.js`).gbfsRequired
     }
   }
 }
