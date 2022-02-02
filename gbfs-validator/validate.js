@@ -13,18 +13,26 @@ module.exports = function validate(schema, object, options = {}) {
 
   options.addSchema?.map(add => {
     if (add.$patch) {
-      if( add.$patch.source.$ref !== document.$id ) {
-        throw new Error(`Source of patch (${add.$patch.source.$ref}) is not the same as the document (${document.$id})`)
+      if (add.$patch.source.$ref !== document.$id) {
+        throw new Error(
+          `Source of patch (${
+            add.$patch.source.$ref
+          }) is not the same as the document (${document.$id})`
+        )
       }
 
       document = jsonpatch.applyPatch(document, add.$patch.with).newDocument
     }
 
     if (add.$merge) {
-      if( add.$merge.source.$ref !== document.$id ) {
-        throw new Error(`Source of merge (${add.$merge.source.$ref}) is not the same as the document (${document.$id})`)
+      if (add.$merge.source.$ref !== document.$id) {
+        throw new Error(
+          `Source of merge (${
+            add.$merge.source.$ref
+          }) is not the same as the document (${document.$id})`
+        )
       }
-      
+
       document = jsonmerge.apply(document, add.$merge.with)
     }
   })
