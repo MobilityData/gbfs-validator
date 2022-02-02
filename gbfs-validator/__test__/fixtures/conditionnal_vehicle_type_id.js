@@ -80,6 +80,7 @@ function build(opts = {}) {
             propulsion_type: 'electric',
             name: 'Example Electric Car',
             default_reserve_time: 30,
+            max_range_meters: 100,
             return_type: ['any_station', 'free_floating'],
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_car.svg',

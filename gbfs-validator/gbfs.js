@@ -47,9 +47,11 @@ function getPartialSchema(version, partial, data = {}) {
   let partialSchema
 
   try {
-    partialSchema = require(`./schema/v${version}/partials/${partial}.js`)(data)
+    partialSchema = require(`./versions/partials/v${version}/${partial}.js`)(
+      data
+    )
   } catch (error) {
-    throw new Error(`Partial schema '${partial}' not found for 'v${version}'`)
+    return null
   }
 
   return partialSchema
@@ -81,25 +83,47 @@ function getVehicleTypes({ body }) {
 
 function hadVehiclesId({ body }) {
   if (Array.isArray(body)) {
-    body.forEach(lang => {
-      if (lang.body.data.bikes.find(b => b.vehicle_type_id)) {
-        return true
-      }
-    })
+    return body.some(lang => lang.body.data.bikes.find(b => b.vehicle_type_id))
   } else {
-    return !!body.data.bikes.find(b => b.vehicle_type_id)
+    return body.data.bikes.some(b => b.vehicle_type_id)
+  }
+}
+
+function hasStationId({ body }) {
+  if (Array.isArray(body)) {
+    return body.some(lang => lang.body.data.bikes.find(b => b.station_id))
+  } else {
+    return body.data.bikes.some(b => b.station_id)
+  }
+}
+
+function hasPricingPlanId({ body }) {
+  if (Array.isArray(body)) {
+    return body.some(lang => lang.body.data.bikes.find(b => b.pricing_plan_id))
+  } else {
+    return body.data.bikes.some(b => b.pricing_plan_id)
+  }
+}
+
+function hasRentalUris({ body }, key, store) {
+  if (Array.isArray(body)) {
+    return body.some(lang =>
+      lang.body.data[key].find(b => b.rental_uris?.[store])
+    )
+  } else {
+    return body.data[key].some(b => b.rental_uris?.[store])
   }
 }
 
 function fileExist(file) {
+  if (!file) {
+    return false
+  }
+
   if (file.exists) {
     return true
   } else if (Array.isArray(file.body)) {
-    file.body.forEach(lang => {
-      if (lang.exists) {
-        return true
-      }
-    })
+    return file.body.some(lang => lang.exists)
   }
 
   return false
@@ -109,7 +133,7 @@ function isGBFSFileRequire(version) {
   if (!version) {
     return false
   } else {
-    return require(`./schema/v${version}`).gbfsRequired
+    return require(`./versions/v${version}`).gbfsRequired
   }
 }
 
@@ -168,13 +192,14 @@ class GBFS {
         }
 
         this.autoDiscovery = body
-        const errors = this.validateFile(
+        const { errors, schema } = this.validateFile(
           this.options.version || body.version || '1.0',
           'gbfs',
           this.autoDiscovery
         )
 
         return {
+          schema,
           errors,
           url,
           version: body.version,
@@ -213,13 +238,14 @@ class GBFS {
 
         this.autoDiscovery = body
 
-        const errors = this.validateFile(
+        const { errors, schema } = this.validateFile(
           this.options.version || body.version || '1.0',
           'gbfs',
           this.autoDiscovery
         )
 
         return {
+          schema,
           errors,
           url: this.url,
           version: body.version || '1.0',
@@ -332,20 +358,21 @@ class GBFS {
     if (Array.isArray(body)) {
       body = body.filter(b => b.exists || b.required).map(b => ({
         ...b,
-        errors: this.validateFile(version, type, b.body, options)
+        ...this.validateFile(version, type, b.body, options)
       }))
 
       return {
         languages: body,
         required,
-        exists: body.reduce((acc, l) => acc && l.exists, true),
+        exists: body.length ? body.reduce((acc, l) => acc && l.exists, true) : false,
         file: `${type}.json`,
         hasErrors: hasErrors(body, required)
       }
     } else {
       return {
         required,
-        errors: this.validateFile(version, type, body, options),
+        ...this.validateFile(version, type, body, options),
+
         exists: !!body,
         file: `${type}.json`,
         url: `${this.url}/${type}.json`
@@ -384,8 +411,9 @@ class GBFS {
       }
     }
 
-    let files = require(`./versions/v${this.options.version ||
-      gbfsResult.version}.js`).files(this.options)
+    const gbfsVersion = this.options.version || gbfsResult.version
+
+    let files = require(`./versions/v${gbfsVersion}.js`).files(this.options)
 
     const t = await Promise.all(
       files.map(f => this.getFile(f.file, f.required))
@@ -393,7 +421,14 @@ class GBFS {
 
     const vehicleTypesFile = t.find(a => a.type === 'vehicle_types')
     const freeBikeStatusFile = t.find(a => a.type === 'free_bike_status')
-    let vehicleTypes, freeBikeStatusHasVehicleId
+    const stationInformationFile = t.find(a => a.type === 'station_information')
+
+    let vehicleTypes,
+      freeBikeStatusHasVehicleId,
+      hasIosRentalUris,
+      hasAndroidRentalUris,
+      hasBikesStationId,
+      hasBikesPricingPlanId
 
     const result = [gbfsResult]
 
@@ -403,56 +438,77 @@ class GBFS {
 
     if (fileExist(freeBikeStatusFile)) {
       freeBikeStatusHasVehicleId = hadVehiclesId(freeBikeStatusFile)
+      hasIosRentalUris = hasRentalUris(freeBikeStatusFile, 'bikes', 'ios')
+      hasAndroidRentalUris = hasRentalUris(
+        freeBikeStatusFile,
+        'bikes',
+        'android'
+      )
+      hasBikesStationId = hasStationId(freeBikeStatusFile)
+      hasBikesPricingPlanId = hasPricingPlanId(freeBikeStatusFile)
+    }
+
+    if (fileExist(stationInformationFile)) {
+      hasIosRentalUris =
+        hasIosRentalUris ||
+        hasRentalUris(stationInformationFile, 'stations', 'ios')
+      hasAndroidRentalUris =
+        hasAndroidRentalUris ||
+        hasRentalUris(stationInformationFile, 'stations', 'android')
     }
 
     t.forEach(f => {
+      const addSchema = []
+      let required = f.required
+
       switch (f.type) {
         case 'free_bike_status':
-          result.push(
-            this.validationFile(
-              f.body,
-              this.options.version || gbfsResult.version,
-              f.type,
-              f.required,
+          if (vehicleTypes && vehicleTypes.length) {
+            const partial = getPartialSchema(
+              gbfsVersion,
+              'required_vehicle_type_id',
               {
-                addSchema:
-                  vehicleTypes && vehicleTypes.length
-                    ? getPartialSchema(
-                        this.options.version || gbfsResult.version,
-                        'required_vehicle_type_id',
-                        { vehicleTypes }
-                      )
-                    : getPartialSchema(
-                        this.options.version || gbfsResult.version,
-                        'no_required_vehicle_type_id'
-                      )
+                vehicleTypes
               }
             )
-          )
+            if (partial) {
+              addSchema.push(partial)
+            }
+          }
           break
-
         case 'vehicle_types':
-          result.push(
-            this.validationFile(
-              f.body,
-              this.options.version || gbfsResult.version,
-              f.type,
-              freeBikeStatusHasVehicleId || f.required
-            )
-          )
+          if (freeBikeStatusHasVehicleId || hasBikesStationId) {
+            required = true
+          }
           break
-
-        default:
-          result.push(
-            this.validationFile(
-              f.body,
-              this.options.version || gbfsResult.version,
-              f.type,
-              f.required
+        case 'system_pricing_plans':
+          if (hasBikesPricingPlanId) {
+            required = true
+          }
+          break
+        case 'system_information':
+          if (hasAndroidRentalUris || hasIosRentalUris) {
+            const partial = getPartialSchema(
+              gbfsVersion,
+              'required_store_uri',
+              {
+                ios: hasIosRentalUris,
+                android: hasAndroidRentalUris
+              }
             )
-          )
+            if (partial) {
+              addSchema.push(partial)
+            }
+          }
+        default:
           break
       }
+
+      result.push(
+        this.validationFile(f.body, gbfsVersion, f.type, required, {
+          addSchema
+        })
+      )
     })
 
     const filesResult = result.map(file => ({

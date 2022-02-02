@@ -17,6 +17,10 @@
     <div v-if="file.hasErrors">
       <div v-if="file.languages">
         <div v-for="lang in file.languages" :key="lang.lang">
+
+            <a v-if="file.schema" download @click="jsonAsBlob(file.schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+             <a v-else-if="lang.schema" download @click="jsonAsBlob(lang.schema, `${file.file}-${lang.lang}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+
           <div v-if="file.required && !lang.exists">
             <b-alert variant="danger" show>
               <b>Missing</b> file {{lang.lang}}/{{file.file}}
@@ -42,7 +46,11 @@
     </div>
   </div>
   <div v-else>
-    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
+    <h5 class="mt-4 mb-3" :title="JSON.stringify(file,null, 2)">{{ file.file }}</h5>
+      
+    <a v-if="file.schema" download @click="jsonAsBlob(file.schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+    <a v-else-if="file.languages && file.languages[0] && file.languages[0].schema" download @click="jsonAsBlob(file.languages[0].schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+
     <b-alert v-if="!file.exists && !file.required" variant="warning" show>
       <b>Missing</b> file but <b>not</b> required
     </b-alert>
@@ -58,6 +66,23 @@ export default {
   props: {
     file: {
       required: true
+    }
+  },
+  methods: {
+    jsonAsBlob(data, fileName) {
+      const a = document.createElement('a')
+      document.body.appendChild(a)
+      a.style = 'display: none'
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json'
+      })
+      const url = window.URL.createObjectURL(blob)
+      a.href = url
+      a.download = fileName
+      a.click()
+
+      window.URL.revokeObjectURL(url)
     }
   }
 }
