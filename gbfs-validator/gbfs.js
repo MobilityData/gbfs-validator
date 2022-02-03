@@ -464,6 +464,17 @@ class GBFS {
       let required = f.required
 
       switch (f.type) {
+        case 'station_status':
+          if (vehicleTypes && vehicleTypes.length) {
+            const partial = getPartialSchema(
+              gbfsVersion,
+              'required_vehicle_types_available'
+            )
+            if (partial) {
+              addSchema.push(partial)
+            }
+          }
+          break
         case 'free_bike_status':
           if (vehicleTypes && vehicleTypes.length) {
             const partial = getPartialSchema(

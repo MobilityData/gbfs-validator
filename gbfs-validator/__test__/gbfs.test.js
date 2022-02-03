@@ -570,3 +570,47 @@ describe('conditional no required vehicle_type_id', () => {
     })
   })
 })
+
+describe('conditional required vehicle_types_available', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/conditionnal_vehicle_types_available')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      const file = result.files.find(f => f.file === 'station_status.json')
+      const errors = file.languages.map(l => l.errors)
+
+      expect(errors).toMatchObject([
+        [
+          {
+            instancePath: '/data/stations/0',
+            schemaPath: '#/properties/data/properties/stations/items/required',
+            keyword: 'required',
+            params: {
+              missingProperty: 'vehicle_types_available'
+            },
+            message: "must have required property 'vehicle_types_available'"
+          }
+        ]
+      ])
+    })
+  })
+})
