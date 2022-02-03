@@ -364,7 +364,9 @@ class GBFS {
       return {
         languages: body,
         required,
-        exists: body.length ? body.reduce((acc, l) => acc && l.exists, true) : false,
+        exists: body.length
+          ? body.reduce((acc, l) => acc && l.exists, true)
+          : false,
         file: `${type}.json`,
         hasErrors: hasErrors(body, required)
       }
