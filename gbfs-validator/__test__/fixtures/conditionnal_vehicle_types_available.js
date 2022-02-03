@@ -116,7 +116,7 @@ function build(opts = {}) {
             last_reported: 1566224400,
             vehicle_types_available: [
               {
-                vehicle_type_id: 'abc456',
+                vehicle_type_id: 'efg456',
                 count: 2
               }
             ]

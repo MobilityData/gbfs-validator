@@ -468,7 +468,10 @@ class GBFS {
           if (vehicleTypes && vehicleTypes.length) {
             const partial = getPartialSchema(
               gbfsVersion,
-              'required_vehicle_types_available'
+              'required_vehicle_types_available',
+              {
+                vehicleTypes
+              }
             )
             if (partial) {
               addSchema.push(partial)
