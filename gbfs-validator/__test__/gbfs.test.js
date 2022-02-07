@@ -614,3 +614,57 @@ describe('conditional required vehicle_types_available', () => {
     })
   })
 })
+
+describe('conditional plan_id', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/plan_id')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      const file = result.files.find(f => f.file === 'vehicle_types.json')
+      const errors = file.languages.map(l => l.errors)
+
+      expect(errors).toMatchObject([
+        [
+          {
+            instancePath: '/data/vehicle_types/0/default_pricing_plan_id',
+            schemaPath: '#/properties/data/properties/vehicle_types/items/properties/default_pricing_plan_id/enum',
+            keyword: 'enum',
+            params: {
+              allowedValues: ['p1']
+            },
+            message: "must be equal to one of the allowed values"
+          },
+          {
+            instancePath: '/data/vehicle_types/1',
+            schemaPath:
+              '#/properties/data/properties/vehicle_types/items/required',
+            keyword: 'required',
+            params: {
+              missingProperty: 'default_pricing_plan_id'
+            },
+            message: "must have required property 'default_pricing_plan_id'"
+          }
+        ]
+      ])
+    })
+  })
+})

@@ -81,6 +81,22 @@ function getVehicleTypes({ body }) {
   }
 }
 
+function getPricingPlans({ body }) {
+  if (Array.isArray(body)) {
+    return body.reduce((acc, lang) => {
+      lang.body?.data?.plans.map(pp => {
+        if (!acc.find(f => f.plan_id === pp.plan_id)) {
+          acc.push(pp)
+        }
+      })
+
+      return acc
+    }, [])
+  } else {
+    return body?.data?.plans
+  }
+}
+
 function hadVehiclesId({ body }) {
   if (Array.isArray(body)) {
     return body.some(lang => lang.body.data.bikes.find(b => b.vehicle_type_id))
@@ -424,8 +440,10 @@ class GBFS {
     const vehicleTypesFile = t.find(a => a.type === 'vehicle_types')
     const freeBikeStatusFile = t.find(a => a.type === 'free_bike_status')
     const stationInformationFile = t.find(a => a.type === 'station_information')
+    const stationPricingPlans = t.find(a => a.type === 'system_pricing_plans')
 
     let vehicleTypes,
+      pricingPlans,
       freeBikeStatusHasVehicleId,
       hasIosRentalUris,
       hasAndroidRentalUris,
@@ -457,6 +475,10 @@ class GBFS {
       hasAndroidRentalUris =
         hasAndroidRentalUris ||
         hasRentalUris(stationInformationFile, 'stations', 'android')
+    }
+
+    if (fileExist(stationPricingPlans)) {
+      pricingPlans = getPricingPlans(stationPricingPlans)
     }
 
     t.forEach(f => {
@@ -496,6 +518,16 @@ class GBFS {
           if (freeBikeStatusHasVehicleId || hasBikesStationId) {
             required = true
           }
+          if (pricingPlans && pricingPlans.length) {
+            const partial = getPartialSchema(gbfsVersion, 'pricing_plan_id', {
+              pricingPlans
+            })
+
+            if (partial) {
+              addSchema.push(partial)
+            }
+          }
+
           break
         case 'system_pricing_plans':
           if (hasBikesPricingPlanId) {
