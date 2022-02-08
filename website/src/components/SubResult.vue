@@ -18,8 +18,8 @@
       <div v-if="file.languages">
         <div v-for="lang in file.languages" :key="lang.lang">
 
-            <a v-if="file.schema" download @click="jsonAsBlob(file.schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
-             <a v-else-if="lang.schema" download @click="jsonAsBlob(lang.schema, `${file.file}-${lang.lang}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+          <a v-if="file.schema" download @click="jsonAsBlob(file.schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
+          <a v-else-if="lang.schema" download @click="jsonAsBlob(lang.schema, `${file.file}-${lang.lang}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
 
           <div v-if="file.required && !lang.exists">
             <b-alert variant="danger" show>
