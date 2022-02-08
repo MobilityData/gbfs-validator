@@ -46,7 +46,7 @@
     </div>
   </div>
   <div v-else>
-    <h5 class="mt-4 mb-3" :title="JSON.stringify(file,null, 2)">{{ file.file }}</h5>
+    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
       
     <a v-if="file.schema" download @click="jsonAsBlob(file.schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
     <a v-else-if="file.languages && file.languages[0] && file.languages[0].schema" download @click="jsonAsBlob(file.languages[0].schema, `${file.file}-schema.json`)" class="btn btn-primary btn-sm mb-2">Download schema</a>
