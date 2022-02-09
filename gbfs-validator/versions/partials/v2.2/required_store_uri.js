@@ -4,7 +4,7 @@ module.exports = ({ android = false, ios = false }) => {
     $patch: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/master/gbfs.md#system_informationjson'
+          'https://github.com/NABSA/gbfs/blob/v2.2/gbfs.md#system_informationjson'
       },
       with: [
         {
@@ -17,7 +17,7 @@ module.exports = ({ android = false, ios = false }) => {
     $merge: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/master/gbfs.md#system_informationjson'
+          'https://github.com/NABSA/gbfs/blob/v2.2/gbfs.md#system_informationjson'
       },
       with: {
         properties: {
