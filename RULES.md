@@ -1,4 +1,4 @@
-This project validates feeds up to version 2.2 of the [JSON Schemas](https://github.com/NABSA/gbfs/blob/master/gbfs.md).
+This project validates feeds up to version 2.2 of the [JSON Schemas](https://github.com/MobilityData/gbfs-json-schema).
 # Files presence
 The validator will display a message for all files that are present. A message will be displayed for each missing file. See examples below.
 
