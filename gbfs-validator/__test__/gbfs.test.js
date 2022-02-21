@@ -154,7 +154,7 @@ describe('checkAutodiscovery method', () => {
   })
 })
 
-describe('checkFile method', () => {
+describe('getFile method', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
@@ -169,7 +169,7 @@ describe('checkFile method', () => {
     return gbfsFeedServer.close()
   })
 
-  test('should check file using gbfs.json url', () => {
+  test('should get file using gbfs.json url', () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
@@ -188,29 +188,24 @@ describe('checkFile method', () => {
       }
     }
 
-    return gbfs.checkFile('2.2', 'system_information', true).then(result => {
+    return gbfs.getFile('system_information', true).then(result => {
       expect(result).toMatchObject({
-        languages: expect.any(Array),
+        body: expect.any(Array),
         required: true,
-        exists: true,
-        file: 'system_information.json',
-        hasErrors: false
+        type: 'system_information'
       })
 
-      result.languages.forEach(l => {
+      result.body.forEach(l => {
         expect(l).toMatchObject({
-          errors: false,
           exists: true,
           lang: 'en',
-          url: `http://${gbfsFeedServer.server.address().address}:${
-            gbfsFeedServer.server.address().port
-          }/autodiscovery/system_information.json`
+          body: expect.any(Object)
         })
       })
     })
   })
 
-  test('should check file do not exist using gbfs.json url', () => {
+  test('should get file do not exist using gbfs.json url', () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
@@ -229,18 +224,16 @@ describe('checkFile method', () => {
       }
     }
 
-    return gbfs.checkFile('2.2', 'do_not_exist', true).then(result => {
+    return gbfs.getFile('do_not_exist', true).then(result => {
       expect(result).toMatchObject({
-        languages: expect.any(Array),
+        body: expect.any(Array),
         required: true,
-        exists: false,
-        file: 'do_not_exist.json',
-        hasErrors: true
+        type: 'do_not_exist'
       })
 
-      result.languages.forEach(l => {
+      result.body.forEach(l => {
         expect(l).toMatchObject({
-          errors: false,
+          body: null,
           exists: false,
           lang: 'en',
           url: null
@@ -249,44 +242,158 @@ describe('checkFile method', () => {
     })
   })
 
-  test('should check file without autodiscovery', () => {
+  test('should get file without autodiscovery', () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
     const gbfs = new GBFS(`${url}`)
 
-    return gbfs.checkFile('2.2', 'system_information', true).then(result => {
+    return gbfs.getFile('system_information', true).then(result => {
       expect(result).toMatchObject({
         required: true,
         exists: true,
-        file: 'system_information.json',
-        errors: [
-          {
-            instancePath: '/data',
-            keyword: 'required',
-            message: "must have required property 'language'",
-            params: {
-              missingProperty: 'language'
-            },
-            schemaPath: '#/properties/data/required'
-          }
-        ]
+        type: 'system_information',
+        body: expect.any(Object)
       })
     })
   })
 
-  test('should check file do not exist without autodiscovery', () => {
+  test('should get file do not exist without autodiscovery', () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
     const gbfs = new GBFS(`${url}/gbfs.json`)
 
-    return gbfs.checkFile('2.2', 'do_not_exist', true).then(result => {
+    return gbfs.getFile('do_not_exist', true).then(result => {
       expect(result).toMatchObject({
+        body: null,
         required: true,
+        errors: expect.any(Error),
         exists: false,
-        file: 'do_not_exist.json',
-        errors: expect.any(Error)
+        type: 'do_not_exist'
+      })
+    })
+  })
+})
+
+describe('validationFile method', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/server')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate file with no lang', () => {
+    const gbfs = new GBFS(`http://localhost/gbfs.json`)
+
+    const result = gbfs.validationFile(
+      {
+        last_updated: 1566224400,
+        ttl: 0,
+        version: '2.2',
+        data: {
+          en: {
+            feeds: [
+              {
+                name: 'system_information',
+                url: `http://localhost/system_information.json`
+              },
+              {
+                name: 'station_information',
+                url: `http://localhost/station_information.json`
+              },
+              {
+                name: 'station_status',
+                url: `http://localhost/station_status.json`
+              },
+              {
+                name: 'free_bike_status',
+                url: `http://localhost/free_bike_status.json`
+              }
+            ]
+          }
+        }
+      },
+      '2.2',
+      'gbfs',
+      true,
+      {}
+    )
+
+    expect(result).toMatchObject({
+      required: true,
+      errors: false,
+      exists: true,
+      file: 'gbfs.json',
+      url: 'http://localhost/gbfs.json/gbfs.json'
+    })
+  })
+
+  test('should validate file with lang', () => {
+    const gbfs = new GBFS(`http://localhost/gbfs.json`)
+
+    const result = gbfs.validationFile(
+      [
+        {
+          body: {
+            last_updated: 1566224400,
+            ttl: 0,
+            version: '2.2',
+            data: {
+              en: {
+                feeds: [
+                  {
+                    name: 'system_information',
+                    url: `http://localhost/system_information.json`
+                  },
+                  {
+                    name: 'station_information',
+                    url: `http://localhost/station_information.json`
+                  },
+                  {
+                    name: 'station_status',
+                    url: `http://localhost/station_status.json`
+                  },
+                  {
+                    name: 'free_bike_status',
+                    url: `http://localhost/free_bike_status.json`
+                  }
+                ]
+              }
+            }
+          },
+          exists: true,
+          lang: 'en'
+        }
+      ],
+      '2.2',
+      'gbfs',
+      true,
+      {}
+    )
+
+    expect(result).toMatchObject({
+      languages: expect.any(Array),
+      required: true,
+      exists: true,
+      file: 'gbfs.json',
+      hasErrors: false
+    })
+
+    result.languages.forEach(l => {
+      expect(l).toMatchObject({
+        body: expect.any(Object),
+        exists: true,
+        lang: 'en',
+        errors: false
       })
     })
   })
@@ -313,6 +420,8 @@ describe('validation method', () => {
     }`
     const gbfs = new GBFS(`${url}/gbfs.json`)
 
+    expect.assertions(1)
+
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
@@ -322,6 +431,240 @@ describe('validation method', () => {
         }),
         files: expect.any(Array)
       })
+    })
+  })
+})
+
+describe('conditional vehicle_types file', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/missing_vehicle_types')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      expect(result).toMatchObject({
+        summary: expect.objectContaining({
+          version: { detected: '2.2', validated: '2.2' }
+        }),
+        files: expect.arrayContaining([
+          expect.objectContaining({
+            file: 'vehicle_types.json',
+            exists: false,
+            required: true
+          })
+        ])
+      })
+    })
+  })
+})
+
+describe('conditional required vehicle_type_id', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/conditionnal_vehicle_type_id')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      expect(result).toMatchObject({
+        summary: expect.objectContaining({
+          version: { detected: '2.2', validated: '2.2' },
+          hasErrors: true,
+          errorsCount: 2
+        }),
+        files: expect.arrayContaining([
+          expect.objectContaining({
+            file: 'free_bike_status.json',
+            languages: expect.arrayContaining([
+              expect.objectContaining({
+                errors: expect.arrayContaining([
+                  expect.objectContaining({
+                    instancePath: '/data/bikes/0',
+                    message:
+                      "'vehicle_type_id' is required for this vehicle type"
+                  }),
+                  expect.objectContaining({
+                    instancePath: '/data/bikes/2',
+                    message:
+                      "must have required property 'current_range_meters'"
+                  })
+                ])
+              })
+            ])
+          })
+        ])
+      })
+    })
+  })
+})
+
+describe('conditional no required vehicle_type_id', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/conditionnal_no_vehicle_type_id')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      expect(result).toMatchObject({
+        summary: expect.objectContaining({
+          version: { detected: '2.2', validated: '2.2' }
+        }),
+        files: expect.arrayContaining([
+          expect.objectContaining({
+            file: 'vehicle_types.json',
+            exists: false,
+            required: true
+          })
+        ])
+      })
+    })
+  })
+})
+
+describe('conditional required vehicle_types_available', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/conditionnal_vehicle_types_available')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      const file = result.files.find(f => f.file === 'station_status.json')
+      const errors = file.languages.map(l => l.errors)
+
+      expect(errors).toMatchObject([
+        [
+          {
+            instancePath: '/data/stations/0',
+            schemaPath: '#/properties/data/properties/stations/items/required',
+            keyword: 'required',
+            params: {
+              missingProperty: 'vehicle_types_available'
+            },
+            message: "must have required property 'vehicle_types_available'"
+          }
+        ]
+      ])
+    })
+  })
+})
+
+describe('conditional plan_id', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/plan_id')()
+
+    await gbfsFeedServer.listen()
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then(result => {
+      const file = result.files.find(f => f.file === 'vehicle_types.json')
+      const errors = file.languages.map(l => l.errors)
+
+      expect(errors).toMatchObject([
+        [
+          {
+            instancePath: '/data/vehicle_types/0/default_pricing_plan_id',
+            schemaPath: '#/properties/data/properties/vehicle_types/items/properties/default_pricing_plan_id/enum',
+            keyword: 'enum',
+            params: {
+              allowedValues: ['p1']
+            },
+            message: "must be equal to one of the allowed values"
+          },
+          {
+            instancePath: '/data/vehicle_types/1',
+            schemaPath:
+              '#/properties/data/properties/vehicle_types/items/required',
+            keyword: 'required',
+            params: {
+              missingProperty: 'default_pricing_plan_id'
+            },
+            message: "must have required property 'default_pricing_plan_id'"
+          }
+        ]
+      ])
     })
   })
 })

@@ -20,7 +20,7 @@
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-vue": "^4.0.0",
-    "netlify-lambda": "^1.3.0"
+    "netlify-lambda": "^2.0.15"
   },
   "workspaces": [
     "website",

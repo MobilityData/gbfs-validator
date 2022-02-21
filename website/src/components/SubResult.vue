@@ -17,6 +17,9 @@
     <div v-if="file.hasErrors">
       <div v-if="file.languages">
         <div v-for="lang in file.languages" :key="lang.lang">
+
+        <download-schema :file="file"/>
+
           <div v-if="file.required && !lang.exists">
             <b-alert variant="danger" show>
               <b>Missing</b> file {{lang.lang}}/{{file.file}}
@@ -42,7 +45,12 @@
     </div>
   </div>
   <div v-else>
-    <h5 class="mt-4 mb-3">{{ file.file }}</h5>
+    <div class="d-flex align-items-baseline">
+      <h5 class="mt-4 mb-3">{{ file.file }}</h5>
+      &nbsp;
+      <download-schema :file="file"/>
+    </div>
+
     <b-alert v-if="!file.exists && !file.required" variant="warning" show>
       <b>Missing</b> file but <b>not</b> required
     </b-alert>
@@ -53,8 +61,11 @@
 </template>
 
 <script>
+import DownloadSchema from './DownloadSchema'
+
 export default {
   name: 'SubResult',
+  components: { DownloadSchema },
   props: {
     file: {
       required: true
