@@ -45,7 +45,7 @@ function build(opts = {}) {
     return {
       last_updated: 1566224400,
       ttl: 0,
-      version: '2.3-RC',
+      version: '2.3-RC2',
       data: {
         system_id: 'shared_bike',
         language: 'en',
@@ -59,7 +59,7 @@ function build(opts = {}) {
     return {
       last_updated: 1566224400,
       ttl: 0,
-      version: '2.3-RC',
+      version: '2.3-RC2',
       data: {
         bikes: [
           {
@@ -80,7 +80,7 @@ function build(opts = {}) {
     return {
       last_updated: 1566224400,
       ttl: 0,
-      version: '2.3-RC',
+      version: '2.3-RC2',
       data: {
         plans: [
           {
@@ -100,7 +100,7 @@ function build(opts = {}) {
     return {
       last_updated: 1566224400,
       ttl: 0,
-      version: '2.3-RC',
+      version: '2.3-RC2',
       data: {
         vehicle_types: [
           {
