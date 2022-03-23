@@ -4,7 +4,7 @@ module.exports = ({ pricingPlans }) => {
     $merge: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v2.3-RC/gbfs.md#vehicle_typesjson-added-in-v21-rc'
+          'https://github.com/NABSA/gbfs/blob/v2.3-RC2/gbfs.md#vehicle_typesjson-added-in-v21-rc'
       },
       with: {
         properties: {
@@ -27,7 +27,7 @@ module.exports = ({ pricingPlans }) => {
     $patch: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v2.3-RC/gbfs.md#vehicle_typesjson-added-in-v21-rc'
+          'https://github.com/NABSA/gbfs/blob/v2.3-RC2/gbfs.md#vehicle_typesjson-added-in-v21-rc'
       },
       with: [
         {
