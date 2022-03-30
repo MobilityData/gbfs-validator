@@ -121,7 +121,7 @@ export default {
       },
       versions: [
         { value: null, text: 'auto-detection' },
-        { value: '2.3-RC', text: 'v2.3-RC' },
+        { value: '2.3-RC2', text: 'v2.3-RC2' },
         { value: '2.2', text: 'v2.2' },
         { value: '2.1', text: 'v2.1' },
         { value: '2.0', text: 'v2.0' },
