@@ -652,16 +652,6 @@ describe('conditional plan_id', () => {
               allowedValues: ['p1']
             },
             message: "must be equal to one of the allowed values"
-          },
-          {
-            instancePath: '/data/vehicle_types/1',
-            schemaPath:
-              '#/properties/data/properties/vehicle_types/items/required',
-            keyword: 'required',
-            params: {
-              missingProperty: 'default_pricing_plan_id'
-            },
-            message: "must have required property 'default_pricing_plan_id'"
           }
         ]
       ])
