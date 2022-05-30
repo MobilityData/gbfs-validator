@@ -12,31 +12,17 @@ module.exports = ({ pricingPlans }) => {
             properties: {
               vehicle_types: {
                 items: {
-                      properties: {
-                        default_pricing_plan_id: {
-                          enum: pricingPlans.map(p => p.plan_id)
-                        }
-                      }
+                  properties: {
+                    default_pricing_plan_id: {
+                      enum: pricingPlans.map(p => p.plan_id)
                     }
+                  }
+                }
               }
             }
           }
         }
       }
-    },
-    $patch: {
-      source: {
-        $ref:
-          'https://github.com/NABSA/gbfs/blob/v2.3/gbfs.md#vehicle_typesjson-added-in-v21-rc'
-      },
-      with: [
-        {
-          op: 'add',
-          path:
-            '/properties/data/properties/vehicle_types/items/required/0',
-          value: 'default_pricing_plan_id'
-        }
-      ]
     }
   }
 }
