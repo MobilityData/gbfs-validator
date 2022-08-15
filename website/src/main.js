@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import VueGtag from 'vue-gtag'
 import App from './App'
 import {
   AlertPlugin,
@@ -19,6 +20,12 @@ import {
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
+  Vue.use(VueGtag, {
+    config: { id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID }
+  })
+}
 
 Vue.config.productionTip = false
 
