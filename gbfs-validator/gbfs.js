@@ -1,5 +1,8 @@
 const got = require('got')
 const validate = require('./validate')
+const validatorVersion = process.env.COMMIT_REF
+  ? process.env.COMMIT_REF.substring(0, 7)
+  : require('./package.json').version
 
 function hasErrors(data, required) {
   let hasError = false
@@ -424,6 +427,7 @@ class GBFS {
     if (!gbfsResult.version) {
       return {
         summary: {
+          validatorVersion,
           versionUnimplemented: true
         }
       }
@@ -566,6 +570,7 @@ class GBFS {
 
     return {
       summary: {
+        validatorVersion,
         version: {
           detected: result[0].version,
           validated: this.options.version || result[0].version
