@@ -2,7 +2,6 @@ module.exports = {
   gbfsRequired: false,
   files: options => {
     return [
-      { file: 'gbfs_versions', required: false },
       { file: 'system_information', required: true },
       { file: 'station_information', required: options.docked },
       { file: 'station_status', required: options.docked },
