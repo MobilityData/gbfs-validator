@@ -42,6 +42,7 @@ describe('cli', () => {
         summary: expect.objectContaining({
           version: { detected: '2.2', validated: '2.2' },
           hasErrors: true,
+          validatorVersion: '1.0.0',
           errorsCount: 1
         }),
         files: expect.any(Array)

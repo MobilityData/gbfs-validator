@@ -45,7 +45,7 @@ function build(opts = {}) {
         system_id: 'shared_bike',
         language: 'en',
         name: 'Shared Bike USA',
-        timezone: 'UTC'
+        timezone: 'Etc/UTC'
       }
     }
   })
@@ -59,7 +59,7 @@ function build(opts = {}) {
         system_id: 'shared_bike',
         // language: 'en', // Missing language
         name: 'Shared Bike USA',
-        timezone: 'UTC'
+        timezone: 'Etc/UTC'
       }
     }
   })
