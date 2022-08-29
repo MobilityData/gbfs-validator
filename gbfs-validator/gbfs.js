@@ -7,7 +7,7 @@ const validatorVersion = process.env.COMMIT_REF
 function hasErrors(data, required) {
   let hasError = false
 
-  data.forEach(el => {
+  data.forEach((el) => {
     if (Array.isArray(el)) {
       if (hasErrors(el, required)) {
         hasError = true
@@ -30,7 +30,7 @@ function countErrors(file) {
       count = file.errors.length
     } else if (file.languages) {
       if (file.required) {
-        count += file.languages.filter(l => !l.exists).length
+        count += file.languages.filter((l) => !l.exists).length
       }
 
       count += file.languages.reduce((acc, l) => {
@@ -63,8 +63,8 @@ function getPartialSchema(version, partial, data = {}) {
 function getVehicleTypes({ body }) {
   if (Array.isArray(body)) {
     return body.reduce((acc, lang) => {
-      lang.body?.data?.vehicle_types.map(vt => {
-        if (!acc.find(f => f.vehicle_type_id === vt.vehicle_type_id)) {
+      lang.body?.data?.vehicle_types.map((vt) => {
+        if (!acc.find((f) => f.vehicle_type_id === vt.vehicle_type_id)) {
           acc.push({
             vehicle_type_id: vt.vehicle_type_id,
             form_factor: vt.form_factor,
@@ -76,7 +76,7 @@ function getVehicleTypes({ body }) {
       return acc
     }, [])
   } else {
-    return body?.data?.vehicle_types.map(vt => ({
+    return body?.data?.vehicle_types.map((vt) => ({
       vehicle_type_id: vt.vehicle_type_id,
       form_factor: vt.form_factor,
       propulsion_type: vt.propulsion_type
@@ -87,8 +87,8 @@ function getVehicleTypes({ body }) {
 function getPricingPlans({ body }) {
   if (Array.isArray(body)) {
     return body.reduce((acc, lang) => {
-      lang.body?.data?.plans.map(pp => {
-        if (!acc.find(f => f.plan_id === pp.plan_id)) {
+      lang.body?.data?.plans.map((pp) => {
+        if (!acc.find((f) => f.plan_id === pp.plan_id)) {
           acc.push(pp)
         }
       })
@@ -102,27 +102,31 @@ function getPricingPlans({ body }) {
 
 function hadVehicleTypeId({ body }) {
   if (Array.isArray(body)) {
-    return body.some(lang => lang.body.data.bikes.find(b => b.vehicle_type_id))
+    return body.some((lang) =>
+      lang.body.data.bikes.find((b) => b.vehicle_type_id)
+    )
   } else {
-    return body.data.bikes.some(b => b.vehicle_type_id)
+    return body.data.bikes.some((b) => b.vehicle_type_id)
   }
 }
 
 function hasPricingPlanId({ body }) {
   if (Array.isArray(body)) {
-    return body.some(lang => lang.body.data.bikes.find(b => b.pricing_plan_id))
+    return body.some((lang) =>
+      lang.body.data.bikes.find((b) => b.pricing_plan_id)
+    )
   } else {
-    return body.data.bikes.some(b => b.pricing_plan_id)
+    return body.data.bikes.some((b) => b.pricing_plan_id)
   }
 }
 
 function hasRentalUris({ body }, key, store) {
   if (Array.isArray(body)) {
-    return body.some(lang =>
-      lang.body.data[key].find(b => b.rental_uris?.[store])
+    return body.some((lang) =>
+      lang.body.data[key].find((b) => b.rental_uris?.[store])
     )
   } else {
-    return body.data[key].some(b => b.rental_uris?.[store])
+    return body.data[key].some((b) => b.rental_uris?.[store])
   }
 }
 
@@ -134,7 +138,7 @@ function fileExist(file) {
   if (file.exists) {
     return true
   } else if (Array.isArray(file.body)) {
-    return file.body.some(lang => lang.exists)
+    return file.body.some((lang) => lang.exists)
   }
 
   return false
@@ -189,7 +193,7 @@ class GBFS {
     return got
       .get(url, this.gotOptions)
       .json()
-      .then(body => {
+      .then((body) => {
         if (typeof body !== 'object') {
           return {
             recommanded: true,
@@ -240,7 +244,7 @@ class GBFS {
     return got
       .get(this.url, this.gotOptions)
       .json()
-      .then(body => {
+      .then((body) => {
         if (typeof body !== 'object') {
           return this.alternativeAutoDiscovery(
             new URL('gbfs.json', this.url).toString()
@@ -269,7 +273,7 @@ class GBFS {
           hasErrors: !!errors
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (!this.url.match(/gbfs.json$/)) {
           return this.alternativeAutoDiscovery(
             new URL('gbfs.json', this.url).toString()
@@ -303,43 +307,43 @@ class GBFS {
 
   getFile(type, required) {
     if (this.autoDiscovery) {
-      const urls = Object.entries(this.autoDiscovery.data).map(key => {
+      const urls = Object.entries(this.autoDiscovery.data).map((key) => {
         return Object.assign(
           { lang: key[0] },
-          this.autoDiscovery.data[key[0]].feeds.find(f => f.name === type)
+          this.autoDiscovery.data[key[0]].feeds.find((f) => f.name === type)
         )
       })
 
       return Promise.all(
-        urls.map(
-          lang =>
-            lang && lang.url
-              ? got
-                  .get(lang.url, this.gotOptions)
-                  .json()
-                  .then(body => {
-                    return {
-                      body,
-                      exists: true,
-                      lang: lang.lang,
-                      url: lang.url
-                    }
-                  })
-                  .catch(() => ({
-                    body: null,
-                    exists: false,
+        urls.map((lang) =>
+          lang && lang.url
+            ? got
+                .get(lang.url, this.gotOptions)
+                .json()
+                .then((body) => {
+                  return {
+                    body,
+                    exists: true,
                     lang: lang.lang,
                     url: lang.url
-                  }))
-              : {
+                  }
+                })
+                .catch(() => ({
                   body: null,
                   exists: false,
                   lang: lang.lang,
-                  url: null
-                }
+                  url: lang.url
+                }))
+            : {
+                body: null,
+                exists: false,
+                lang: lang.lang,
+                url: null
+              }
         )
-      ).then(bodies => {
+      ).then((bodies) => {
         return {
+          file: `${type}.json`,
           body: bodies,
           required,
           type
@@ -349,13 +353,15 @@ class GBFS {
       return got
         .get(`${this.url}/${type}.json`, this.gotOptions)
         .json()
-        .then(body => ({
+        .then((body) => ({
+          file: `${type}.json`,
           body,
           required,
           exists: true,
           type
         }))
-        .catch(err => ({
+        .catch((err) => ({
+          file: `${type}.json`,
           body: null,
           required,
           errors: required ? err : null,
@@ -367,10 +373,12 @@ class GBFS {
 
   validationFile(body, version, type, required, options) {
     if (Array.isArray(body)) {
-      body = body.filter(b => b.exists || b.required).map(b => ({
-        ...b,
-        ...this.validateFile(version, type, b.body, options)
-      }))
+      body = body
+        .filter((b) => b.exists || b.required)
+        .map((b) => ({
+          ...b,
+          ...this.validateFile(version, type, b.body, options)
+        }))
 
       return {
         languages: body,
@@ -385,7 +393,6 @@ class GBFS {
       return {
         required,
         ...this.validateFile(version, type, body, options),
-
         exists: !!body,
         file: `${type}.json`,
         url: `${this.url}/${type}.json`
@@ -402,14 +409,14 @@ class GBFS {
         body: 'grant_type=client_credentials'
       })
       .json()
-      .then(auth => {
+      .then((auth) => {
         this.gotOptions.headers = {
           Authorization: `Bearer ${auth.access_token}`
         }
       })
   }
 
-  async validation() {
+  async getFiles() {
     if (this.auth && this.auth.type === 'oauth_client_credentials_grant') {
       await this.getToken()
     }
@@ -419,6 +426,8 @@ class GBFS {
     if (!gbfsResult.version) {
       return {
         summary: {
+          gbfsResult,
+          gbfsVersion: gbfsResult.version,
           validatorVersion,
           versionUnimplemented: true
         }
@@ -427,16 +436,35 @@ class GBFS {
 
     const gbfsVersion = this.options.version || gbfsResult.version
 
-    let files = require(`./versions/v${gbfsVersion}.js`).files(this.options)
-
-    const t = await Promise.all(
-      files.map(f => this.getFile(f.file, f.required))
+    let filesRequired = require(`./versions/v${gbfsVersion}.js`).files(
+      this.options
     )
 
-    const vehicleTypesFile = t.find(a => a.type === 'vehicle_types')
-    const freeBikeStatusFile = t.find(a => a.type === 'free_bike_status')
-    const stationInformationFile = t.find(a => a.type === 'station_information')
-    const stationPricingPlans = t.find(a => a.type === 'system_pricing_plans')
+    return {
+      summary: {},
+      gbfsResult,
+      gbfsVersion,
+      files: await Promise.all(
+        filesRequired.map((f) => this.getFile(f.file, f.required))
+      )
+    }
+  }
+
+  async validation() {
+    const { gbfsResult, gbfsVersion, files, summary } = await this.getFiles()
+
+    if (summary?.versionUnimplemented) {
+      return { summary }
+    }
+
+    const vehicleTypesFile = files.find((a) => a.type === 'vehicle_types')
+    const freeBikeStatusFile = files.find((a) => a.type === 'free_bike_status')
+    const stationInformationFile = files.find(
+      (a) => a.type === 'station_information'
+    )
+    const stationPricingPlans = files.find(
+      (a) => a.type === 'system_pricing_plans'
+    )
 
     let vehicleTypes,
       pricingPlans,
@@ -475,7 +503,7 @@ class GBFS {
       pricingPlans = getPricingPlans(stationPricingPlans)
     }
 
-    t.forEach(f => {
+    files.forEach((f) => {
       const addSchema = []
       let required = f.required
 
@@ -542,6 +570,7 @@ class GBFS {
               addSchema.push(partial)
             }
           }
+          break
         default:
           break
       }
@@ -553,7 +582,7 @@ class GBFS {
       )
     })
 
-    const filesResult = result.map(file => ({
+    const filesResult = result.map((file) => ({
       ...file,
       errorsCount: countErrors(file)
     }))
