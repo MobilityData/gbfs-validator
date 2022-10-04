@@ -1,6 +1,6 @@
 # GBFS-validator
 
-A General [Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) dataset validator
+A [General Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) dataset validator
 
 # Introduction
 
