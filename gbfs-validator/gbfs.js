@@ -100,19 +100,11 @@ function getPricingPlans({ body }) {
   }
 }
 
-function hadVehiclesId({ body }) {
+function hadVehicleTypeId({ body }) {
   if (Array.isArray(body)) {
     return body.some(lang => lang.body.data.bikes.find(b => b.vehicle_type_id))
   } else {
     return body.data.bikes.some(b => b.vehicle_type_id)
-  }
-}
-
-function hasStationId({ body }) {
-  if (Array.isArray(body)) {
-    return body.some(lang => lang.body.data.bikes.find(b => b.station_id))
-  } else {
-    return body.data.bikes.some(b => b.station_id)
   }
 }
 
@@ -448,10 +440,9 @@ class GBFS {
 
     let vehicleTypes,
       pricingPlans,
-      freeBikeStatusHasVehicleId,
+      freeBikeStatusHasVehicleTypeId,
       hasIosRentalUris,
       hasAndroidRentalUris,
-      hasBikesStationId,
       hasBikesPricingPlanId
 
     const result = [gbfsResult]
@@ -461,14 +452,13 @@ class GBFS {
     }
 
     if (fileExist(freeBikeStatusFile)) {
-      freeBikeStatusHasVehicleId = hadVehiclesId(freeBikeStatusFile)
+      freeBikeStatusHasVehicleTypeId = hadVehicleTypeId(freeBikeStatusFile)
       hasIosRentalUris = hasRentalUris(freeBikeStatusFile, 'bikes', 'ios')
       hasAndroidRentalUris = hasRentalUris(
         freeBikeStatusFile,
         'bikes',
         'android'
       )
-      hasBikesStationId = hasStationId(freeBikeStatusFile)
       hasBikesPricingPlanId = hasPricingPlanId(freeBikeStatusFile)
     }
 
@@ -519,7 +509,7 @@ class GBFS {
           }
           break
         case 'vehicle_types':
-          if (freeBikeStatusHasVehicleId || hasBikesStationId) {
+          if (freeBikeStatusHasVehicleTypeId) {
             required = true
           }
           if (pricingPlans && pricingPlans.length) {
