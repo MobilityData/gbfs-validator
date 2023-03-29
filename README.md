@@ -69,6 +69,10 @@ yarn start
 
 Open `localhost:8080` on your browser
 
+# Projects based on this validator
+
+[transport.data.gouv.fr GBFS validator tool](https://transport.data.gouv.fr/validation?type=gbfs) - Tool displaying interactive geofencing, station, and vehicle maps, the validation results, and metadata of GBFS feeds.  
+
 # Acknowledgements
 
 This project was originally created by Pierrick Paul at [fluctuo](https://fluctuo.com/) - MobilityData started maintaining the project in September 2021.
