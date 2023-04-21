@@ -49,7 +49,7 @@ To build the project locally, you need
 
 We recommend you to use [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-You should use `v12.x.x` of Node.js, or higher. We recommend `v14.x.x`.
+Minimum Node.js version `v14.x.x`, or higher. Recommend Node.js version `v18.x.x`.
 
 ## Clone the repository
 
