@@ -1,5 +1,10 @@
 const GBFS = require('../gbfs')
 
+const serverOpts = {
+  port: 0,
+  host: '127.0.0.1',
+}
+
 describe('initialization', () => {
   test('should correctly initialize validator per default', () => {
     expect(new GBFS('http://localhost:8888/gbfs.json')).toMatchSnapshot()
@@ -55,7 +60,7 @@ describe('checkAutodiscovery method', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/server')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -160,7 +165,7 @@ describe('getFile method', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/server')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -282,7 +287,7 @@ describe('validationFile method', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/server')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -405,7 +410,7 @@ describe('validation method', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/server')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -441,7 +446,7 @@ describe('conditional vehicle_types file', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/missing_vehicle_types')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -481,7 +486,7 @@ describe('conditional required vehicle_type_id', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/conditionnal_vehicle_type_id')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -538,7 +543,7 @@ describe('conditional no required vehicle_type_id', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/conditionnal_no_vehicle_type_id')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -579,7 +584,7 @@ describe('conditional required vehicle_types_available', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/conditionnal_vehicle_types_available')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
@@ -623,7 +628,7 @@ describe('conditional plan_id', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/plan_id')()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
   })
