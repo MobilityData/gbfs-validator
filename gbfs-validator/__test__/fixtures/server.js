@@ -1,7 +1,11 @@
 const fastify = require('fastify')
 
 function build(opts = {}) {
-  const app = fastify(opts)
+  const app = fastify({
+    ...opts,
+    port: opts?.port || 0,
+    host: opts?.host || 'localhost'
+  })
 
   app.get('/gbfs.json', async function(request, reply) {
     return {
