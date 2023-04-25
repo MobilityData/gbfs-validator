@@ -1,3 +1,8 @@
+const serverOpts = {
+  port: 0,
+  host: '127.0.0.1',
+}
+
 describe('cli', () => {
   describe('without arguments', () => {
     test('should show help without required url', async () => {
@@ -20,7 +25,7 @@ describe('cli', () => {
     beforeAll(async () => {
       gbfsFeedServer = require('./fixtures/server')()
 
-      await gbfsFeedServer.listen()
+      await gbfsFeedServer.listen(serverOpts)
 
       return gbfsFeedServer
     })
