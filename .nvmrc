@@ -1,1 +1,2 @@
-v18.16.0
+# Enforcing engine versions with package.json
+engine-strict=true
