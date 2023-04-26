@@ -15,15 +15,16 @@
     "bootstrap-vue": "^2.21.2",
     "sass": "^1.34.1",
     "sass-loader": "^12.0.0",
-    "vue": "^2.5.21",
+    "vue": "^2.7.14",
     "vue-gtag": "1.16.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.3.0",
-    "@vue/cli-plugin-eslint": "^3.3.0",
-    "@vue/cli-service": "^3.3.0",
+    "@vue/cli-plugin-babel": "^5.0.6",
+    "@vue/cli-plugin-eslint": "^5.0.6",
+    "@vue/cli-service": "^5.0.6",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
+    "core-js": "^3.30.1",
+    "eslint": "^7.32.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-template-compiler": "^2.5.21"
   },

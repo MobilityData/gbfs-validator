@@ -12,7 +12,9 @@ module.exports = {
   css: {
     loaderOptions: {
       postcss: {
-        plugins: [require('autoprefixer')]
+        postcssOptions: {
+          plugins: [require('autoprefixer')]
+        }
       }
     }
   }
