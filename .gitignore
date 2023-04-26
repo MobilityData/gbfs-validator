@@ -15,3 +15,6 @@ yarn-error.log*
 
 *.log
 coverage
+
+# Netlify build folders and files
+.netlify/plugins
