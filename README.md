@@ -80,7 +80,7 @@ Open `localhost:8080` on your browser
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-We welcome contributions to the project! Please check out our [Contribution guidelines](/CONTRIBUTING.md) for details.
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome! Please check out our [Contribution guidelines](/CONTRIBUTING.md) for details.
 
 :warning: for contributions on schemas, please see [Versions README](gbfs-validator/versions/README.md)
 ## Acknowledgements
