@@ -80,7 +80,7 @@ Open `localhost:8080` on your browser
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome! Please check out our [Contribution guidelines](/CONTRIBUTING.md) for details.
+This project follows the [all-contributors](https://allcontributors.org/docs/en/overview) specification, find the [emoji key here](https://allcontributors.org/docs/en/emoji-key). Contributions of any kind welcome! Please check out our [Contribution guidelines](/CONTRIBUTING.md) for details.
 
 :warning: for contributions on schemas, please see [Versions README](gbfs-validator/versions/README.md)
 ## Acknowledgements
