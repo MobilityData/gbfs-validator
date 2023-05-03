@@ -1,0 +1,13 @@
+{
+  "projectName": "gbfs-validator",
+  "projectOwner": "MobilityData",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["README.md"],
+  "commit": false,
+  "imageSize": 100,
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": true,
+  "skipCi": true,
+  "contributors": []
+}
