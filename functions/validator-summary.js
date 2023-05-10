@@ -27,7 +27,7 @@ exports.handler = function(event, context, callback) {
     .then(result => {
       callback(null, {
         statusCode: 200,
-        body: getSummary(result)
+        body: JSON.stringify(getSummary(result))
       })
     })
     .catch(err => {
