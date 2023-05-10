@@ -4,11 +4,17 @@ const getSummary = (validationResult) => (
   {
     ...validationResult,
     files: undefined,
-    filesIncluded: Object.keys((validationResult.files || {}))
+    filesSummary: (validationResult.files || []).map(item => ({
+      required: item.required,
+      exists: item.exists,
+      file: item.file,
+      hasErrors: item.hasErrors,
+      errorsCount: item.errorsCount
+    }))
   }
 )
 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
   let body
 
   try {
