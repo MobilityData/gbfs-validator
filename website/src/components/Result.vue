@@ -1,3 +1,23 @@
+<script setup>
+import { computed, defineProps } from 'vue'
+import SubResult from './SubResult.vue'
+
+const props = defineProps({
+  isValidating: {
+    type: Boolean,
+    required: true
+  },
+  result: {
+    type: [Object, Error, Boolean],
+    required: true
+  }
+})
+
+const errorsCountFormated = computed(() => {
+  return new Intl.NumberFormat().format(props.result.summary.errorsCount)
+})
+</script>
+
 <template>
   <div class="result">
     <div v-if="isValidating" class="validating">Validating...</div>
@@ -5,18 +25,27 @@
       <div v-if="result.summary">
         <h3 class="mt-4 mb-4">Result</h3>
 
-        <b-alert v-if="result.summary.versionUnimplemented" variant="danger" show>
+        <b-alert
+          v-if="result.summary.versionUnimplemented"
+          variant="danger"
+          show
+        >
           Sorry, this version is not yet implemented or not detectable !
         </b-alert>
         <div v-else>
           <b-alert variant="info" show>
-            Detected version <b>{{ result.summary.version.detected }} </b> and validate with <a :href="`https://github.com/NABSA/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"><b>{{ result.summary.version.validated}}</b></a>
+            Detected version <b>{{ result.summary.version.detected }} </b> and
+            validate with
+            <a
+              :href="`https://github.com/NABSA/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"
+              ><b>{{ result.summary.version.validated }}</b></a
+            >
           </b-alert>
 
           <div>
             <b-alert v-if="result.summary.hasErrors" variant="danger" show>
-              Invalid GBFS feed <br>
-              <b>{{ result.summary.errorsCount | formatNumber }} errors</b>
+              Invalid GBFS feed <br />
+              <b>{{ errorsCountFormated }} errors</b>
             </b-alert>
             <b-alert v-else variant="success" show>Valid !</b-alert>
           </div>
@@ -30,27 +59,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import SubResult from './SubResult'
-
-export default {
-  name: 'Result',
-  props: {
-    isValidating: {
-      type: Boolean,
-      required: true
-    },
-    result: {
-      type: [Object, Error, Boolean],
-      required: true
-    }
-  },
-  components: {
-    SubResult
-  }
-}
-</script>
 
 <style scoped>
 .result {

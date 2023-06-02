@@ -5,20 +5,18 @@
     "dev": "netlify dev",
     "start": "yarn run dev",
     "lint": "eslint --ext .js,.vue website/src",
-    "build": "yarn run build:website && yarn run build:functions",
-    "build:website": "cd website && yarn run build",
-    "build:functions": "netlify functions:build -s functions"
+    "build": "yarn run build:website",
+    "build:website": "cd website && yarn run build"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "eslint": "^4.15.0",
-    "eslint-config-prettier": "^3.1.0",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.2.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-vue": "^4.0.0",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.14.1",
     "netlify-cli": "^10.14.0"
   },
   "workspaces": [
@@ -27,8 +25,8 @@
     "check-systems",
     "functions"
   ],
-  "engines" : {
-    "npm" : ">=8.0.0",
-    "node" : ">=18.0.0"
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=18.0.0"
   }
 }

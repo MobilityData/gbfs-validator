@@ -1,8 +1,6 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueGtag from 'vue-gtag'
-import App from './App'
+import App from './App.vue'
 import {
   AlertPlugin,
   ButtonPlugin,
@@ -21,9 +19,9 @@ import {
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
+if (import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
   Vue.use(VueGtag, {
-    config: { id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID }
+    config: { id: import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID }
   })
 }
 
@@ -42,13 +40,4 @@ Vue.use(LayoutPlugin)
 Vue.use(TabsPlugin)
 Vue.use(TooltipPlugin)
 
-Vue.filter('formatNumber', function(value) {
-  return new Intl.NumberFormat().format(value)
-})
-
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  components: { App },
-  template: '<App/>'
-})
+Vue.createApp(App).mount('#app')
