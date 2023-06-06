@@ -1,9 +1,9 @@
 [build]
   command = "yarn build"
-  publish = "dist/website"
-  functions = "dist/functions"
+  publish = "website/dist"
 
-[[plugins]]
-package = "netlify-plugin-inline-functions-env"
-  [plugins.inputs]
-  buildEvent = "onBuild"
+[functions]
+  directory = "functions"
+
+[dev]
+  functions = "functions"

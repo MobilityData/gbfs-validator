@@ -18,3 +18,5 @@ coverage
 
 # Netlify build folders and files
 .netlify/plugins
+
+functions/*.zip
