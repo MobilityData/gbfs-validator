@@ -3,7 +3,7 @@ import { computed } from 'vue'
 const props = defineProps(['station'])
 
 const keys = computed(() => {
-  return Object.keys(props.station).filter((k) => k != '_info')
+  return Object.keys(props.station)
 })
 
 const stationInfoKeys = computed(() => {

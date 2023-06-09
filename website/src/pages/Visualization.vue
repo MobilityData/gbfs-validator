@@ -319,7 +319,11 @@ function populateData() {
     mapInstance.addControl(geofencingOverlay)
   }
 
-  if (get(selected).includes('vehicles') && get(vehicles)) {
+  if (
+    get(selected).includes('vehicles') &&
+    get(vehicles) &&
+    get(vehicles).length
+  ) {
     const geojson = {
       type: 'FeatureCollection',
       features: get(vehicles).map((v) => ({
@@ -390,7 +394,11 @@ function populateData() {
     mapInstance.addControl(vehiclesOverlay)
   }
 
-  if (get(selected).includes('stations') && get(stations)) {
+  if (
+    get(selected).includes('stations') &&
+    get(stations) &&
+    get(stations).length
+  ) {
     const geojson = {
       type: 'FeatureCollection',
       features: get(stations).map((s) => {
