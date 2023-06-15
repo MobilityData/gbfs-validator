@@ -9,7 +9,7 @@ const keys = computed(() => {
 
 <template>
   <div>
-    <h3>Geocenfing zone</h3>
+    <h3>Geofencing zone</h3>
     <table>
       <tr>
         <th>Key</th>
