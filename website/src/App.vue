@@ -13,7 +13,7 @@ import Footer from './components/Footer.vue'
               <img src="/gbfs_validator.jpg" alt="" />
             </b-col>
             <b-col>
-              <h1>gbfs-validator.netlify.com</h1>
+              <h1>gbfs-validator.mobilitydata.org</h1>
               <h2>A GBFS feed validator</h2>
             </b-col>
           </b-row>
@@ -21,7 +21,7 @@ import Footer from './components/Footer.vue'
             <b-col>
               <p>
                 Validate any
-                <a href="https://github.com/NABSA/gbfs/">GBFS</a> feed online.
+                <a href="https://github.com/MobilityData/gbfs/">GBFS</a> feed online.
                 Based on official
                 <a href="https://github.com/MobilityData/gbfs-json-schema"
                   >GBFS json schemas</a
