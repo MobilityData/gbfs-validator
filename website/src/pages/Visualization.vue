@@ -37,8 +37,7 @@ let vehiclesOverlay
 let stationsOverlay
 let geofencingOverlay
 
-const MAPBOX_KEY =
-  'pk.eyJ1IjoicGllcnJpY2twIiwiYSI6ImNsaWluZjl6bDF3emQzZW9iZHZ2NDd5MDMifQ.FCTTnlXknFjxmw9NLemYsQ'
+const MAPBOX_KEY = import.meta.env.VITE_MAPBOX_API_KEY
 
 // https://github.com/rowanwins/maplibregl-mapbox-request-transformer
 const transformRequest = (url = '', resourceType = '') => {

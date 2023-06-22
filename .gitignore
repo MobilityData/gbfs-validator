@@ -20,3 +20,5 @@ coverage
 .netlify
 
 functions/*.zip
+
+.env

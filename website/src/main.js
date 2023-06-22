@@ -24,9 +24,9 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import router from './router'
 
-if (import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
+if (import.meta.env.VITE_GOOGLE_ANALYTICS_ID) {
   Vue.use(VueGtag, {
-    config: { id: import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID }
+    config: { id: import.meta.env.VITE_GOOGLE_ANALYTICS_ID }
   })
 }
 

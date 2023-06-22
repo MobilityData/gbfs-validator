@@ -54,13 +54,18 @@ git clone https://github.com/fluctuo/gbfs-validator.git
 cd gbfs-validator
 ```
 
+### Set Environment variables
+
+Copy `./website/.env.exemple` to `./website/.env`
+And set values
+
 ### Run dev environment
 
 With Node.js
 
 ```shell
 yarn
-yarn start
+yarn run dev
 ```
 
 Open `localhost:8080` on your browser
