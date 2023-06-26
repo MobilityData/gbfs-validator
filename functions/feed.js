@@ -12,10 +12,10 @@ exports.handler = function (event, context, callback) {
     })
   }
 
-  const gbfs = new GBFS(body.url, body.options)
+  const gbfs = new GBFS(body.url)
 
   gbfs
-    .validation()
+    .getFiles()
     .then((result) => {
       callback(null, {
         statusCode: 200,

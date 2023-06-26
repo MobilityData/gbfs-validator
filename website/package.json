@@ -13,13 +13,22 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
+    "@deck.gl/core": "^8.9.18",
+    "@deck.gl/layers": "^8.9.18",
+    "@deck.gl/mapbox": "^8.9.18",
+    "@turf/bbox": "^6.5.0",
+    "@vue/compat": "^3.3.2",
+    "@vueuse/core": "^10.1.2",
     "bootstrap": "^5.0.1",
     "bootstrap-vue": "^2.23.1",
+    "maplibre-gl": "^3.0.1",
+    "maplibregl-mapbox-request-transformer": "^0.0.2",
+    "mitt": "^3.0.0",
     "sass": "^1.34.1",
     "sass-loader": "^12.0.0",
     "vue": "^3.3.2",
-    "@vue/compat": "^3.3.2",
-    "vue-gtag": "1.16.1"
+    "vue-gtag": "1.16.1",
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

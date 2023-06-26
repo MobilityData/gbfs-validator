@@ -6,4 +6,6 @@
   directory = "functions"
 
 [dev]
+  command = "yarn run dev:website"
+  autoLaunch = false
   functions = "functions"

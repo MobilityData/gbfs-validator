@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
 
-import Result from './Result.vue'
+import Result from '../components/Result.vue'
 
 const state = reactive({
   result: false,

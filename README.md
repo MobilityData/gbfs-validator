@@ -20,7 +20,7 @@ Questions? Please open an issue or reach out to MobilityData on the GBFS slack c
 
 The validator is developed to be used “online” (hosted with a lambda function).
 
-1.  Open gbfs-validator.netlify.com/
+1.  Open gbfs-validator.mobilitydata.org/
 2.  Enter the feed’s auto-discovery URL
 3.  If needed, select the version. If not specified, the validator will pick the version mentioned in the `gbfs.json` file
 4.  Select file requirement options (free-floating or docked)
@@ -54,13 +54,18 @@ git clone https://github.com/fluctuo/gbfs-validator.git
 cd gbfs-validator
 ```
 
+### Set Environment variables
+
+Copy `./website/.env.exemple` to `./website/.env`
+And set values
+
 ### Run dev environment
 
 With Node.js
 
 ```shell
 yarn
-yarn start
+yarn run dev
 ```
 
 Open `localhost:8080` on your browser
@@ -83,6 +88,7 @@ Open `localhost:8080` on your browser
 This project follows the [all-contributors](https://allcontributors.org/docs/en/overview) specification, find the [emoji key here](https://allcontributors.org/docs/en/emoji-key). Contributions of any kind welcome! Please check out our [Contribution guidelines](/CONTRIBUTING.md) for details.
 
 :warning: for contributions on schemas, please see [Versions README](gbfs-validator/versions/README.md)
+
 ## Acknowledgements
 
 This project was originally created by Pierrick Paul at [fluctuo](https://fluctuo.com/) - MobilityData started maintaining the project in September 2021.

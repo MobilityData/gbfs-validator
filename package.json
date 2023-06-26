@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev:website": "cd website && yarn run serve",
+    "dev:website": "cd website && yarn run dev",
     "dev": "netlify dev",
     "start": "yarn run dev",
     "lint": "eslint --ext .js,.vue website/src",

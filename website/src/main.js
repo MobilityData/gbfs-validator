@@ -12,6 +12,7 @@ import {
   FormPlugin,
   FormSelectPlugin,
   LayoutPlugin,
+  LinkPlugin,
   TabsPlugin,
   TooltipPlugin
 } from 'bootstrap-vue'
@@ -19,14 +20,17 @@ import {
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-if (import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID) {
+import 'maplibre-gl/dist/maplibre-gl.css'
+
+import router from './router'
+
+if (import.meta.env.VITE_GOOGLE_ANALYTICS_ID) {
   Vue.use(VueGtag, {
-    config: { id: import.meta.env.VUE_APP_GOOGLE_ANALYTICS_ID }
+    config: { id: import.meta.env.VITE_GOOGLE_ANALYTICS_ID }
   })
 }
 
 Vue.config.productionTip = false
-
 Vue.use(AlertPlugin)
 Vue.use(ButtonPlugin)
 Vue.use(CardPlugin)
@@ -37,7 +41,11 @@ Vue.use(FormInputPlugin)
 Vue.use(FormPlugin)
 Vue.use(FormSelectPlugin)
 Vue.use(LayoutPlugin)
+Vue.use(LinkPlugin)
 Vue.use(TabsPlugin)
 Vue.use(TooltipPlugin)
 
-Vue.createApp(App).mount('#app')
+const app = Vue.createApp(App)
+
+app.use(router)
+app.mount('#app')
