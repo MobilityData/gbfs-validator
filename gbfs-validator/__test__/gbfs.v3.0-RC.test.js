@@ -1,5 +1,10 @@
 const GBFS = require('../gbfs')
 
+const serverOpts = {
+  port: 0,
+  host: '127.0.0.1',
+}
+
 function get_errors(result) {
   let errors = []
 
@@ -27,7 +32,7 @@ describe('default feed', () => {
 
     gbfsFeedServer = mockRequests.build()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
   })
 
   afterAll(() => {
@@ -74,7 +79,7 @@ describe('invalid feed', () => {
 
     gbfsFeedServer = mockRequests.build()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
   })
 
   afterAll(() => {
@@ -117,7 +122,7 @@ describe('exaustive feed', () => {
 
     gbfsFeedServer = mockRequests.build()
 
-    await gbfsFeedServer.listen()
+    await gbfsFeedServer.listen(serverOpts)
   })
 
   afterAll(() => {
