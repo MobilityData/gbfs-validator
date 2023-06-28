@@ -196,7 +196,7 @@ class GBFS {
       .then((body) => {
         if (typeof body !== 'object') {
           return {
-            recommanded: true,
+            recommended: true,
             required: isGBFSFileRequire(this.options.version),
             errors: false,
             exists: false,
@@ -218,7 +218,7 @@ class GBFS {
           errors,
           url,
           version: body.version,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
@@ -230,7 +230,7 @@ class GBFS {
       .catch(() => {
         return {
           url,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
@@ -264,7 +264,7 @@ class GBFS {
           errors,
           url: this.url,
           version: body.version || '1.0',
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
@@ -282,7 +282,7 @@ class GBFS {
 
         return {
           url: this.url,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
@@ -451,7 +451,32 @@ class GBFS {
     const vehicleTypesFile = t.find(a => a.type === 'vehicle_types')
     const freeBikeStatusFile = t.find(a => a.type === 'free_bike_status')
     const stationInformationFile = t.find(a => a.type === 'station_information')
-    const stationPricingPlans = t.find(a => a.type === 'system_pricing_plans')
+    const systemPricingPlans = t.find(a => a.type === 'system_pricing_plans')
+    const systemInformation = t.find(a => a.type === 'system_information')
+
+    const manifestUrl = systemInformation?.body?.[0]?.body?.data?.manifest_url
+
+    if (manifestUrl) {
+      try {
+        const body = await got.get(manifestUrl, this.gotOptions).json()
+
+        t.push({
+          body,
+          required: true,
+          type: 'manifest'
+        })
+      } catch (error) {
+        t.push({
+          url: manifestUrl,
+          recommended: true,
+          required: true,
+          errors: false,
+          exists: false,
+          file: `manifest.json`,
+          hasErrors: false
+        })
+      }
+    }
 
     let vehicleTypes,
       pricingPlans,

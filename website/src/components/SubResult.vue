@@ -17,12 +17,12 @@ function errorsCountFormated(value) {
   <div
     class="subresult"
     v-if="
-      file.hasErrors || (!file.exists && (file.recommanded || file.required))
+      file.hasErrors || (!file.exists && (file.recommended || file.required))
     "
   >
     <h5 class="mt-4 mb-3">{{ file.file }}</h5>
 
-    <div v-if="file.recommanded && !file.exists">
+    <div v-if="file.recommended && !file.exists">
       <b-alert variant="warning" show> Missing file. Recommanded </b-alert>
     </div>
 
