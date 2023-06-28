@@ -22,3 +22,7 @@ coverage
 functions/*.zip
 
 .env
+
+# schemas
+
+gbfs-validator/versions/schemas/.*
