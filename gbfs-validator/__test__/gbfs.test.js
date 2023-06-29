@@ -82,7 +82,7 @@ describe('checkAutodiscovery method', () => {
         exists: true,
         file: 'gbfs.json',
         hasErrors: false,
-        recommanded: true,
+        recommended: true,
         required: true,
         url: `http://${gbfsFeedServer.server.address().address}:${
           gbfsFeedServer.server.address().port
@@ -104,7 +104,7 @@ describe('checkAutodiscovery method', () => {
         exists: true,
         file: 'gbfs.json',
         hasErrors: false,
-        recommanded: true,
+        recommended: true,
         required: true,
         url: `http://${gbfsFeedServer.server.address().address}:${
           gbfsFeedServer.server.address().port
@@ -126,7 +126,7 @@ describe('checkAutodiscovery method', () => {
         exists: false,
         file: 'gbfs.json',
         hasErrors: false,
-        recommanded: true,
+        recommended: true,
         required: false,
         url: `http://${gbfsFeedServer.server.address().address}:${
           gbfsFeedServer.server.address().port
@@ -149,7 +149,7 @@ describe('checkAutodiscovery method', () => {
         exists: false,
         file: 'gbfs.json',
         hasErrors: false,
-        recommanded: true,
+        recommended: true,
         required: true,
         url: `http://${gbfsFeedServer.server.address().address}:${
           gbfsFeedServer.server.address().port

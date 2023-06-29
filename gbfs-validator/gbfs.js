@@ -196,7 +196,7 @@ class GBFS {
       .then((body) => {
         if (typeof body !== 'object') {
           return {
-            recommanded: true,
+            recommended: true,
             required: isGBFSFileRequire(this.options.version),
             errors: false,
             exists: false,
@@ -218,7 +218,7 @@ class GBFS {
           errors,
           url,
           version: body.version,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
@@ -230,7 +230,7 @@ class GBFS {
       .catch(() => {
         return {
           url,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
@@ -264,7 +264,7 @@ class GBFS {
           errors,
           url: this.url,
           version: body.version || '1.0',
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(
             this.options.version || body.version || '1.0'
           ),
@@ -282,7 +282,7 @@ class GBFS {
 
         return {
           url: this.url,
-          recommanded: true,
+          recommended: true,
           required: isGBFSFileRequire(this.options.version),
           errors: false,
           exists: false,
@@ -307,12 +307,22 @@ class GBFS {
 
   getFile(type, required) {
     if (this.autoDiscovery) {
-      const urls = Object.entries(this.autoDiscovery.data).map((key) => {
-        return Object.assign(
-          { lang: key[0] },
-          this.autoDiscovery.data[key[0]].feeds.find((f) => f.name === type)
-        )
-      })
+      let urls
+
+      let version = this.options.version || this.autoDiscovery.version
+
+      // 3.0-RC , 3.0 and upcoming minor versions
+      if (/^3\.\d/.test(version)) {
+        urls =
+          this.autoDiscovery.data.feeds?.filter((f) => f.name === type) || []
+      } else {
+        urls = Object.entries(this.autoDiscovery.data).map((key) => {
+          return Object.assign(
+            { lang: key[0] },
+            this.autoDiscovery.data[key[0]].feeds.find((f) => f.name === type)
+          )
+        })
+      }
 
       return Promise.all(
         urls.map((lang) =>
@@ -462,9 +472,34 @@ class GBFS {
     const stationInformationFile = files.find(
       (a) => a.type === 'station_information'
     )
-    const stationPricingPlans = files.find(
+    const systemPricingPlans = files.find(
       (a) => a.type === 'system_pricing_plans'
     )
+    const systemInformation = files.find((a) => a.type === 'system_information')
+
+    const manifestUrl = systemInformation?.body?.[0]?.body?.data?.manifest_url
+
+    if (manifestUrl) {
+      try {
+        const body = await got.get(manifestUrl, this.gotOptions).json()
+
+        files.push({
+          body,
+          required: true,
+          type: 'manifest'
+        })
+      } catch (error) {
+        files.push({
+          url: manifestUrl,
+          recommended: true,
+          required: true,
+          errors: false,
+          exists: false,
+          file: `manifest.json`,
+          hasErrors: false
+        })
+      }
+    }
 
     let vehicleTypes,
       pricingPlans,
@@ -499,8 +534,8 @@ class GBFS {
         hasRentalUris(stationInformationFile, 'stations', 'android')
     }
 
-    if (fileExist(stationPricingPlans)) {
-      pricingPlans = getPricingPlans(stationPricingPlans)
+    if (fileExist(systemPricingPlans)) {
+      pricingPlans = getPricingPlans(systemPricingPlans)
     }
 
     files.forEach((f) => {
@@ -512,7 +547,7 @@ class GBFS {
           if (vehicleTypes && vehicleTypes.length) {
             const partial = getPartialSchema(
               gbfsVersion,
-              'required_vehicle_types_available',
+              'station_status/required_vehicle_types_available',
               {
                 vehicleTypes
               }
@@ -526,7 +561,21 @@ class GBFS {
           if (vehicleTypes && vehicleTypes.length) {
             const partial = getPartialSchema(
               gbfsVersion,
-              'required_vehicle_type_id',
+              'free_bike_status/required_vehicle_type_id',
+              {
+                vehicleTypes
+              }
+            )
+            if (partial) {
+              addSchema.push(partial)
+            }
+          }
+          break
+        case 'vehicle_status':
+          if (vehicleTypes && vehicleTypes.length) {
+            const partial = getPartialSchema(
+              gbfsVersion,
+              'vehicle_status/required_vehicle_type_id',
               {
                 vehicleTypes
               }
@@ -541,9 +590,13 @@ class GBFS {
             required = true
           }
           if (pricingPlans && pricingPlans.length) {
-            const partial = getPartialSchema(gbfsVersion, 'pricing_plan_id', {
-              pricingPlans
-            })
+            const partial = getPartialSchema(
+              gbfsVersion,
+              'vehicle_types/pricing_plan_id',
+              {
+                pricingPlans
+              }
+            )
 
             if (partial) {
               addSchema.push(partial)
@@ -560,7 +613,7 @@ class GBFS {
           if (hasAndroidRentalUris || hasIosRentalUris) {
             const partial = getPartialSchema(
               gbfsVersion,
-              'required_store_uri',
+              'system_information/required_store_uri',
               {
                 ios: hasIosRentalUris,
                 android: hasAndroidRentalUris
