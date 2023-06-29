@@ -14,7 +14,7 @@ parseOptions = () => {
   commander
     .version(pjson.version, '-v, --version')
     .usage('[OPTIONS]...')
-    .option('-u, --url <dataset_folder>', 'Validates GBFS local dataset')
+    .option('-u, --url <dataset_folder>', 'URL of the GBFS feed')
     .option('-p, --print', 'Print report to console')
     .option('-vb, --verbose', 'Verbose mode prints debugging console logs')
     .option('-s, --save-report <report_path>', 'Local path to output report file')
