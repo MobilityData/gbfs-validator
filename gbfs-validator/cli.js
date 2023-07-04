@@ -2,8 +2,8 @@ const { inspect } = require('util')
 const commander = require('commander')
 const fs = require('fs')
 const fsPath = require('path')
-const GBFS = require('./')
-const pjson = require('./package.json');
+const GBFS = require('./gbfs')
+const pjson = require('./package.json')
 
 getFeedValidationReport = async (url) => {
   const gbfs = new GBFS(url)
@@ -23,8 +23,6 @@ parseOptions = () => {
   return commander.opts()
 }
 
-const options = parseOptions();
-
 const saveReport = (report, filePath) => { 
   const dirname = fsPath.dirname(filePath);
   if (!fs.existsSync(dirname)) {
@@ -33,7 +31,7 @@ const saveReport = (report, filePath) => {
   fs.writeFileSync(filePath, JSON.stringify(report))
 }
 
-const processFeedValidation = async () => {
+const processFeedValidation = async (options) => {
   if (options.verbose) {
     console.log("Started GBFS validation with options: \n " + inspect(options, { depth: null, colors: true }))
   }
@@ -51,15 +49,28 @@ const processFeedValidation = async () => {
   }
 }
 
-if (options.url) {
-  processFeedValidation().then(
-    () => {
-      if (options.verbose) {
-        console.log("Validation completed")
+const validate = (options) => {
+  if (options?.url) {
+    processFeedValidation(options).then(
+      () => {
+        if (options.verbose) {
+          console.log("Validation completed")
+        }
       }
-    }
-  )
+    )
+  } else {
+    commander.help()
+    process.exit(1)
+  }
+}
+
+if (require.main === module) {
+  validate(parseOptions())
 } else {
-  commander.help()
-  process.exit(1)
+  module.exports = {
+    validate,
+    processFeedValidation,
+    saveReport,
+    getFeedValidationReport,
+  }
 }

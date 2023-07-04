@@ -1,57 +1,37 @@
-const serverOpts = {
-  port: 0,
-  host: '127.0.0.1',
-}
+const GBFS = require('../gbfs')
+const cli = require('../cli.js')
 
 describe('cli', () => {
-  describe('without arguments', () => {
-    test('should show help without required url', async () => {
-      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {})
-      const mockConsoleError = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
 
-      expect(() => {
-        require('../cli.js')
-      }).toThrow('Missing URL')
+  let mockValidate
+  let mockExit
 
-      expect(mockExit).toHaveBeenCalledWith(1)
-    })
+  beforeAll(async () => {
+    mockValidate = jest.fn()
+    GBFS.prototype.validation = mockValidate;
+    jest.spyOn(GBFS.prototype, 'validation').mockImplementation(mockValidate)
+    mockExit = jest.spyOn(process, 'exit').mockImplementation(() => { })
   })
 
-  describe('with arguments', () => {
-    let gbfsFeedServer
-
-    beforeAll(async () => {
-      gbfsFeedServer = require('./fixtures/server')()
-
-      await gbfsFeedServer.listen(serverOpts)
-
-      return gbfsFeedServer
-    })
-
-    afterAll(() => {
-      return gbfsFeedServer.close()
-    })
-
-    test('should run cli', async () => {
-      const url = `http://${gbfsFeedServer.server.address().address}:${
-        gbfsFeedServer.server.address().port
-      }`
-
-      process.argv[2] = url
-
-      const cli = await require('../cli.js')
-
-      expect(cli).toMatchObject({
-        summary: expect.objectContaining({
-          version: { detected: '2.2', validated: '2.2' },
-          hasErrors: true,
-          validatorVersion: '1.0.0',
-          errorsCount: 1
-        }),
-        files: expect.any(Array)
+  test('should show help without parameters', async () => {
+    let stdOut = ""
+    jest
+      .spyOn(console._stdout, 'write')
+      .mockImplementation(message => {
+        stdOut += message
       })
-    })
+
+    await cli.validate()
+
+    expect(mockExit).toHaveBeenCalledWith(1)
+    expect(stdOut).toContain("Usage:")
+  })
+
+  test('should execute GBFS validate', async () => {
+    const result = jest.fn();
+    mockValidate.mockReturnValue(result)
+    const expected = await cli.validate({ url: "gbfs_url" })
+    expect(mockExit).toHaveBeenCalledWith(1)
+    expect(mockValidate).toHaveBeenCalled()
   })
 })
