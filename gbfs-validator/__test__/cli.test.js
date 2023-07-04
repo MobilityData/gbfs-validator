@@ -11,7 +11,7 @@ const cliExec = (args) => {
   return new Promise(resolve => {
     exec(command,
       // Setting exit override to allow program to exit simplifying unit testing
-      { env: { ...process.env, 'EXIT_OVERRIDE': 'true'}},
+      { env: { ...process.env, 'EXIT_OVERRIDE': 'true' } },
       (error, stdout, stderr) => {
         resolve({
           code: error && error.code ? error.code : 0,
