@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { inspect } = require('util')
 const commander = require('commander')
 const fs = require('fs')
@@ -10,20 +12,35 @@ getFeedValidationReport = async (url) => {
   return gbfs.validation()
 }
 
+const isExitOverrided = () => (process.env.EXIT_OVERRIDE === 'true')
+
+const printingReport = (options) => (options.printReport === 'yes')
+
+const exitProcess = (code) => {
+  if (!isExitOverrided && code === 1) {
+    process.exit(code)
+  }
+  process.exit(0)
+}
+
 parseOptions = () => {
   commander
     .version(pjson.version, '-v, --version')
     .usage('[OPTIONS]...')
-    .option('-u, --url <dataset_folder>', 'URL of the GBFS feed')
-    .option('-p, --print', 'Print report to console')
+    .requiredOption('-u, --url [dataset_url]', 'URL of the GBFS feed')
     .option('-vb, --verbose', 'Verbose mode prints debugging console logs')
     .option('-s, --save-report <report_path>', 'Local path to output report file')
-    .parse(process.argv)
+    .addOption(new commander.Option('-pr, --print-report <yes_no>', 'Print report to standard output').default('yes').choices(['yes', 'no']))
 
-  return commander.opts()
+  // Supporting friendly unit testing and possible CI integrations
+  // The process throw an exception on parsing error in addition to the parsing error 
+  if (isExitOverrided()) {
+    commander.exitOverride()
+  }
+  return commander.parse(process.argv).opts()
 }
 
-const saveReport = (report, filePath) => { 
+const saveReport = (report, filePath) => {
   const dirname = fsPath.dirname(filePath);
   if (!fs.existsSync(dirname)) {
     fs.mkdirSync(dirname, { recursive: true });
@@ -37,7 +54,7 @@ const processFeedValidation = async (options) => {
   }
   try {
     const report = await getFeedValidationReport(options.url)
-    if (options.print) {
+    if (printingReport(options)) {
       console.log(inspect(report, { depth: null, colors: true }))
     }
     if (options.saveReport) {
@@ -45,27 +62,29 @@ const processFeedValidation = async (options) => {
     }
   } catch (error) {
     console.error(`Critical error while validating GBFS feed => ${error}`)
-    process.exit(1);
+    exitProcess(1);
   }
 }
 
-const validate = (options) => {
-  if (options?.url) {
-    processFeedValidation(options).then(
-      () => {
-        if (options.verbose) {
-          console.log("Validation completed")
-        }
-      }
-    )
-  } else {
+const validate = () => {
+  const options = parseOptions()
+  if (!options.saveReport && !printingReport(options)) {
+    console.log('Please set at least of the following options: --save-report or --print-report')
     commander.help()
-    process.exit(1)
+    exitProcess(1)
   }
+
+  processFeedValidation(options).then(
+    () => {
+      if (options.verbose) {
+        console.log("Validation completed")
+      }
+    }
+  )
 }
 
 if (require.main === module) {
-  validate(parseOptions())
+  validate()
 } else {
   module.exports = {
     validate,
