@@ -30,9 +30,8 @@ describe('cli', () => {
 
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/server')()
-    const result = await gbfsFeedServer.listen(serverOpts)
+    await gbfsFeedServer.listen(serverOpts)
     feedUrl = `http://${gbfsFeedServer.server.address().address}:${gbfsFeedServer.server.address().port}/gbfs.json`
-    return result
   })
 
   afterAll(() => {
