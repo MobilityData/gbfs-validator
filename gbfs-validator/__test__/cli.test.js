@@ -53,7 +53,7 @@ describe('cli', () => {
   test('should show an error if pr parameter is set to `no` and -s is not set', async () => {
     const result = await cliExec([`-u ${feedUrl}`, '-pr no'])
     expect(result.code).toBe(1)
-    expect(result.stdout).toContain('Please set at least of the following options: --save-report or --print-report')
+    expect(result.stdout).toContain('Please set at least one of the following options: --save-report or --print-report')
   })
 
   test('should success when paramters url and save report has valid values and print report is set to no', async () => {
