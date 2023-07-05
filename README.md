@@ -70,6 +70,43 @@ yarn run dev
 
 Open `localhost:8080` on your browser
 
+### Command line
+The GBFS validator can be used a command line. Find below the steps for using cli feature:
+
+- Download or clone this repository
+```shell
+git clone https://github.com/fluctuo/gbfs-validator.git
+cd gbfs-validator
+```
+- Executes the cli script using one of the listed below options
+
+```shell
+./gbfs-validator/cli.js -u {http_address_of_gbfs_dataset} -s {local_path_to_output_report_file}
+```
+or 
+```shell
+node ./gbfs-validator/cli.js -u {http_address_of_gbfs_dataset} -s {local_path_to_output_report_file}
+```
+
+## CLI help parameter
+To get the list of supported paramters
+```shell
+./gbfs-validator/cli.js --help
+```
+
+## Usage description and supported parameters
+```
+Usage: cli [OPTIONS]...
+
+Options:
+  -v, --version                    output the version number
+  -u, --url <feed_url>             URL of the GBFS feed
+  -vb, --verbose                   Verbose mode prints debugging console logs
+  -s, --save-report <report_path>  Local path to output report file
+  -pr, --print-report <yes_no>     Print report to standard output (choices: "yes", "no", default: "yes")
+  -h, --help                       display help for command
+```
+
 ## Projects based on this validator
 
 [transport.data.gouv.fr GBFS validator tool](https://transport.data.gouv.fr/validation?type=gbfs) - Tool displaying interactive geofencing, station, and vehicle maps, the validation results, and metadata of GBFS feeds.

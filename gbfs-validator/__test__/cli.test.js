@@ -1,57 +1,69 @@
+let path = require('path')
+let exec = require('node:child_process').exec
+
 const serverOpts = {
   port: 0,
   host: '127.0.0.1',
 }
 
+const cliExec = (args) => {
+  const command = `${path.resolve(`${__dirname}/../cli.js`)} ${args.join(' ')}`
+  return new Promise(resolve => {
+    exec(command,
+      // Setting exit override to allow program to exit simplifying unit testing
+      { env: { ...process.env, 'EXIT_OVERRIDE': 'true' } },
+      (error, stdout, stderr) => {
+        resolve({
+          code: error && error.code ? error.code : 0,
+          error,
+          stdout,
+          stderr
+        })
+      })
+  })
+}
+
 describe('cli', () => {
-  describe('without arguments', () => {
-    test('should show help without required url', async () => {
-      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {})
-      const mockConsoleError = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
 
-      expect(() => {
-        require('../cli.js')
-      }).toThrow('Missing URL')
+  let gbfsFeedServer
+  let feedUrl
 
-      expect(mockExit).toHaveBeenCalledWith(1)
-    })
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/server')()
+    await gbfsFeedServer.listen(serverOpts)
+    feedUrl = `http://${gbfsFeedServer.server.address().address}:${gbfsFeedServer.server.address().port}/gbfs.json`
   })
 
-  describe('with arguments', () => {
-    let gbfsFeedServer
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
 
-    beforeAll(async () => {
-      gbfsFeedServer = require('./fixtures/server')()
+  test('should show an error if url parameter is not set', async () => {
+    const result = await cliExec([])
+    expect(result.code).toBe(1)
+    expect(result.error.message).toContain('error: required option \'-u, --url <feed_url>\' not specified')
+  })
 
-      await gbfsFeedServer.listen(serverOpts)
+  test('should success and print the report when url parameter set and -pr is set as default', async () => {
+    const result = await cliExec([`-u`, `${feedUrl}`])
+    expect(result.code).toBe(0)
+    expect(result.stdout).toContain('summary:')
+  })
 
-      return gbfsFeedServer
-    })
+  test('should show an error if pr parameter is set to `no` and -s is not set', async () => {
+    const result = await cliExec([`-u ${feedUrl}`, '-pr no'])
+    expect(result.code).toBe(1)
+    expect(result.stdout).toContain('Please set at least one of the following options: --save-report or --print-report')
+  })
 
-    afterAll(() => {
-      return gbfsFeedServer.close()
-    })
+  test('should success when paramters url and save report has valid values and print report is set to no', async () => {
+    const result = await cliExec([`-u ${feedUrl}`, '-s /dev/null', '-pr no'])
+    expect(result.code).toBe(0)
+  })
 
-    test('should run cli', async () => {
-      const url = `http://${gbfsFeedServer.server.address().address}:${
-        gbfsFeedServer.server.address().port
-      }`
-
-      process.argv[2] = url
-
-      const cli = await require('../cli.js')
-
-      expect(cli).toMatchObject({
-        summary: expect.objectContaining({
-          version: { detected: '2.2', validated: '2.2' },
-          hasErrors: true,
-          validatorVersion: '1.0.0',
-          errorsCount: 1
-        }),
-        files: expect.any(Array)
-      })
-    })
+  test('should success and print report when paramters url and save report are valid and print report is set to yes', async () => {
+    const result = await cliExec([`-u ${feedUrl}`, '-s /dev/null', '-pr yes'])
+    expect(result.code).toBe(0)
+    expect(result.stdout).toContain('summary:')
   })
 })
