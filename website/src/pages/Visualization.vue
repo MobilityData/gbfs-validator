@@ -48,14 +48,6 @@ const transformRequest = (url = '', resourceType = '') => {
 }
 
 onMounted(() => {
-  // When specifying ?url=https://example.com/gbfs.json, start
-  // directly a validation
-  const url_query_param = new URL(location.href).searchParams.get('url')
-  if (url_query_param) {
-    set(url, url_query_param)
-    visualize()
-  }
-
   const initialState = { lng: 2.349014, lat: 48.864716, zoom: 11 }
 
   mapInstance = new Map({
@@ -72,7 +64,14 @@ onMounted(() => {
 
   mapInstance.addControl(new NavigationControl())
 
-  populateData()
+  // When specifying ?url=https://example.com/gbfs.json, start
+  // directly a validation
+  const url_query_param = new URL(location.href).searchParams.get('url')
+
+  if (url_query_param) {
+    set(url, url_query_param)
+    return visualize()
+  }
 })
 
 onUnmounted(() => {
@@ -120,7 +119,7 @@ function updateURL() {
 function dataFromArray(f) {
   if (f?.body) {
     if (Array.isArray(f.body)) {
-      return f.body[0].body?.data
+      return f.body.length && f.body[0].body?.data
     } else {
       return f.body.data
     }
@@ -131,11 +130,13 @@ function dataFromArray(f) {
 
 const vehicles = computed(() => {
   if (get(result).length) {
-    const vehiclesFile = get(result).find(
-      (f) => f.file === 'free_bike_status.json'
+    const vehiclesFile = get(result).find((f) =>
+      ['free_bike_status', 'vehicle_status'].includes(f.type)
     )
 
-    return dataFromArray(vehiclesFile)?.bikes
+    const data = dataFromArray(vehiclesFile)
+
+    return data?.bikes || data?.vehicles
   } else {
     return null
   }
@@ -166,7 +167,7 @@ const vehiclesCountByType = computed(() => {
 const stations = computed(() => {
   if (get(result).length) {
     const stationsFile = get(result).find(
-      (f) => f.file === 'station_information.json'
+      (f) => f.type === 'station_information'
     )
 
     return dataFromArray(stationsFile)?.stations
@@ -201,9 +202,7 @@ const vehiclesInStations = computed(() => {
 
 const vehicleTypes = computed(() => {
   if (get(result)) {
-    const vehicleTypesFile = get(result).find(
-      (f) => f.file === 'vehicle_types.json'
-    )
+    const vehicleTypesFile = get(result).find((f) => f.type === 'vehicle_types')
 
     return dataFromArray(vehicleTypesFile)?.vehicle_types
   } else {
