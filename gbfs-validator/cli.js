@@ -69,7 +69,7 @@ const processFeedValidation = async (options) => {
 const validate = () => {
   const options = parseOptions()
   if (!options.saveReport && !printingReport(options)) {
-    console.log('Please set at least of the following options: --save-report or --print-report')
+    console.log('Please set at least one of the following options: --save-report or --print-report')
     commander.help()
     exitProcess(1)
   }
