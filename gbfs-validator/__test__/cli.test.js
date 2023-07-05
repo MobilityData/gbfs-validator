@@ -41,7 +41,7 @@ describe('cli', () => {
   test('should show an error if url parameter is not set', async () => {
     const result = await cliExec([])
     expect(result.code).toBe(1)
-    expect(result.error.message).toContain('error: required option \'-u, --url [feed_url]\' not specified')
+    expect(result.error.message).toContain('error: required option \'-u, --url <feed_url>\' not specified')
   })
 
   test('should success and print the report when url parameter set and -pr is set as default', async () => {

@@ -27,7 +27,7 @@ parseOptions = () => {
   commander
     .version(pjson.version, '-v, --version')
     .usage('[OPTIONS]...')
-    .requiredOption('-u, --url [feed_url]', 'URL of the GBFS feed')
+    .requiredOption('-u, --url <feed_url>', 'URL of the GBFS feed')
     .option('-vb, --verbose', 'Verbose mode prints debugging console logs')
     .option('-s, --save-report <report_path>', 'Local path to output report file')
     .addOption(new commander.Option('-pr, --print-report <yes_no>', 'Print report to standard output').default('yes').choices(['yes', 'no']))

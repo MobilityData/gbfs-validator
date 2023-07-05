@@ -100,7 +100,7 @@ Usage: cli [OPTIONS]...
 
 Options:
   -v, --version                    output the version number
-  -u, --url [dataset_url]          URL of the GBFS feed
+  -u, --url <feed_url>             URL of the GBFS feed
   -vb, --verbose                   Verbose mode prints debugging console logs
   -s, --save-report <report_path>  Local path to output report file
   -pr, --print-report <yes_no>     Print report to standard output (choices: "yes", "no", default: "yes")
