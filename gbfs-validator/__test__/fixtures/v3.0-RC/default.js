@@ -116,15 +116,13 @@ class MockRequests {
               }
             ],
             default_reserve_time: 30,
-            return_type: ['any_station', 'free_floating'],
+            return_constraint: 'hybrid',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_bicycle.svg',
               icon_url_dark:
                 'https://www.example.com/assets/icon_bicycle_dark.svg',
               icon_last_modified: '2021-06-15'
-            },
-            default_pricing_plan_id: 'bike_plan_1',
-            pricing_plan_ids: ['bike_plan_1', 'bike_plan_2', 'bike_plan_3']
+            }
           },
           {
             vehicle_type_id: 'cartype1',
@@ -138,14 +136,12 @@ class MockRequests {
             ],
             default_reserve_time: 30,
             max_range_meters: 100,
-            return_type: ['any_station', 'free_floating'],
+            return_constraint: 'any_station',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_car.svg',
               icon_url_dark: 'https://www.example.com/assets/icon_car_dark.svg',
               icon_last_modified: '2021-06-15'
-            },
-            default_pricing_plan_id: 'car_plan_1',
-            pricing_plan_ids: ['car_plan_1', 'car_plan_2', 'car_plan_3']
+            }
           }
         ]
       }

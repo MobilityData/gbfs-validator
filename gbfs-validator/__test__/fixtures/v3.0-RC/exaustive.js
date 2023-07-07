@@ -211,7 +211,7 @@ class MockRequests {
               }
             ],
             default_reserve_time: 30,
-            return_type: ['any_station', 'free_floating'],
+            return_constraint: 'free_floating',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_bicycle.svg',
               icon_url_dark:
@@ -243,7 +243,6 @@ class MockRequests {
             vehicle_accessories: ['automatic', 'air_conditioning'],
             g_CO2_km: 0,
             default_reserve_time: 30,
-            return_type: ['any_station', 'free_floating'],
             vehicle_image: 'https://www.example.com/assets/car.jpg',
             make: [
               {
@@ -267,7 +266,6 @@ class MockRequests {
             wheel_count: 4,
             max_permitted_speed: 200,
             rated_power: 100,
-            default_reserve_time: 30,
             return_constraint: 'hybrid',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_car.svg',
@@ -290,7 +288,20 @@ class MockRequests {
       data: {
         stations: [
           {
-            station_id: 'pga',
+            station_id: 'station1',
+            name: [
+              {
+                text: 'Station 1',
+                language: 'en'
+              }
+            ],
+            lat: 12.345578,
+            lon: 45.678801,
+            is_virtual_station: false,
+            capacity: 5
+          },
+          {
+            station_id: 'station2',
             name: [
               {
                 text: 'Parking garage A',
@@ -454,8 +465,7 @@ class MockRequests {
             rental_uris: {
               android:
                 'https://www.example.com/app?vehicle_id=973a5c94-c288-4a2b-afa6-de8aeb6ae2e5&platform=android&',
-              ios:
-                'https://www.example.com/app?vehicle_id=973a5c94-c288-4a2b-afa6-de8aeb6ae2e5&platform=ios',
+              ios: 'https://www.example.com/app?vehicle_id=973a5c94-c288-4a2b-afa6-de8aeb6ae2e5&platform=ios',
               web: 'https://www.example.com/app?sid=1234567890'
             },
             vehicle_type_id: 'biketype1',
@@ -584,7 +594,7 @@ class MockRequests {
                 language: 'en'
               }
             ],
-            currency: 'CAD',
+            currency: 'EUR',
             price: 3.0,
             reservation_price_flat_rate: 3.0,
             is_taxable: true,
