@@ -1,5 +1,7 @@
 const fastify = require('fastify')
 
+const last_updated_fresh = Math.floor(Date.now() / 1000) - 30
+
 function build(opts = {}) {
   const app = fastify(opts)
 
@@ -49,7 +51,7 @@ function build(opts = {}) {
 
   app.get('/free_bike_status.json', async function(request, reply) {
     return {
-      last_updated: 1566224400,
+      last_updated: last_updated_fresh,
       ttl: 0,
       version: '2.2',
       data: {

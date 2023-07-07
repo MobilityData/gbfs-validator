@@ -1,5 +1,7 @@
 const fastify = require('fastify')
 
+const last_updated_fresh = Math.floor(Date.now() / 1000) - 30
+
 function build(opts = {}) {
   const app = fastify(opts)
 
@@ -64,15 +66,12 @@ function build(opts = {}) {
             propulsion_type: 'human',
             name: 'Example Basic Bike',
             default_reserve_time: 30,
-            return_type: ['any_station', 'free_floating'],
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_bicycle.svg',
               icon_url_dark:
                 'https://www.example.com/assets/icon_bicycle_dark.svg',
               icon_last_modified: '2021-06-15'
-            },
-            default_pricing_plan_id: 'bike_plan_1',
-            pricing_plan_ids: ['bike_plan_1', 'bike_plan_2', 'bike_plan_3']
+            }
           },
           {
             vehicle_type_id: 'efg456',
@@ -81,14 +80,11 @@ function build(opts = {}) {
             name: 'Example Electric Car',
             default_reserve_time: 30,
             max_range_meters: 100,
-            return_type: ['any_station', 'free_floating'],
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_car.svg',
               icon_url_dark: 'https://www.example.com/assets/icon_car_dark.svg',
               icon_last_modified: '2021-06-15'
-            },
-            default_pricing_plan_id: 'car_plan_1',
-            pricing_plan_ids: ['car_plan_1', 'car_plan_2', 'car_plan_3']
+            }
           }
         ]
       }
@@ -97,7 +93,7 @@ function build(opts = {}) {
 
   app.get('/free_bike_status.json', async function(request, reply) {
     return {
-      last_updated: 1566224400,
+      last_updated: last_updated_fresh,
       ttl: 0,
       version: '2.2',
       data: {

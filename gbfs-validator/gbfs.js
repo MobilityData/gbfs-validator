@@ -5,45 +5,51 @@ const validatorVersion = process.env.COMMIT_REF
   : require('./package.json').version
 
 function hasErrors(data, required) {
-  let hasError = false
-
-  data.forEach((el) => {
+  for (const el of data) {
     if (Array.isArray(el)) {
       if (hasErrors(el, required)) {
-        hasError = true
+        return true
       }
     } else {
-      if (required && !el.exists ? true : !!el.errors || el.hasErrors) {
-        hasError = true
-      }
-    }
-  })
-
-  return hasError
-}
-
-function countErrors(file) {
-  let count = 0
-
-  if (file.hasErrors) {
-    if (file.errors) {
-      count = file.errors.length
-    } else if (file.languages) {
-      if (file.required) {
-        count += file.languages.filter((l) => !l.exists).length
+      if (required && !el.exists) {
+        return true
       }
 
-      count += file.languages.reduce((acc, l) => {
-        if (l.exists) {
-          acc += l.errors.length
-        }
-
-        return acc
-      }, 0)
+      if (el.hasErrors || el.errors?.length || el.otherErrors?.length) {
+        return true
+      }
     }
   }
 
-  return count
+  return false
+}
+
+function hasWarnings(data) {
+  for (const el of data) {
+    if (Array.isArray(el)) {
+      if (hasWarnings(el)) {
+        return true
+      }
+    }
+
+    if (el.otherWarnings?.length) {
+      return true
+    }
+  }
+}
+
+function countErrors(file) {
+  let errors = 0
+
+  errors += file.errors?.length || 0
+  errors += file.otherErrors?.length || 0
+
+  for (const lang of file.languages || []) {
+    errors += lang.errors?.length || 0
+    errors += lang.otherErrors?.length || 0
+  }
+
+  return errors
 }
 
 function getPartialSchema(version, partial, data = {}) {
@@ -144,11 +150,15 @@ function fileExist(file) {
   return false
 }
 
+function getVersionConfiguration(version) {
+  return require(`./versions/v${version}`)
+}
+
 function isGBFSFileRequire(version) {
   if (!version) {
     return false
   } else {
-    return require(`./versions/v${version}`).gbfsRequired
+    return getVersionConfiguration(version).gbfsRequired
   }
 }
 
@@ -161,7 +171,7 @@ class GBFS {
       throw new Error('Missing URL')
     }
 
-    this.url = url
+    this.url = url.replace(/\s+$/, '')
     this.options = {
       docked,
       freefloating,
@@ -216,15 +226,18 @@ class GBFS {
         }
 
         this.autoDiscovery = body
-        const { errors, schema } = this.validateFile(
-          this.options.version || body.version || '1.0',
-          'gbfs',
-          this.autoDiscovery
-        )
+        const { errors, schema, otherWarnings, otherErrors } =
+          this.validateFile(
+            this.options.version || body.version || '1.0',
+            'gbfs',
+            this.autoDiscovery
+          )
 
         return {
           schema,
           errors,
+          otherWarnings,
+          otherErrors,
           url,
           version: body.version,
           recommended: true,
@@ -262,15 +275,18 @@ class GBFS {
 
         this.autoDiscovery = body
 
-        const { errors, schema } = this.validateFile(
-          this.options.version || body.version || '1.0',
-          'gbfs',
-          this.autoDiscovery
-        )
+        const { errors, schema, otherWarnings, otherErrors } =
+          this.validateFile(
+            this.options.version || body.version || '1.0',
+            'gbfs',
+            this.autoDiscovery
+          )
 
         return {
           schema,
           errors,
+          otherWarnings,
+          otherErrors,
           url: this.url,
           version: body.version || '1.0',
           recommended: true,
@@ -301,17 +317,52 @@ class GBFS {
       })
   }
 
-  validateFile(version, file, data, options) {
-    let schema
+  validateFile(version, file, data, options, { allFiles, lang } = {}) {
+    let s
 
     try {
-      schema = require(`./versions/schemas/v${version}/${file}`)
+      s = require(`./versions/schemas/v${version}/${file}`)
     } catch (e) {
       console.log(e)
       throw new Error('can not require')
     }
 
-    return validate(schema, data, options)
+    let { schema, errors } = validate(s, data, options)
+
+    let others = { errors: [], warnings: [] }
+    try {
+      const files = getVersionConfiguration(version).files(this.options)
+
+      let f = files.find((f) => f.file === file)
+
+      const fns = f?.otherRules || []
+
+      for (const fn of fns) {
+        try {
+          fn({
+            errors: others.errors,
+            warnings: others.warnings,
+            version,
+            file,
+            data,
+            schema,
+            lang,
+            allFiles
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    } catch (e) {
+      // No additional validation
+    }
+
+    return {
+      schema,
+      errors,
+      otherErrors: others.errors,
+      otherWarnings: others.warnings
+    }
   }
 
   getFile(type, required) {
@@ -390,13 +441,16 @@ class GBFS {
     }
   }
 
-  validationFile(body, version, type, required, options) {
+  validationFile(body, version, type, required, options, { allFiles } = {}) {
     if (Array.isArray(body)) {
       body = body
         .filter((b) => b.exists || b.required)
         .map((b) => ({
           ...b,
-          ...this.validateFile(version, type, b.body, options)
+          ...this.validateFile(version, type, b.body, options, {
+            allFiles,
+            lang: b.lang
+          })
         }))
 
       return {
@@ -406,12 +460,16 @@ class GBFS {
           ? body.reduce((acc, l) => acc && l.exists, true)
           : false,
         file: `${type}.json`,
-        hasErrors: hasErrors(body, required)
+        hasErrors: hasErrors(body, required),
+        hasWarnings: hasWarnings(body)
       }
     } else {
       return {
         required,
-        ...this.validateFile(version, type, body, options),
+        ...this.validateFile(version, type, body, options, {
+          allFiles
+        }),
+
         exists: !!body,
         file: `${type}.json`,
         url: `${this.url}/${type}.json`
@@ -639,16 +697,28 @@ class GBFS {
       }
 
       result.push(
-        this.validationFile(f.body, gbfsVersion, f.type, required, {
-          addSchema
-        })
+        this.validationFile(
+          f.body,
+          gbfsVersion,
+          f.type,
+          required,
+          { addSchema },
+          { allFiles: files }
+        )
       )
     })
 
-    const filesResult = result.map((file) => ({
-      ...file,
-      errorsCount: countErrors(file)
-    }))
+    let errorsCount = 0
+    const filesResult = result.map((file) => {
+      let errorsCountFile = countErrors(file)
+
+      errorsCount += errorsCountFile
+
+      return {
+        ...file,
+        errorsCount: errorsCountFile
+      }
+    })
 
     return {
       summary: {
@@ -658,10 +728,8 @@ class GBFS {
           validated: this.options.version || result[0].version
         },
         hasErrors: hasErrors(result),
-        errorsCount: filesResult.reduce((acc, file) => {
-          acc += file.errorsCount
-          return acc
-        }, 0)
+        hasWarnings: hasWarnings(result),
+        errorsCount
       },
       files: filesResult
     }

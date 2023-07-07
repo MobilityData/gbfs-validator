@@ -1,9 +1,11 @@
 const fastify = require('fastify')
 
+const last_updated_fresh = Math.floor(Date.now() / 1000) - 30
+
 function build(opts = {}) {
   const app = fastify(opts)
 
-  app.get('/gbfs.json', async function(request, reply) {
+  app.get('/gbfs.json', async function (request, reply) {
     return {
       last_updated: 1566224400,
       ttl: 0,
@@ -57,7 +59,7 @@ function build(opts = {}) {
 
   app.get('/free_bike_status.json', async function(request, reply) {
     return {
-      last_updated: 1566224400,
+      last_updated: last_updated_fresh,
       ttl: 0,
       version: '2.3',
       data: {
@@ -109,7 +111,7 @@ function build(opts = {}) {
             propulsion_type: 'human',
             name: 'Example Basic Bike',
             default_reserve_time: 30,
-            return_type: ['any_station', 'free_floating'],
+            return_constraint: 'any_station',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_bicycle.svg',
               icon_url_dark:
@@ -126,7 +128,7 @@ function build(opts = {}) {
             name: 'Example Electric Car',
             default_reserve_time: 30,
             max_range_meters: 100,
-            return_type: ['any_station', 'free_floating'],
+            return_constraint: 'free_floating',
             vehicle_assets: {
               icon_url: 'https://www.example.com/assets/icon_car.svg',
               icon_url_dark: 'https://www.example.com/assets/icon_car_dark.svg',
