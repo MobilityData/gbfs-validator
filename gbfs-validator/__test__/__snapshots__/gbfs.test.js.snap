@@ -72,3 +72,25 @@ GBFS {
   "url": "http://localhost:8888/gbfs.json",
 }
 `;
+
+exports[`initialization with auth should correctly initialize with \`api_key\` 1`] = `
+GBFS {
+  "auth": Object {
+    "apiKey": Object {
+      "key": "mykey",
+    },
+    "type": "api_key",
+  },
+  "gotOptions": Object {
+    "headers": Object {
+      "X-API-KEY": "mykey",
+    },
+  },
+  "options": Object {
+    "docked": false,
+    "freefloating": false,
+    "version": null,
+  },
+  "url": "http://localhost:8888/gbfs.json",
+}
+`;

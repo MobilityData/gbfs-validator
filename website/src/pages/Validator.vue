@@ -15,6 +15,7 @@ const state = reactive({
       type: null,
       basicAuth: { user: null, password: null },
       bearerToken: { token: null },
+      apiKey: { key: null },
       oauthClientCredentialsGrant: {
         user: null,
         password: null,
@@ -44,6 +45,10 @@ const state = reactive({
     {
       value: 'bearer_token',
       text: 'Bearer Token'
+    },
+    {
+      value: 'api_key',
+      text: 'API Key'
     },
     {
       value: 'oauth_client_credentials_grant',
@@ -193,6 +198,19 @@ function updateURL() {
               id="input-bearer_token"
               placeholder="token"
               v-model="state.options.auth.bearerToken.token"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
+            id="input-group-api_key"
+            label="Authentification"
+            label-for="input-api_key"
+            v-if="state.options.auth.type === 'api_key'"
+          >
+            <b-form-input
+              id="input-api_key"
+              placeholder="key"
+              v-model="state.options.auth.apiKey.key"
             ></b-form-input>
           </b-form-group>
 
