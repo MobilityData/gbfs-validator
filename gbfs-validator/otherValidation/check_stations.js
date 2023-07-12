@@ -69,13 +69,13 @@ function checkStationStatusIDs({ errors, data, lang, allFiles }) {
 
     ids.add(station.station_id)
 
-    let status = stationsInformation.data?.stations?.find(
+    let information = stationsInformation.data?.stations?.find(
       (s) => s.station_id === station.station_id
     )
-    if (!status) {
+    if (!information) {
       errors.push({
         path: '/station/station_id',
-        key: 'missing_station_status',
+        key: 'missing_station_information',
         message: `Missing station_information`,
         station_id: station.station_id
       })
@@ -83,7 +83,16 @@ function checkStationStatusIDs({ errors, data, lang, allFiles }) {
   })
 }
 
-function checkStationStatusCounts({ errors, warnings, data, version }) {
+function checkStationStatusCounts({
+  errors,
+  warnings,
+  data,
+  version,
+  lang,
+  allFiles
+}) {
+  const stationsInformation = getFileBody(allFiles, 'station_information', lang)
+
   data.data.stations.map((station) => {
     if (station.vehicle_types_available) {
       let num_vehicles_available =
@@ -138,6 +147,25 @@ function checkStationStatusCounts({ errors, warnings, data, version }) {
         message: `num_vehicles_available is greater than ${HIGH_NUM_VEHICLES_AVAILABLE}`,
         station_id: station.station_id
       })
+    }
+
+    let information = stationsInformation.data?.stations?.find(
+      (s) => s.station_id === station.station_id
+    )
+    if (information && information.capacity) {
+      let capacity = parseInt(information.capacity)
+
+      if (
+        capacity <
+        station.num_vehicles_available + station.num_docks_available
+      ) {
+        errors.push({
+          path: '/station/capacity',
+          key: 'capacity_too_low',
+          message: `capacity is less than the sum of num_vehicles_available and num_docks_available`,
+          station_id: station.station_id
+        })
+      }
     }
   })
 }

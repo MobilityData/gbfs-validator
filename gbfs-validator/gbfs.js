@@ -15,7 +15,7 @@ function hasErrors(data, required) {
         return true
       }
 
-      if (el.hasErrors || el.errors?.length || el.otherErrors?.length) {
+      if (el.hasErrors || el.errors?.length || el.nonSchemaErrors?.length) {
         return true
       }
     }
@@ -32,7 +32,7 @@ function hasWarnings(data) {
       }
     }
 
-    if (el.otherWarnings?.length) {
+    if (el.nonSchemaWarnings?.length) {
       return true
     }
   }
@@ -42,14 +42,113 @@ function countErrors(file) {
   let errors = 0
 
   errors += file.errors?.length || 0
-  errors += file.otherErrors?.length || 0
+  errors += file.nonSchemaErrors?.length || 0
 
   for (const lang of file.languages || []) {
     errors += lang.errors?.length || 0
-    errors += lang.otherErrors?.length || 0
+    errors += lang.nonSchemaErrors?.length || 0
   }
 
   return errors
+}
+
+function jsonSchemaSummary(errors) {
+  if (!errors) {
+    return []
+  }
+
+  let summary = {}
+
+  for (const error of errors) {
+    let message = error.message
+
+    if (error.params && error.params.additionalProperty) {
+      message += `: ${error.params.additionalProperty}`
+    }
+
+    let instancePath = error.instancePath
+      .replace(/\/\d+\//g, '/#/')
+      .replace(/\/\d+$/g, '/#')
+
+    if (!summary[message]) {
+      summary[message] = {}
+    }
+
+    if (!summary[message][instancePath]) {
+      summary[message][instancePath] = 1
+    } else {
+      summary[message][instancePath]++
+    }
+  }
+
+  return Object.entries(summary).map(([message, value]) => {
+    let values = Object.entries(value).map(([path, count]) => {
+      return {
+        path,
+        message,
+        count
+      }
+    })
+
+    return {
+      key: message,
+      message: message,
+      values
+    }
+  })
+}
+
+function otherSummary(nonSchemas) {
+  if (!nonSchemas) {
+    return []
+  }
+
+  let summary = {}
+  for (const nonSchema of nonSchemas) {
+    let key = nonSchema.key
+    let message = nonSchema.message
+
+    if (nonSchema.additionalProperty) {
+      message = message.replace(/\.$/, '') + `: '${nonSchema.additionalProperty}'`
+    }
+
+    if (!summary[message]) {
+      summary[message] = {}
+    }
+
+    let path = nonSchema.path.replace(/\/\d+\//g, '/#/').replace(/\/\d+$/g, '/#')
+
+    if (!summary[message][path]) {
+      summary[message][path] = { count: 1, key }
+    } else {
+      summary[message][path].count++
+    }
+  }
+
+  return Object.entries(summary).map(([message, value]) => {
+    let values = Object.entries(value).map(([path, { count, key }]) => {
+      return {
+        key,
+        path,
+        message,
+        count
+      }
+    })
+
+    return {
+      key: values[0].key,
+      message,
+      values
+    }
+  })
+}
+
+function getSummary(errors, nonSchemaErrors, nonSchemaWarnings) {
+  return {
+    errors: jsonSchemaSummary(errors),
+    nonSchemaErrors: otherSummary(nonSchemaErrors),
+    nonSchemaWarnings: otherSummary(nonSchemaWarnings)
+  }
 }
 
 function getPartialSchema(version, partial, data = {}) {
@@ -217,18 +316,22 @@ class GBFS {
         }
 
         this.autoDiscovery = body
-        const { errors, schema, otherWarnings, otherErrors } =
+
+        const { errors, schema, nonSchemaWarnings, nonSchemaErrors } =
           this.validateFile(
             this.options.version || body.version || '1.0',
             'gbfs',
             this.autoDiscovery
           )
 
+        const summary = getSummary(errors, nonSchemaErrors, nonSchemaWarnings)
+
         return {
           schema,
           errors,
-          otherWarnings,
-          otherErrors,
+          nonSchemaWarnings,
+          nonSchemaErrors,
+          summary,
           url,
           version: body.version,
           recommended: true,
@@ -266,18 +369,21 @@ class GBFS {
 
         this.autoDiscovery = body
 
-        const { errors, schema, otherWarnings, otherErrors } =
+        const { errors, schema, nonSchemaWarnings, nonSchemaErrors } =
           this.validateFile(
             this.options.version || body.version || '1.0',
             'gbfs',
             this.autoDiscovery
           )
 
+        const summary = getSummary(errors, nonSchemaErrors, nonSchemaWarnings)
+
         return {
           schema,
           errors,
-          otherWarnings,
-          otherErrors,
+          nonSchemaWarnings,
+          nonSchemaErrors,
+          summary,
           url: this.url,
           version: body.version || '1.0',
           recommended: true,
@@ -320,7 +426,7 @@ class GBFS {
 
     let { schema, errors } = validate(s, data, options)
 
-    let others = { errors: [], warnings: [] }
+    let nonSchema = { errors: [], warnings: [] }
     try {
       const files = getVersionConfiguration(version).files(this.options)
 
@@ -331,8 +437,8 @@ class GBFS {
       for (const fn of fns) {
         try {
           fn({
-            errors: others.errors,
-            warnings: others.warnings,
+            errors: nonSchema.errors,
+            warnings: nonSchema.warnings,
             version,
             file,
             data,
@@ -351,27 +457,28 @@ class GBFS {
     return {
       schema,
       errors,
-      otherErrors: others.errors,
-      otherWarnings: others.warnings
+      nonSchemaErrors: nonSchema.errors,
+      nonSchemaWarnings: nonSchema.warnings,
+      summary: getSummary(errors, nonSchema.errors, nonSchema.warnings)
     }
   }
 
   getFile(type, required) {
     if (this.autoDiscovery) {
-      let urls
+      let urls = []
 
       let version = this.options.version || this.autoDiscovery.version
 
       // 3.0-RC , 3.0 and upcoming minor versions
       if (/^3\.\d/.test(version)) {
-        urls =
-          this.autoDiscovery.data.feeds?.filter((f) => f.name === type) || []
-      } else {
-        urls = Object.entries(this.autoDiscovery.data).map((key) => {
-          return Object.assign(
-            { lang: key[0] },
-            this.autoDiscovery.data[key[0]].feeds.find((f) => f.name === type)
-          )
+        urls = this.autoDiscovery.data?.feeds?.filter((f) => f.name === type)
+      } else if (this.autoDiscovery.data) {
+        Object.entries(this.autoDiscovery.data).map(([key, value]) => {
+          let feed = value.feeds?.find((f) => f.name === type)
+
+          if (feed) {
+            urls.push(Object.assign({ lang: key }, feed))
+          }
         })
       }
 
@@ -699,14 +806,31 @@ class GBFS {
     })
 
     let errorsCount = 0
+    let summaryErrorCount = 0
     const filesResult = result.map((file) => {
       let errorsCountFile = countErrors(file)
 
+      let fileSummaryErrorCount = 0
+      if (file.summary) {
+        fileSummaryErrorCount +=
+          file.summary.errors.length + file.summary.nonSchemaErrors.length
+      } else if (file.languages) {
+        file.languages.forEach((language) => {
+          if (language.summary) {
+            fileSummaryErrorCount +=
+              language.summary.errors.length +
+              language.summary.nonSchemaErrors.length
+          }
+        })
+      }
+
       errorsCount += errorsCountFile
+      summaryErrorCount += fileSummaryErrorCount
 
       return {
         ...file,
-        errorsCount: errorsCountFile
+        errorsCount: errorsCountFile,
+        summaryErrorCount: fileSummaryErrorCount
       }
     })
 
@@ -719,7 +843,8 @@ class GBFS {
         },
         hasErrors: hasErrors(result),
         hasWarnings: hasWarnings(result),
-        errorsCount
+        errorsCount,
+        summaryErrorCount
       },
       files: filesResult
     }
