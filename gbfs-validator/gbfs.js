@@ -186,6 +186,12 @@ class GBFS {
           Authorization: `Bearer ${this.auth.bearerToken.token}`
         }
       }
+
+      if (this.auth.type === 'api_key' && this.auth.apiKey) {
+        this.gotOptions.headers = {
+          [this.auth.apiKey.key]: `${this.auth.apiKey.value}`
+        }
+      }
     }
   }
 
