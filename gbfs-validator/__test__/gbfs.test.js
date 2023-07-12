@@ -57,7 +57,10 @@ describe('initialization', () => {
         new GBFS('http://localhost:8888/gbfs.json', {
           auth: {
             type: 'api_key',
-            apiKey: { key: 'mykey' }
+            apiKey: {
+              key: 'mykey',
+              value: 'myvalue'
+            }
           }
         })
       ).toMatchSnapshot()

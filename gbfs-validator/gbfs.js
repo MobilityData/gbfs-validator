@@ -189,7 +189,7 @@ class GBFS {
 
       if (this.auth.type === 'api_key' && this.auth.apiKey) {
         this.gotOptions.headers = {
-          'X-API-KEY': `${this.auth.apiKey.key}`
+          [this.auth.apiKey.key]: `${this.auth.apiKey.value}`
         }
       }
     }

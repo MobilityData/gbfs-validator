@@ -78,12 +78,13 @@ GBFS {
   "auth": Object {
     "apiKey": Object {
       "key": "mykey",
+      "value": "myvalue",
     },
     "type": "api_key",
   },
   "gotOptions": Object {
     "headers": Object {
-      "X-API-KEY": "mykey",
+      "mykey": "myvalue",
     },
   },
   "options": Object {

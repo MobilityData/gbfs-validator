@@ -201,17 +201,28 @@ function updateURL() {
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group
+           <b-form-group
             id="input-group-api_key"
             label="Authentification"
             label-for="input-api_key"
             v-if="state.options.auth.type === 'api_key'"
           >
-            <b-form-input
-              id="input-api_key"
-              placeholder="key"
-              v-model="state.options.auth.apiKey.key"
-            ></b-form-input>
+            <b-row>
+              <b-col>
+                <b-form-input
+                  id="input-api_key-key"
+                  placeholder="key"
+                  v-model="state.options.auth.apiKey.key"
+                ></b-form-input>
+              </b-col>
+              <b-col>
+                <b-form-input
+                  id="input-api_key-value"
+                  placeholder="value"
+                  v-model="state.options.auth.apiKey.value"
+                ></b-form-input>
+              </b-col>
+            </b-row>
           </b-form-group>
 
           <b-form-group
