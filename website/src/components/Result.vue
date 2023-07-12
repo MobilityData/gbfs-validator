@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const errorsCountFormated = computed(() => {
-  return new Intl.NumberFormat().format(props.result.summary.errorsCount)
+  return new Intl.NumberFormat().format(props.result.summary.summaryErrorCount)
 })
 </script>
 

@@ -31,6 +31,14 @@ If a pricing is used (like in `default_pricing_plan_id` or `pricing_plan_ids` of
 
 If the `default_pricing_plan_id` is not present in the `vehicle_types.json` file when pricing plans are present, the validator will return an error.
 
+# missing_station_information
+
+If a station is declared `station_status.json` but not in `station_information.json`, the validator will return an error.
+
+# missing_station_status
+
+If a station is declared `station_information.json` but not in `station_status.json`, the validator will return an error.
+
 # unknown_plan_id
 
 If a pricing plan id is used (like in `default_pricing_plan_id` or `pricing_plan_ids` of the `vehicle_types.json` file ), but is not present in the `system_pricing_plans.json` file, the validator will return an error.
@@ -54,6 +62,10 @@ If `num_docks_available` on a station is unusually high validator will return a 
 # num_vehicles_available_high
 
 If `num_vehicles_available` on a station is unusually high, the validator will return a warning.
+
+# station_capacity_too_low
+
+If `capacity` on a station is lower than the sum of `num_vehicles_available` and `num_docks_available`, the validator will return an error.
 
 # unclosed_polygon
 

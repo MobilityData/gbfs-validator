@@ -340,7 +340,7 @@ class MockRequests {
             parking_type: 'underground_parking',
             parking_hoop: false,
             contact_phone: '+33109874321',
-            capacity: 10,
+            capacity: 20,
             vehicle_type_area_capacity: [
               {
                 vehicle_type_id: 'abc123',

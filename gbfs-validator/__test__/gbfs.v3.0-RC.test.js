@@ -7,7 +7,7 @@ const serverOpts = {
 
 function get_errors(result) {
   let errors = []
-  let otherErrors = []
+  let nonSchemaErrors = []
   let warnings = []
 
   result.files?.map((f) => {
@@ -15,8 +15,8 @@ function get_errors(result) {
       errors.push({ file: f.file, errors: f.errors })
     }
 
-    if (f.otherErrors?.length) {
-      otherErrors.push({ file: f.file, errors: f.otherErrors })
+    if (f.nonSchemaErrors?.length) {
+      nonSchemaErrors.push({ file: f.file, errors: f.nonSchemaErrors })
     }
 
     if (f.warnings?.length) {
@@ -28,8 +28,8 @@ function get_errors(result) {
         errors.push({ file: f.file, lang: l.lang, errors: l.errors })
       }
 
-      if (l.otherErrors?.length) {
-        otherErrors.push({ file: f.file, lang: l.lang, errors: l.otherErrors })
+      if (l.nonSchemaErrors?.length) {
+        nonSchemaErrors.push({ file: f.file, lang: l.lang, errors: l.nonSchemaErrors })
       }
 
       if (l.warnings?.length) {
@@ -38,7 +38,7 @@ function get_errors(result) {
     })
   })
 
-  return { errors, otherErrors, warnings }
+  return { errors, nonSchemaErrors, warnings }
 }
 
 describe('default feed', () => {
@@ -158,7 +158,7 @@ describe('exaustive feed', () => {
     return gbfs.validation().then((result) => {
       expect(get_errors(result)).toEqual({
         errors: [],
-        otherErrors: [],
+        nonSchemaErrors: [],
         warnings: []
       })
 
@@ -239,11 +239,11 @@ describe('default_reserve_time REQUIRED if reservation_price_per_min or reservat
     expect.assertions(3)
 
     return gbfs.validation().then((result) => {
-      let { errors, otherErrors, warnings } = get_errors(result)
+      let { errors, nonSchemaErrors, warnings } = get_errors(result)
 
       expect(errors).toEqual([])
       expect(warnings).toEqual([])
-      expect(otherErrors).toEqual([
+      expect(nonSchemaErrors).toEqual([
         {
           errors: [
             {
