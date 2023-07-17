@@ -502,6 +502,7 @@ class GBFS {
           errors: false,
           exists: false,
           file: `manifest.json`,
+          type: 'manifest',
           hasErrors: false
         })
       }
