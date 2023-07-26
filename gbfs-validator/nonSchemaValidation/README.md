@@ -134,3 +134,7 @@ If the computed cost seams low regarding the `form_factor` and `propulsion_type`
 # high_cost
 
 If the computed cost seams high regarding the `form_factor` and `propulsion_type`, the validator will return a warning.
+
+# duplicate_vehicle_type_id
+
+If the `vehicle_types.json` contains duplicate `vehicle_type_id`, the validator will return an error.
