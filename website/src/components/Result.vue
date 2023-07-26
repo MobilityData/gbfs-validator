@@ -16,6 +16,11 @@ const props = defineProps({
 const errorsCountFormated = computed(() => {
   return new Intl.NumberFormat().format(props.result.summary.summaryErrorCount)
 })
+const warningCountFormated = computed(() => {
+  return new Intl.NumberFormat().format(
+    props.result.summary.summaryWarningCount
+  )
+})
 </script>
 
 <template>
@@ -48,6 +53,12 @@ const errorsCountFormated = computed(() => {
               <b>{{ errorsCountFormated }} errors</b>
             </b-alert>
             <b-alert v-else variant="success" show>Valid !</b-alert>
+          </div>
+          <div>
+            <b-alert v-if="result.summary.hasWarnings" variant="warning" show>
+              The feed has some issues considered as warning <br />
+              <b>{{ warningCountFormated }} warnings</b>
+            </b-alert>
           </div>
           <h4 class="mt-3 mb-3">Detail per files</h4>
           <div v-for="file in result.files" :key="file.filename">

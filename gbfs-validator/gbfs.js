@@ -109,14 +109,17 @@ function otherSummary(nonSchemas) {
     let message = nonSchema.message
 
     if (nonSchema.additionalProperty) {
-      message = message.replace(/\.$/, '') + `: '${nonSchema.additionalProperty}'`
+      message =
+        message.replace(/\.$/, '') + `: '${nonSchema.additionalProperty}'`
     }
 
     if (!summary[message]) {
       summary[message] = {}
     }
 
-    let path = nonSchema.path.replace(/\/\d+\//g, '/#/').replace(/\/\d+$/g, '/#')
+    let path = nonSchema.path
+      .replace(/\/\d+\//g, '/#/')
+      .replace(/\/\d+$/g, '/#')
 
     if (!summary[message][path]) {
       summary[message][path] = { count: 1, key }
@@ -817,30 +820,38 @@ class GBFS {
 
     let errorsCount = 0
     let summaryErrorCount = 0
+    let summaryWarningCount = 0
+
     const filesResult = result.map((file) => {
       let errorsCountFile = countErrors(file)
 
       let fileSummaryErrorCount = 0
+      let fileSummaryWarningCount = 0
+
       if (file.summary) {
         fileSummaryErrorCount +=
           file.summary.errors.length + file.summary.nonSchemaErrors.length
+        fileSummaryWarningCount += file.summary.nonSchemaWarnings.length
       } else if (file.languages) {
         file.languages.forEach((language) => {
           if (language.summary) {
             fileSummaryErrorCount +=
               language.summary.errors.length +
               language.summary.nonSchemaErrors.length
+            fileSummaryWarningCount += language.summary.nonSchemaWarnings.length
           }
         })
       }
 
       errorsCount += errorsCountFile
       summaryErrorCount += fileSummaryErrorCount
+      summaryWarningCount += fileSummaryWarningCount
 
       return {
         ...file,
         errorsCount: errorsCountFile,
-        summaryErrorCount: fileSummaryErrorCount
+        summaryErrorCount: fileSummaryErrorCount,
+        summaryWarningCount: fileSummaryWarningCount
       }
     })
 
@@ -854,7 +865,8 @@ class GBFS {
         hasErrors: hasErrors(result),
         hasWarnings: hasWarnings(result),
         errorsCount,
-        summaryErrorCount
+        summaryErrorCount,
+        summaryWarningCount
       },
       files: filesResult
     }
