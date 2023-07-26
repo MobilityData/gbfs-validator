@@ -1,4 +1,4 @@
-const o = require('../otherValidation')
+const o = require('../nonSchemaValidation')
 
 module.exports = {
   gbfsRequired: true,

@@ -1,4 +1,4 @@
-const o = require('../otherValidation')
+const o = require('../nonSchemaValidation')
 
 module.exports = {
   gbfsRequired: true,
@@ -7,18 +7,12 @@ module.exports = {
       {
         file: 'gbfs_versions',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_information',
         required: true,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'vehicle_types',
@@ -62,34 +56,22 @@ module.exports = {
       {
         file: 'system_hours',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_calendar',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_regions',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_pricing_plans',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_alerts',

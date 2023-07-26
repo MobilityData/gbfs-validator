@@ -88,7 +88,7 @@ function errorsCountFormated(value) {
 
                   <a
                     v-if="item.nonSchemaError"
-                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/otherValidation/README.md#${item.key}`"
+                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
                     target="_blank"
                     ><code>{{ item.key }}</code></a
                   >
@@ -126,7 +126,7 @@ function errorsCountFormated(value) {
                 >
                   {{ item.message }}
                   <a
-                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/otherValidation/README.md#${item.key}`"
+                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
                     target="_blank"
                     ><code>{{ item.key }}</code></a
                   >
