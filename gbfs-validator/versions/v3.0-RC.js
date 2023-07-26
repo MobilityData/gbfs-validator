@@ -1,4 +1,4 @@
-const o = require('../otherValidation')
+const o = require('../nonSchemaValidation')
 
 module.exports = {
   gbfsRequired: true,
@@ -77,10 +77,7 @@ module.exports = {
       {
         file: 'system_pricing_plans',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL
-        ]
+        otherRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_alerts',
