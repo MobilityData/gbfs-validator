@@ -125,7 +125,7 @@ function checkStationStatusCounts({
         errors.push({
           path: '/station/num_vehicles_available',
           key: 'num_docks_available_incorrect',
-          message: `num_vehicles_available is not equal to the sum of vehicle_types_available.count`,
+          message: `num_docks_available is not equal to the sum of vehicle_docks_available.count`,
           station_id: station.station_id
         })
       }

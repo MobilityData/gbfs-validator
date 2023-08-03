@@ -49,11 +49,11 @@ If the `default_reserve_time` is not present in the `vehicle_types.json` file fo
 
 # num_vehicles_available_incorrect
 
-If `num_vehicles_available_incorrect` on a station is not equal to the sum of `vehicle_types_available.count` for each vehicle type, the validator will return an error.
+If `num_vehicles_available` on a station is not equal to the sum of `vehicle_types_available.count` for each vehicle type, the validator will return an error.
 
 # num_docks_available_incorrect
 
-If `num_docks_available_incorrect` on a station is not equal to the sum of `vehicle_docks_available.count` for each vehicle type, the validator will return an error.
+If `num_docks_available` on a station is not equal to the sum of `vehicle_docks_available.count` for each vehicle type, the validator will return an error.
 
 # num_docks_available_high
 
