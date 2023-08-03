@@ -103,7 +103,7 @@ function errorsCountFormated(value) {
 
               <details>
                 <summary>Show errors details</summary>
-                <pre><code>{{ [...lang.errors, ...lang.nonSchemaErrors] }}</code></pre>
+                <pre><code>{{ [...(lang.errors || []), ...(lang.nonSchemaErrors || [])  ] }}</code></pre>
               </details>
             </b-alert>
           </div>
