@@ -1,7 +1,8 @@
 <template>
   <footer class="footer text-center text-muted mt-5">
-    Made with &hearts; by <a href="http://fluctuo.com">fluctuo</a>, website
-    powered by
+    Made with &hearts; by <a href="http://fluctuo.com">fluctuo</a>, 
+    maintained by <a href="https://mobilitydata.org">MobilityData</a>, 
+    website powered by
     <a href="http://https://www.netlify.com/">netlify </a>
   </footer>
 </template>
