@@ -15,7 +15,7 @@ function addAdditionalPropertiesErrors(sub_schema) {
       // Additional properties are already reported as error, we ignore them
       additionalProperties = true
     } else {
-      // Additional properties will be reported as error
+      // Additional properties will be reported as error by ajv, and we will report them as warnings
       additionalProperties = false
     }
 

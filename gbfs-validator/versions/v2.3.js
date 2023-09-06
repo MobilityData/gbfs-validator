@@ -7,17 +7,17 @@ module.exports = {
       {
         file: 'gbfs_versions',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_information',
         required: true,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'vehicle_types',
         required: false,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkVehicleTypePricing,
@@ -28,7 +28,7 @@ module.exports = {
       {
         file: 'station_information',
         required: options.docked,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkStationInformationIDs
@@ -37,7 +37,7 @@ module.exports = {
       {
         file: 'station_status',
         required: options.docked,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkStationStatusIDs,
@@ -47,7 +47,7 @@ module.exports = {
       {
         file: 'free_bike_status',
         required: options.freefloating,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkFreeBikeStatusIDs
@@ -56,32 +56,32 @@ module.exports = {
       {
         file: 'system_hours',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_calendar',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_regions',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_pricing_plans',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_alerts',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'geofencing_zones',
         required: false,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkGeofencingZones

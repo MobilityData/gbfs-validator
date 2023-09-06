@@ -62,6 +62,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
         vehicle_accessories = ['navigation']
         max_wheel_count = 3
         break
+      case 'scooter':
       case 'scooter_standing':
       case 'scooter_seated':
         max_rider_capacity = 1
@@ -77,7 +78,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
 
     if (vehicle_type.rider_capacity > max_rider_capacity) {
       warnings.push({
-        path: '/vehicle_types/rider_capacity',
+        path: '/data/vehicle_types/rider_capacity',
         key: 'unexpected_rider_capacity',
         message: `Unexpected rider_capacity for ${vehicle_type.form_factor}: ${vehicle_type.rider_capacity}`
       })
@@ -85,7 +86,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
 
     if (vehicle_type.cargo_volume_capacity > max_cargo_volume_capacity) {
       warnings.push({
-        path: '/vehicle_types/cargo_volume_capacity',
+        path: '/data/vehicle_types/cargo_volume_capacity',
         key: 'unexpected_cargo_volume_capacity',
         message: `Unexpected cargo_volume_capacity for ${vehicle_type.form_factor}: ${vehicle_type.cargo_volume_capacity}`
       })
@@ -93,7 +94,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
 
     if (vehicle_type.cargo_load_capacity > max_cargo_load_capacity) {
       warnings.push({
-        path: '/vehicle_types/cargo_load_capacity',
+        path: '/data/vehicle_types/cargo_load_capacity',
         key: 'unexpected_cargo_load_capacity',
         message: `Unexpected cargo_load_capacity for ${vehicle_type.form_factor}: ${vehicle_type.cargo_load_capacity}`
       })
@@ -104,7 +105,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       !propulsion_types.includes(vehicle_type.propulsion_type)
     ) {
       warnings.push({
-        path: '/vehicle_types/propulsion_type',
+        path: '/data/vehicle_types/propulsion_type',
         key: 'unexpected_propulsion_type',
         message: `Unexpected propulsion_type for ${vehicle_type.form_factor}: ${vehicle_type.propulsion_type}`
       })
@@ -112,7 +113,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
 
     if (min_range_meters && vehicle_type.max_range_meters < min_range_meters) {
       warnings.push({
-        path: '/vehicle_types/max_range_meters',
+        path: '/data/vehicle_types/max_range_meters',
         key: 'unexpectedly_low_range_meters',
         message: `Unexpected max_range_meters for ${vehicle_type.form_factor}: ${vehicle_type.max_range_meters}`
       })
@@ -120,7 +121,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
 
     if (max_range_meters && vehicle_type.max_range_meters > max_range_meters) {
       warnings.push({
-        path: '/vehicle_types/max_range_meters',
+        path: '/data/vehicle_types/max_range_meters',
         key: 'unexpectedly_high_range_meters',
         message: `Unexpected max_range_meters for ${vehicle_type.form_factor}: ${vehicle_type.max_range_meters}`
       })
@@ -130,7 +131,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       vehicle_type.vehicle_accessories.map((vehicle_accessory) => {
         if (!vehicle_accessories.includes(vehicle_accessory)) {
           warnings.push({
-            path: '/vehicle_types/vehicle_accessories',
+            path: '/data/vehicle_types/vehicle_accessories',
             key: 'unexpected_vehicle_accessory',
             message: `Unexpected vehicle_accessory for ${vehicle_type.form_factor}: ${vehicle_accessory}`
           })
@@ -143,7 +144,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       vehicle_type.vehicle_accessories.map((vehicle_accessory) => {
         if (accessories.has(vehicle_accessory)) {
           errors.push({
-            path: '/vehicle_types/vehicle_accessories',
+            path: '/data/vehicle_types/vehicle_accessories',
             key: 'duplicate_vehicle_accessory',
             message: `Duplicate vehicle_accessory for ${vehicle_type.form_factor}: ${vehicle_accessory}`
           })
@@ -152,9 +153,8 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
         if (vehicle_accessory.match(/doors_\d+$/g)) {
           if (has_door_count) {
             errors.push({
-              path: '/vehicle_types/vehicle_accessories',
-              key: 'incorrect_vehicle_accessory',
-              message: `Incorrect vehicle_accessory for ${vehicle_type.form_factor}: ${vehicle_accessory}`
+              key: 'multiple_door_counts',
+              message: `Multiple door counts for ${vehicle_type.form_factor}: ${vehicle_accessory}`
             })
           }
 
@@ -170,7 +170,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       vehicle_type.wheel_count < min_wheel_count
     ) {
       warnings.push({
-        path: '/vehicle_types/wheel_count',
+        path: '/data/vehicle_types/wheel_count',
         key: 'unexpectedly_low_wheel_count',
         message: `Unexpected wheel_count for ${vehicle_type.form_factor}: ${vehicle_type.wheel_count}`
       })
@@ -181,7 +181,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       vehicle_type.wheel_count > max_wheel_count
     ) {
       warnings.push({
-        path: '/vehicle_types/wheel_count',
+        path: '/data/vehicle_types/wheel_count',
         key: 'unexpectedly_high_wheel_count',
         message: `Unexpected wheel_count for ${vehicle_type.form_factor}: ${vehicle_type.wheel_count}`
       })
@@ -196,7 +196,7 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
       ).length > 1
     ) {
       errors.push({
-        path: '/vehicle_types/vehicle_type_id',
+        path: '/data/vehicle_types/vehicle_type_id',
         key: 'duplicate_vehicle_type_id',
         message: `Duplicate vehicle_type_id`,
         vehicle_type_id: vehicle_type_id

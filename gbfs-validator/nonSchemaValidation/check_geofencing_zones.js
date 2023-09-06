@@ -9,7 +9,7 @@ function checkGeofencingZones({ errors, data }) {
 
         if (first[0] !== last[0] || first[1] !== last[1]) {
           errors.push({
-            path: '/geofencing_zones/features/geometry/coordinates',
+            path: '/data/geofencing_zones/features/geometry/coordinates',
             key: 'unclosed_polygon',
             message: `The polygon is not closed`
           })

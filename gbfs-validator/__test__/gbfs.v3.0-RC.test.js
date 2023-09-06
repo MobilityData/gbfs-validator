@@ -184,7 +184,7 @@ describe('default_reserve_time REQUIRED if reservation_price_per_min or reservat
       system_pricing_plans(...args) {
         const json = super.system_pricing_plans(...args)
 
-        // This plan with require a default_reserve_time on vehicle_types using it.
+        // This plan will require a default_reserve_time on vehicle_types using it.
         json.data.plans[0].reservation_price_per_min = 1
         json.data.plans[0].reservation_price_flat_rate = 2
 

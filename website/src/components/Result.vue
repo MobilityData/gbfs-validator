@@ -56,7 +56,7 @@ const warningCountFormated = computed(() => {
           </div>
           <div>
             <b-alert v-if="result.summary.hasWarnings" variant="warning" show>
-              The feed has some issues considered as warning <br />
+              GBFS feed contains warnings <br />
               <b>{{ warningCountFormated }} warnings</b>
             </b-alert>
           </div>

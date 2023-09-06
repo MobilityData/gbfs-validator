@@ -1,17 +1,19 @@
 const { getFileBody } = require('./utils')
 
-const RAISONABLE_COST_PER_TYPE = {
+const TYPICAL_PRICING_PER_TYPE = {
   bicycle: { km: 5, minutes: 20, minCost: 1, maxCost: 15 },
   cargo_bicycle: { km: 5, minutes: 20, minCost: 1, maxCost: 15 },
   scooter_standing: { km: 5, minutes: 20, minCost: 1, maxCost: 15 },
   scooter_seated: { km: 5, minutes: 20, minCost: 1, maxCost: 15 },
+  scooter: { km: 5, minutes: 20, minCost: 1, maxCost: 15 },
   car: { km: 30, minutes: 60, minCost: 5, maxCost: 50 },
   moped: { km: 30, minutes: 60, minCost: 2, maxCost: 30 }
 }
 
 function computeInterval(value, { start, end, interval }) {
   if (value <= start) {
-    // 'start' The kilometer at which this segment rate starts being charged (inclusive).
+    // The trip distance or duration is inferior to the kilometer or minute 
+    // at which this segment rate starts being charged (inclusive). 
     return 0
   }
 
@@ -50,7 +52,7 @@ function computeCost({ plan, km, min }) {
     cost += per_min.rate * computeInterval(min, per_min)
   })
 
-  return cost
+  return Math.round(cost * 100) / 100
 }
 
 function checkVehicleTypePricingPlanCosts({
@@ -82,7 +84,7 @@ function checkVehicleTypePricingPlanCosts({
 
       if (!plan) {
         errors.push({
-          path: '/vehicle_types/pricing_plan_ids',
+          path: '/data/vehicle_types/pricing_plan_ids',
           key: 'invalid_pricing_plan_id',
           message: `Invalid pricing_plan_id`,
           plan_id
@@ -94,31 +96,31 @@ function checkVehicleTypePricingPlanCosts({
         return
       }
 
-      const raisonable = RAISONABLE_COST_PER_TYPE[vehicle_type.form_factor]
+      const typical_pricing = TYPICAL_PRICING_PER_TYPE[vehicle_type.form_factor]
 
-      if (!raisonable) {
+      if (!typical_pricing) {
         return
       }
 
       const cost = computeCost({
         plan,
-        km: raisonable.km,
-        min: raisonable.minutes
+        km: typical_pricing.km,
+        min: typical_pricing.minutes
       })
 
-      if (cost > raisonable.maxCost) {
+      if (cost > typical_pricing.maxCost) {
         warnings.push({
-          path: '/vehicle_types/pricing_plan_ids',
+          path: '/data/vehicle_types/pricing_plan_ids',
           key: 'high_cost',
-          message: `High cost: ${cost} ${plan.currency} for ${raisonable.km} km and ${raisonable.min} min on ${vehicle_type.form_factor} (${vehicle_type.vehicle_type_id})`
+          message: `High cost: ${cost} ${plan.currency} for ${typical_pricing.km} km and ${typical_pricing.minutes} min on ${vehicle_type.form_factor} (${vehicle_type.vehicle_type_id})`
         })
       }
 
-      if (cost < raisonable.minCost) {
+      if (cost < typical_pricing.minCost) {
         warnings.push({
-          path: '/vehicle_types/pricing_plan_ids',
+          path: '/data/vehicle_types/pricing_plan_ids',
           key: 'low_cost',
-          message: `Low cost: ${cost} ${plan.currency} for ${raisonable.km} km and ${raisonable.min} min on ${vehicle_type.form_factor} (${vehicle_type.vehicle_type_id})`
+          message: `Low cost: ${cost} ${plan.currency} for ${typical_pricing.km} km and ${typical_pricing.minutes} min on ${vehicle_type.form_factor} (${vehicle_type.vehicle_type_id})`
         })
       }
     })

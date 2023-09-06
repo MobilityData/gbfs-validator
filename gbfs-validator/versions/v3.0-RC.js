@@ -7,16 +7,12 @@ module.exports = {
       {
         file: 'gbfs_versions',
         required: false,
-        otherRules: [
-          o.checkAdditionalProperties,
-          o.checkTTL,
-          o.checkTranslatedStrings
-        ]
+        nonSchemaRules: [o.checkAdditionalProperties, o.checkTTL]
       },
       {
         file: 'system_information',
         required: true,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkTranslatedStrings
@@ -25,7 +21,7 @@ module.exports = {
       {
         file: 'vehicle_types',
         required: false,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkTranslatedStrings,
@@ -37,7 +33,7 @@ module.exports = {
       {
         file: 'station_information',
         required: options.docked,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkTranslatedStrings,
@@ -47,10 +43,9 @@ module.exports = {
       {
         file: 'station_status',
         required: options.docked,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
-          o.checkTranslatedStrings,
           o.checkStationStatusIDs,
           o.checkStationStatusCounts
         ]
@@ -58,36 +53,42 @@ module.exports = {
       {
         file: 'vehicle_status',
         required: options.freefloating,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
-          o.checkTranslatedStrings,
           o.checkVehicleStatusIDs
         ]
       },
       {
         file: 'system_regions',
         required: false,
-        otherRules: [
+        nonSchemaRules: [
+          o.checkAdditionalProperties,
+          o.checkTTL
+        ]
+      },
+      {
+        file: 'system_pricing_plans',
+        required: false,
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkTranslatedStrings
         ]
       },
       {
-        file: 'system_pricing_plans',
-        required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
-      },
-      {
         file: 'system_alerts',
         required: false,
-        otherRules: [o.checkAdditionalProperties, o.checkTTL]
+        nonSchemaRules: [
+          o.checkAdditionalProperties,
+          o.checkTTL,
+          o.checkTranslatedStrings
+        ]
       },
       {
         file: 'geofencing_zones',
         required: false,
-        otherRules: [
+        nonSchemaRules: [
           o.checkAdditionalProperties,
           o.checkTTL,
           o.checkTranslatedStrings,
