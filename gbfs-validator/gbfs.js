@@ -32,24 +32,26 @@ function hasWarnings(data) {
       }
     }
 
-    if (el.nonSchemaWarnings?.length) {
+    if (el.hasWarnings || el.nonSchemaWarnings?.length) {
       return true
     }
   }
+
+  return false
 }
 
 function countErrors(file) {
-  let errors = 0
+  let count = 0
 
-  errors += file.errors?.length || 0
-  errors += file.nonSchemaErrors?.length || 0
+  count += file.errors?.length || 0
+  count += file.nonSchemaErrors?.length || 0
 
   for (const lang of file.languages || []) {
-    errors += lang.errors?.length || 0
-    errors += lang.nonSchemaErrors?.length || 0
+    count += lang.errors?.length || 0
+    count += lang.nonSchemaErrors?.length || 0
   }
 
-  return errors
+  return count
 }
 
 function jsonSchemaSummary(errors) {
@@ -98,7 +100,7 @@ function jsonSchemaSummary(errors) {
   })
 }
 
-function otherSummary(nonSchemas) {
+function nonSchemaSummary(nonSchemas) {
   if (!nonSchemas) {
     return []
   }
@@ -149,8 +151,8 @@ function otherSummary(nonSchemas) {
 function getSummary(errors, nonSchemaErrors, nonSchemaWarnings) {
   return {
     errors: jsonSchemaSummary(errors),
-    nonSchemaErrors: otherSummary(nonSchemaErrors),
-    nonSchemaWarnings: otherSummary(nonSchemaWarnings)
+    nonSchemaErrors: nonSchemaSummary(nonSchemaErrors),
+    nonSchemaWarnings: nonSchemaSummary(nonSchemaWarnings)
   }
 }
 
@@ -273,7 +275,7 @@ class GBFS {
       throw new Error('Missing URL')
     }
 
-    this.url = url.replace(/\s+$/, '')
+    this.url = url.trim()
     this.options = {
       docked,
       freefloating,
@@ -444,7 +446,7 @@ class GBFS {
 
       let f = files.find((f) => f.file === file)
 
-      const fns = f?.otherRules || []
+      const fns = f?.nonSchemaRules || []
 
       for (const fn of fns) {
         try {

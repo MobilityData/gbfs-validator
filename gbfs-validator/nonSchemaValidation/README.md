@@ -25,7 +25,7 @@ If any `Localized String` has a lang that is not declared in the `languages` fie
 
 # missing_system_pricing_plans
 
-If a pricing is used (like in `default_pricing_plan_id` or `pricing_plan_ids` of the `vehicle_types.json` file ), but not pricing are declared, the validator will return an error.
+If `default_pricing_plan_id` or `pricing_plan_ids` is specified in `vehicle_types.json`, but no pricing plan is defined in `system_pricing_plans.json`, the validator will return an error.
 
 # missing_default_pricing_plan_id
 
@@ -33,11 +33,14 @@ If the `default_pricing_plan_id` is not present in the `vehicle_types.json` file
 
 # missing_station_information
 
-If a station is declared `station_status.json` but not in `station_information.json`, the validator will return an error.
+If a station is declared in `station_status.json` but not in `station_information.json`, the validator will return an error.
 
 # missing_station_status
 
-If a station is declared `station_information.json` but not in `station_status.json`, the validator will return an error.
+If a station is declared in `station_information.json` but not in `station_status.json`, the validator will return an error.
+
+# duplicate_station_id
+If `station_information.json` or `station_status.json` contain duplicate `station_id`, the validator will return an error.
 
 # unknown_plan_id
 
@@ -89,11 +92,11 @@ If the `propulsion_type` value is unexpected regarding the vehicle type, the val
 
 # unexpectedly_low_range_meters
 
-If the `range_meters` value is unexpectedly low regarding the vehicle type, the validator will return a warning.
+If the `max_range_meters` value is unexpectedly low regarding the vehicle type, the validator will return a warning.
 
 # unexpectedly_high_range_meters
 
-If the `range_meters` value is unexpectedly high regarding the vehicle type, the validator will return a warning.
+If the `max_range_meters` value is unexpectedly high regarding the vehicle type, the validator will return a warning.
 
 # unexpected_vehicle_accessory
 
@@ -110,6 +113,10 @@ If the `wheel_count` value is unexpectedly high regarding the vehicle type, the 
 # duplicate_vehicle_accessory
 
 If the `vehicle_accessories` value contains duplicates, the validator will return an error.
+
+# multiple_door_counts
+
+If the `vehicle_accessories` value contains multiple door counts, the validator will return an error.
 
 # duplicate_bike_id
 
@@ -129,11 +136,11 @@ If a referenced `pricing_plan_id` is not present in the `system_pricing_plans.js
 
 # low_cost
 
-If the computed cost seams low regarding the `form_factor` and `propulsion_type`, the validator will return a warning.
+If the computed cost seams low regarding the `form_factor`, the validator will return a warning.
 
 # high_cost
 
-If the computed cost seams high regarding the `form_factor` and `propulsion_type`, the validator will return a warning.
+If the computed cost seams high regarding the `form_factor`, the validator will return a warning.
 
 # duplicate_vehicle_type_id
 

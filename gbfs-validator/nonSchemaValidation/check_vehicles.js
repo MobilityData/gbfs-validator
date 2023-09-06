@@ -9,16 +9,16 @@ function getVehicleTypes(allFiles, lang) {
 function checkFreeBikeStatusIDs({ errors, data, lang, allFiles }) {
   let ids = new Set()
 
-  let vehicle_types_id = new Set()
+  let vehicle_types_ids = new Set()
   let vehicle_types = getVehicleTypes(allFiles, lang) || []
   vehicle_types.map((vehicle_type) => {
-    vehicle_types_id.add(vehicle_type.vehicle_type_id)
+    vehicle_types_ids.add(vehicle_type.vehicle_type_id)
   })
 
   data.data.bikes.map((bike) => {
     if (ids.has(bike.bike_id)) {
       errors.push({
-        path: '/bikes/bike_id',
+        path: '/data/bikes/bike_id',
         key: 'duplicate_bike_id',
         message: `Duplicate bike_id`,
         bike_id: bike.bike_id
@@ -26,9 +26,9 @@ function checkFreeBikeStatusIDs({ errors, data, lang, allFiles }) {
       return
     }
 
-    if (bike.vehicle_type_id && !vehicle_types_id.has(bike.vehicle_type_id)) {
+    if (bike.vehicle_type_id && !vehicle_types_ids.has(bike.vehicle_type_id)) {
       errors.push({
-        path: '/bikes/vehicle_type_id',
+        path: '/data/bikes/vehicle_type_id',
         key: 'invalid_vehicle_type_id',
         message: `Invalid vehicle_type_id`,
         bike_id: bike.bike_id
@@ -43,16 +43,16 @@ function checkFreeBikeStatusIDs({ errors, data, lang, allFiles }) {
 function checkVehicleStatusIDs({ errors, data, lang, allFiles }) {
   let ids = new Set()
 
-  let vehicle_types_id = new Set()
+  let vehicle_types_ids = new Set()
   let vehicle_types = getVehicleTypes(allFiles, lang) || []
   vehicle_types.map((vehicle_type) => {
-    vehicle_types_id.add(vehicle_type.vehicle_type_id)
+    vehicle_types_ids.add(vehicle_type.vehicle_type_id)
   })
 
   data.data.vehicles.map((vehicle) => {
     if (ids.has(vehicle.vehicle_id)) {
       errors.push({
-        path: '/vehicles/vehicle_id',
+        path: '/data/vehicles/vehicle_id',
         key: 'duplicate_vehicle_id',
         message: `Duplicate vehicle_id`,
         vehicle_id: vehicle.vehicle_id
@@ -64,10 +64,10 @@ function checkVehicleStatusIDs({ errors, data, lang, allFiles }) {
 
     if (
       vehicle.vehicle_type_id &&
-      !vehicle_types_id.has(vehicle.vehicle_type_id)
+      !vehicle_types_ids.has(vehicle.vehicle_type_id)
     ) {
       errors.push({
-        path: '/vehicles/vehicle_type_id',
+        path: '/data/vehicles/vehicle_type_id',
         key: 'invalid_vehicle_type_id',
         message: `Invalid vehicle_type_id`,
         vehicle_id: vehicle.vehicle_id
