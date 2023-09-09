@@ -15,12 +15,12 @@ const state = reactive({
       type: null,
       basicAuth: { user: null, password: null },
       bearerToken: { token: null },
-      apiKey: { key: null },
       oauthClientCredentialsGrant: {
         user: null,
         password: null,
         tokenUrl: null
-      }
+      },
+      headers: [{key: null}, {key: null}, {key: null}]
     }
   },
   versions: [
@@ -36,7 +36,7 @@ const state = reactive({
   auths: [
     {
       value: null,
-      text: 'none'
+      text: 'None'
     },
     {
       value: 'basic_auth',
@@ -47,12 +47,12 @@ const state = reactive({
       text: 'Bearer Token'
     },
     {
-      value: 'api_key',
-      text: 'API Key'
-    },
-    {
       value: 'oauth_client_credentials_grant',
       text: 'Oauth Client Credentials Grant'
+    },
+    {
+      value: 'headers',
+      text: 'Custom Headers (e.g. API Key)'
     }
   ]
 })
@@ -201,25 +201,25 @@ function updateURL() {
             ></b-form-input>
           </b-form-group>
 
-           <b-form-group
-            id="input-group-api_key"
+          <b-form-group
+            id="input-group-headers"
             label="Authentification"
-            label-for="input-api_key"
-            v-if="state.options.auth.type === 'api_key'"
+            label-for="input-headers"
+            v-if="state.options.auth.type === 'headers'"
           >
-            <b-row>
+            <b-row v-for="index in 3" class="mb-2">
               <b-col>
                 <b-form-input
-                  id="input-api_key-key"
+                  :id="'input-headers-' + index + '-key'"
                   placeholder="key"
-                  v-model="state.options.auth.apiKey.key"
+                  v-model="state.options.auth.headers[index-1].key"
                 ></b-form-input>
               </b-col>
               <b-col>
                 <b-form-input
-                  id="input-api_key-value"
+                  :id="'input-headers-' + index + '-value'"
                   placeholder="value"
-                  v-model="state.options.auth.apiKey.value"
+                  v-model="state.options.auth.headers[index-1].value"
                 ></b-form-input>
               </b-col>
             </b-row>

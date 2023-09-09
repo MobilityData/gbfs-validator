@@ -52,15 +52,41 @@ describe('initialization', () => {
       ).toMatchSnapshot()
     })
 
-    test('should correctly initialize with `api_key`', () => {
+    test('should correctly initialize with one `headers`', () => {
       expect(
         new GBFS('http://localhost:8888/gbfs.json', {
           auth: {
-            type: 'api_key',
-            apiKey: {
-              key: 'mykey',
-              value: 'myvalue'
-            }
+            type: 'headers',
+            headers: [
+              {
+                key: 'mykey',
+                value: 'myvalue'
+              }
+            ]
+          }
+        })
+      ).toMatchSnapshot()
+    })
+
+    test('should correctly initialize with multiple `headers`', () => {
+      expect(
+        new GBFS('http://localhost:8888/gbfs.json', {
+          auth: {
+            type: 'headers',
+            headers: [
+              {
+                key: 'mykey',
+                value: 'myvalue'
+              },
+              {
+                key: 'mysecondkey',
+                value: 'mysecondvalue'
+              },
+              {
+                key: 'mythirdkey',
+                value: 'mythirdvalue'
+              }
+            ]
           }
         })
       ).toMatchSnapshot()
