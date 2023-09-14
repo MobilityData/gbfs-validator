@@ -73,18 +73,55 @@ GBFS {
 }
 `;
 
-exports[`initialization with auth should correctly initialize with \`api_key\` 1`] = `
+exports[`initialization with auth should correctly initialize with one \`headers\` 1`] = `
 GBFS {
   "auth": Object {
-    "apiKey": Object {
-      "key": "mykey",
-      "value": "myvalue",
-    },
-    "type": "api_key",
+    "headers": Array [
+      Object {
+        "key": "mykey",
+        "value": "myvalue",
+      },
+    ],
+    "type": "headers",
   },
   "gotOptions": Object {
     "headers": Object {
       "mykey": "myvalue",
+    },
+  },
+  "options": Object {
+    "docked": false,
+    "freefloating": false,
+    "version": null,
+  },
+  "url": "http://localhost:8888/gbfs.json",
+}
+`;
+
+exports[`initialization with auth should correctly initialize with multiple \`headers\` 1`] = `
+GBFS {
+  "auth": Object {
+    "headers": Array [
+      Object {
+        "key": "mykey",
+        "value": "myvalue",
+      },
+      Object {
+        "key": "mysecondkey",
+        "value": "mysecondvalue",
+      },
+      Object {
+        "key": "mythirdkey",
+        "value": "mythirdvalue",
+      },
+    ],
+    "type": "headers",
+  },
+  "gotOptions": Object {
+    "headers": Object {
+      "mykey": "myvalue",
+      "mysecondkey": "mysecondvalue",
+      "mythirdkey": "mythirdvalue",
     },
   },
   "options": Object {

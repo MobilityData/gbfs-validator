@@ -187,9 +187,12 @@ class GBFS {
         }
       }
 
-      if (this.auth.type === 'api_key' && this.auth.apiKey) {
-        this.gotOptions.headers = {
-          [this.auth.apiKey.key]: `${this.auth.apiKey.value}`
+      if (this.auth.type === 'headers') {
+        this.gotOptions.headers = {}
+        for (var header of this.auth.headers) {
+          if (header && header.value) {
+            this.gotOptions.headers[header.key] = header.value
+          }
         }
       }
     }
