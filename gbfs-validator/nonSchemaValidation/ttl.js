@@ -1,5 +1,5 @@
 
-function checkTTL({ errors, file, data }) {
+function checkTTL({ errors, warnings, file, data }) {
     const realtime = [
       'free_bike_status',
       'station_status',
@@ -21,7 +21,7 @@ function checkTTL({ errors, file, data }) {
     }
   
     if (realtime && last_updated < fiveMinutesAgo) {
-      errors.push({
+      warnings.push({
         path: '/last_updated',
         key: 'last_updated_outdated',
         message: `Last update is older than 5 minutes.`

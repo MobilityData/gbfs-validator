@@ -46,7 +46,7 @@ function checkVehicleTypePricing({ errors, data, version, lang, allFiles }) {
       if (!plan) {
         errors.push({
           path: '/data/vehicle_types/' + index,
-          key: 'unknown_plan_id',
+          key: 'missing_system_pricing_plans',
           message: `plan_id not found in system_pricing_plans.`,
           plan_id
         })

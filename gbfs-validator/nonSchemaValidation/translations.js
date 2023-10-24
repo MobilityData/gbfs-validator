@@ -75,16 +75,6 @@ function checkTranslations(errors, data, languages, path, prefix = []) {
       continue
     }
 
-    if (filtered.length > 1) {
-      errors.push({
-        path: `/${prefix.join('/')}`,
-        key: 'duplicate_translation',
-        message: `Duplicate translation for ${lang}.`
-      })
-
-      continue
-    }
-
     data = data.filter((a) => a.language !== lang)
   }
 

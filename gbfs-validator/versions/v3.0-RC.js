@@ -26,8 +26,7 @@ module.exports = {
           o.checkTTL,
           o.checkTranslatedStrings,
           o.checkVehicleTypePricing,
-          o.checkVehicleTypeConsistency,
-          o.checkVehicleTypePricingPlanCosts
+          o.checkVehicleTypeConsistency
         ]
       },
       {

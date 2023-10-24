@@ -12,7 +12,6 @@ const {
   checkVehicleStatusIDs
 } = require('./check_vehicles')
 const { checkVehicleTypeConsistency } = require('./check_vehicle_types')
-const { checkVehicleTypePricingPlanCosts } = require('./check_pricing_plans')
 const { checkGeofencingZones } = require('./check_geofencing_zones')
 
 module.exports = {
@@ -26,6 +25,5 @@ module.exports = {
   checkStationStatusCounts,
   checkFreeBikeStatusIDs,
   checkVehicleStatusIDs,
-  checkVehicleTypePricingPlanCosts,
   checkGeofencingZones
 }
