@@ -47,108 +47,106 @@ function errorsCountFormated(value) {
             </b-alert>
           </div>
 
-          <div
-            v-if="
-              lang.summary.errors.length + lang.summary.nonSchemaErrors.length >
-              0
-            "
-          >
-            <b class="text-danger">
-              {{
-                errorsCountFormated(
-                  lang.summary.errors.length +
-                    lang.summary.nonSchemaErrors.length
-                )
-              }}
-              errors
-            </b>
-
-            in <a :href="lang.url" target="_blank">{{ lang.url }}</a> .
-
-            <b-alert
-              variant="danger"
-              show
-              v-if="
-                lang.summary.errors.length ||
-                lang.summary.nonSchemaErrors.length
-              "
-            >
-              <ul>
-                <li
-                  v-for="item in [
-                    ...lang.summary.errors,
-                    ...lang.summary.nonSchemaErrors.map((e) => ({
-                      ...e,
-                      nonSchemaError: true
-                    }))
-                  ]"
-                  v-bind:key="item.key"
-                >
-                  {{ item.message }}
-
-                  <a
-                    v-if="item.nonSchemaError"
-                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
-                    target="_blank"
-                    ><code>{{ item.key }}</code></a
+          <div v-if="lang.summary.errors.length + lang.summary.nonSchemaErrors.length > 0">
+            <b-alert  variant="danger" show>
+              <b-button
+                v-b-toggle="`${lang.lang}/${file.file}-errors`"
+                variant="danger"
+                size="sm"
+                >Show errors</b-button
+              >&nbsp;
+              <b>
+                {{
+                  errorsCountFormated(
+                    lang.summary.errors.length +
+                      lang.summary.nonSchemaErrors.length
+                  )
+                }}
+                errors
+              </b>
+              in <a :href="lang.url" target="_blank">{{ lang.url }}</a>
+              <b-collapse :id="`${lang.lang}/${file.file}-errors`" class="mt-3">
+                <ul>
+                  <li
+                    v-for="item in [
+                      ...lang.summary.errors,
+                      ...lang.summary.nonSchemaErrors.map((e) => ({
+                        ...e,
+                        nonSchemaError: true
+                      }))
+                    ]"
+                    v-bind:key="item.key"
                   >
+                    {{ item.message }}
 
-                  <ul>
-                    <li v-for="path in item.values" v-bind:key="path.path">
-                      <code>{{ path.path }}</code> (x{{ path.count }})
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+                    <a
+                      v-if="item.nonSchemaError"
+                      :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
+                      target="_blank"
+                      ><code>{{ item.key }}</code></a
+                    >
 
-              <details>
-                <summary>Show errors details</summary>
-                <pre><code>{{ [...(lang.errors || []), ...(lang.nonSchemaErrors || [])  ] }}</code></pre>
-              </details>
+                    <ul>
+                      <li v-for="path in item.values" v-bind:key="path.path">
+                        <code>{{ path.path }}</code> (x{{ path.count }})
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+
+                <details>
+                  <summary>Show errors details</summary>
+                  <pre><code>{{ [...(lang.errors || []), ...(lang.nonSchemaErrors || [])  ] }}</code></pre>
+                </details>
+              </b-collapse>
             </b-alert>
           </div>
 
           <div v-if="lang.summary.nonSchemaWarnings.length > 0">
-            <b class="text-warning">
-              {{ errorsCountFormated(lang.summary.nonSchemaWarnings.length) }}
-              warnings
-            </b>
-            in <a :href="lang.url" target="_blank">{{ lang.url }}</a> .
-            <b-alert
-              variant="warning"
-              show
-              v-if="lang.summary.nonSchemaWarnings.length"
-            >
-              <ul>
-                <li
-                  v-for="item in lang.summary.nonSchemaWarnings"
-                  v-bind:key="item.key"
-                >
-                  {{ item.message }}
-                  <a
-                    :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
-                    target="_blank"
-                    ><code>{{ item.key }}</code></a
+            <b-alert variant="warning" show>
+              <b-button
+                v-b-toggle="`${lang.lang}/${file.file}-warnings`"
+                variant="warning"
+                size="sm"
+                >Show warnings</b-button
+              >&nbsp;
+              <b>
+                {{ errorsCountFormated(lang.summary.nonSchemaWarnings.length) }}
+                warnings
+              </b>
+              in <a :href="lang.url" target="_blank">{{ lang.url }}</a>
+              <b-collapse :id="`${lang.lang}/${file.file}-warnings`" class="mt-3">
+                <ul>
+                  <li
+                    v-for="item in lang.summary.nonSchemaWarnings"
+                    v-bind:key="item.key"
                   >
-                  <ul>
-                    <li v-for="path in item.values" v-bind:key="path.path">
-                      <code>{{ path.path }}</code> (x{{ path.count }})
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+                    {{ item.message }}
+                    <a
+                      :href="`https://github.com/MobilityData/gbfs-validator/blob/master/gbfs-validator/nonSchemaValidation/README.md#${item.key}`"
+                      target="_blank"
+                      ><code>{{ item.key }}</code></a
+                    >
+                    <ul>
+                      <li v-for="path in item.values" v-bind:key="path.path">
+                        <code>{{ path.path }}</code> (x{{ path.count }})
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
 
-              <details>
-                <summary>Show warnings details</summary>
-                <pre><code>{{ lang.nonSchemaWarnings }}</code></pre>
-              </details>
+                <details>
+                  <summary>Show warnings details</summary>
+                  <pre><code>{{ lang.nonSchemaWarnings }}</code></pre>
+                </details>
+              </b-collapse>
             </b-alert>
           </div>
         </div>
       </div>
       <b-alert v-else variant="danger" show>
         <b>{{ file.errorsCount }} errors</b> in
-        <a :href="file.url" target="_blank">{{ file.url }}</a> .
+        <a :href="file.url" target="_blank">{{ file.url }}</a>
         <pre><code>{{ file.errors }}</code></pre>
       </b-alert>
     </div>
