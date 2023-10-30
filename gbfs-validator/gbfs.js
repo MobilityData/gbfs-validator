@@ -493,7 +493,13 @@ class GBFS {
         const body = await got.get(manifestUrl, this.gotOptions).json()
 
         files.push({
-          body,
+          body: [
+            {
+              body,
+              exists: true,
+              url: manifestUrl
+            }
+          ],
           required: true,
           type: 'manifest'
         })
