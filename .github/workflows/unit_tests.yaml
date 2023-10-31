@@ -8,8 +8,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3.4.0
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: setup node-gyp
+        run: npm install -g node-gyp@latest
+   
       - name: Run tests
         run: yarn install && yarn workspaces run test
