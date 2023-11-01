@@ -3,7 +3,7 @@
   publish = "website/dist"
 
 [build.environment]
-  YARN_FLAGS = "--frozen-lockfile --verbose"
+  YARN_FLAGS = "--frozen-lockfile"
 
 [functions]
   directory = "functions"
