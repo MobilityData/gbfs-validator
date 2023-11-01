@@ -19,7 +19,7 @@
     "@turf/bbox": "^6.5.0",
     "@vue/compat": "^3.3.2",
     "@vueuse/core": "^10.1.2",
-    "bootstrap": "^5.0.1",
+    "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.23.1",
     "maplibre-gl": "^3.0.1",
     "maplibregl-mapbox-request-transformer": "^0.0.2",
