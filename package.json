@@ -5,7 +5,7 @@
     "dev": "netlify dev",
     "start": "yarn run dev",
     "lint": "eslint --ext .js,.vue website/src",
-    "build": "yarn run build:website",
+    "build": "yarn workspace website build",
     "build:website": "cd website && yarn run build"
   },
   "devDependencies": {
@@ -17,14 +17,19 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.14.1",
-    "netlify-cli": "^10.14.0"
+    "netlify-cli": "^15.11.0"
   },
-  "workspaces": [
-    "website",
-    "gbfs-validator",
-    "check-systems",
-    "functions"
-  ],
+  "workspaces": {
+    "packages": [
+      "website",
+      "gbfs-validator",
+      "check-systems",
+      "functions"
+    ],
+    "nohoist": [
+      "netlify-cli"
+    ]
+  },
   "engines": {
     "npm": ">=8.0.0",
     "node": ">=18.0.0"
