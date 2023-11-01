@@ -24,7 +24,8 @@ function checkTTL({ errors, warnings, file, data }) {
       warnings.push({
         path: '/last_updated',
         key: 'last_updated_outdated',
-        message: `Last update is older than 5 minutes.`
+        message: `Last update was more than 5 minutes ago.`,
+        last_updated: last_updated
       })
     }
   }
