@@ -7,9 +7,7 @@ const validatorVersion = process.env.COMMIT_REF
 function hasErrors(data, required) {
   for (const el of data) {
     if (Array.isArray(el)) {
-      if (hasErrors(el, required)) {
-        return true
-      }
+      return hasErrors(el, required)
     } else {
       if (required && !el.exists) {
         return true
@@ -27,9 +25,7 @@ function hasErrors(data, required) {
 function hasWarnings(data) {
   for (const el of data) {
     if (Array.isArray(el)) {
-      if (hasWarnings(el)) {
-        return true
-      }
+      return hasWarnings(el)
     }
 
     if (el.hasWarnings || el.nonSchemaWarnings?.length) {
