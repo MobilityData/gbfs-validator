@@ -104,7 +104,7 @@ describe('invalid feed', () => {
     return gbfsFeedServer.close()
   })
 
-  test('should not validate feed', async () => {
+  test('should validate feed with errors', async () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
@@ -230,7 +230,7 @@ describe('default_reserve_time REQUIRED if reservation_price_per_min or reservat
     return gbfsFeedServer.close()
   })
 
-  test('should not validate feed', async () => {
+  test('should validate feed with errors', async () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
