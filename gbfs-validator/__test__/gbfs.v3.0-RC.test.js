@@ -130,11 +130,11 @@ describe('invalid feed', () => {
   })
 })
 
-describe('exaustive feed', () => {
+describe('exhaustive feed', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
-    const { MockRequests } = require('./fixtures/v3.0-RC/exaustive')
+    const { MockRequests } = require('./fixtures/v3.0-RC/exhaustive')
 
     let mockRequests = new MockRequests()
 
@@ -178,7 +178,7 @@ describe('default_reserve_time REQUIRED if reservation_price_per_min or reservat
   let gbfsFeedServer
 
   beforeAll(async () => {
-    const { MockRequests } = require('./fixtures/v3.0-RC/exaustive')
+    const { MockRequests } = require('./fixtures/v3.0-RC/exhaustive')
 
     class InvalidMockRequests extends MockRequests {
       system_pricing_plans(...args) {
