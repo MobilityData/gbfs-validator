@@ -2,6 +2,9 @@
   command = "yarn build"
   publish = "website/dist"
 
+[build.environment]
+  YARN_FLAGS = "--frozen-lockfile --verbose"
+
 [functions]
   directory = "functions"
 
