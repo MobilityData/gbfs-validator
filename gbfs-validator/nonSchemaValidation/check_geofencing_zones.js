@@ -1,8 +1,8 @@
 function checkGeofencingZones({ errors, data }) {
   data.data?.geofencing_zones?.features?.forEach((feature) => {
-    const multypolygon = feature.geometry
+    const multipolygon = feature.geometry
 
-    for (const multi_coordinates of multypolygon.coordinates) {
+    for (const multi_coordinates of multipolygon.coordinates) {
       for (const geo of multi_coordinates) {
         const first = geo[0]
         const last = geo[geo.length - 1]
