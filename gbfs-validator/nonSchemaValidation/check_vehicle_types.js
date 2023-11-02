@@ -6,9 +6,9 @@ function checkVehicleTypeConsistency({ errors, warnings, data }) {
   })
   vehicle_types_ids.forEach((vehicle_type_id) => {
     if (
-      data.data.vehicle_types.some(
+      data.data.vehicle_types.filter(
         (vehicle_type) => vehicle_type.vehicle_type_id === vehicle_type_id
-      )
+      ).length > 1
     ) {
       errors.push({
         path: '/data/vehicle_types/vehicle_type_id',
