@@ -3,7 +3,7 @@
   publish = "website/dist"
 
 [build.environment]
-  YARN_FLAGS = "--frozen-lockfile --network-concurrency 1"
+  YARN_FLAGS = "--frozen-lockfile"
 
 [functions]
   directory = "functions"
