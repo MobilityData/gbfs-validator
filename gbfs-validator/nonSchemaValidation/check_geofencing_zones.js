@@ -3,9 +3,9 @@ function checkGeofencingZones({ errors, data }) {
     const multipolygon = feature.geometry
 
     for (const coordinates of multipolygon.coordinates) {
-      for (const geo of coordinates) {
-        const first = geo[0]
-        const last = geo[geo.length - 1]
+      for (const polygonCoordinates of coordinates) {
+        const first = polygonCoordinates[0]
+        const last = polygonCoordinates[polygonCoordinates.length - 1]
 
         if (first[0] !== last[0] || first[1] !== last[1]) {
           errors.push({
