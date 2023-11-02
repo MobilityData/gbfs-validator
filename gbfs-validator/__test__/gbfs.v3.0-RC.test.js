@@ -10,7 +10,7 @@ function get_errors(result) {
   let nonSchemaErrors = []
   let warnings = []
 
-  result.files?.map((f) => {
+  result.files?.forEach((f) => {
     if (f.errors?.length) {
       errors.push({ file: f.file, errors: f.errors })
     }
@@ -23,7 +23,7 @@ function get_errors(result) {
       warnings.push({ file: f.file, warnings: f.warnings })
     }
 
-    f.languages?.map((l) => {
+    f.languages?.forEach((l) => {
       if (l.errors?.length) {
         errors.push({ file: f.file, lang: l.lang, errors: l.errors })
       }

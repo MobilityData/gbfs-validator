@@ -9,7 +9,7 @@ function checkStationInformationIDs({ errors, data, lang, allFiles }) {
 
   const ids = new Set()
 
-  data.data.stations.map((station) => {
+  data.data.stations.forEach((station) => {
     if (!station.station_id) {
       return
     }
@@ -49,7 +49,7 @@ function checkStationStatusIDs({ errors, data, lang, allFiles }) {
 
   const ids = new Set()
 
-  data.data.stations.map((station) => {
+  data.data.stations.forEach((station) => {
     if (!station.station_id) {
       return
     }
@@ -90,7 +90,7 @@ function checkStationStatusCounts({
 }) {
   const stationsInformation = getFileBody(allFiles, 'station_information', lang)
 
-  data.data.stations.map((station) => {
+  data.data.stations.forEach((station) => {
     if (station.vehicle_types_available) {
       let num_vehicles_available =
         version === '3.0-RC'
@@ -98,7 +98,7 @@ function checkStationStatusCounts({
           : station.num_bikes_available
 
       let count = 0
-      station.vehicle_types_available.map((vehicle) => {
+      station.vehicle_types_available.forEach((vehicle) => {
         count += vehicle.count
       })
 
@@ -114,7 +114,7 @@ function checkStationStatusCounts({
 
     if (station.vehicle_docks_available) {
       let num_docks_available = 0
-      station.vehicle_docks_available.map((vehicle) => {
+      station.vehicle_docks_available.forEach((vehicle) => {
         num_docks_available += vehicle.count
       })
 

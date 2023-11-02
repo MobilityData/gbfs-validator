@@ -11,11 +11,11 @@ function checkFreeBikeStatusIDs({ errors, data, lang, allFiles }) {
 
   let vehicle_types_ids = new Set()
   let vehicle_types = getVehicleTypes(allFiles, lang) || []
-  vehicle_types.map((vehicle_type) => {
+  vehicle_types.forEach((vehicle_type) => {
     vehicle_types_ids.add(vehicle_type.vehicle_type_id)
   })
 
-  data.data.bikes.map((bike) => {
+  data.data.bikes.forEach((bike) => {
     if (ids.has(bike.bike_id)) {
       errors.push({
         path: '/data/bikes/bike_id',
@@ -45,11 +45,11 @@ function checkVehicleStatusIDs({ errors, data, lang, allFiles }) {
 
   let vehicle_types_ids = new Set()
   let vehicle_types = getVehicleTypes(allFiles, lang) || []
-  vehicle_types.map((vehicle_type) => {
+  vehicle_types.forEach((vehicle_type) => {
     vehicle_types_ids.add(vehicle_type.vehicle_type_id)
   })
 
-  data.data.vehicles.map((vehicle) => {
+  data.data.vehicles.forEach((vehicle) => {
     if (ids.has(vehicle.vehicle_id)) {
       errors.push({
         path: '/data/vehicles/vehicle_id',

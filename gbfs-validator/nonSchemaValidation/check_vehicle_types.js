@@ -1,7 +1,7 @@
 function checkVehicleTypeConsistency({ errors, warnings, data }) {
   let vehicle_types_ids = new Set()
 
-  data.data.vehicle_types.map((vehicle_type) => {
+  data.data.vehicle_types.forEach((vehicle_type) => {
     vehicle_types_ids.add(vehicle_type.vehicle_type_id)
   })
   ;[...vehicle_types_ids].forEach((vehicle_type_id) => {
