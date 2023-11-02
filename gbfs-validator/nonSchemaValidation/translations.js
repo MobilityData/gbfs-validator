@@ -69,7 +69,8 @@ function checkTranslations(errors, data, languages, path, prefix = []) {
       errors.push({
         path: `/${prefix.join('/')}`,
         key: 'missing_translation',
-        message: `Missing translation for ${lang}.`
+        message: `Missing translation`,
+        language: lang
       })
 
       continue
@@ -82,7 +83,8 @@ function checkTranslations(errors, data, languages, path, prefix = []) {
     errors.push({
       path: `/${prefix.join('/')}`,
       key: 'unknown_language',
-      message: `Unknown language ${value.language}.`
+      message: `Unknown language`,
+      language: value.language
     })
   }
 }
