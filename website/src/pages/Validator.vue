@@ -150,10 +150,10 @@ function updateURL() {
             >
           </b-form-group>
         </b-tab>
-        <b-tab title="Authentification">
+        <b-tab title="Authentication">
           <b-form-group
             id="input-group-auth"
-            label="Authentification"
+            label="Authentication"
             label-for="input-auth"
             class="mb-3"
           >
@@ -166,7 +166,7 @@ function updateURL() {
 
           <b-form-group
             id="input-group-basic_auth"
-            label="Authentification"
+            label="Authentication"
             label-for="input-basic_auth"
             v-if="state.options.auth.type === 'basic_auth'"
           >
@@ -190,7 +190,7 @@ function updateURL() {
 
           <b-form-group
             id="input-group-bearer_token"
-            label="Authentification"
+            label="Authentication"
             label-for="input-bearer_token"
             v-if="state.options.auth.type === 'bearer_token'"
           >
@@ -203,7 +203,7 @@ function updateURL() {
 
           <b-form-group
             id="input-group-headers"
-            label="Authentification"
+            label="Authentication"
             label-for="input-headers"
             v-if="state.options.auth.type === 'headers'"
           >
@@ -227,7 +227,7 @@ function updateURL() {
 
           <b-form-group
             id="input-group-oauth_client_credentials_grant"
-            label="Authentification"
+            label="Authentication"
             label-for="input-bearer_token"
             v-if="state.options.auth.type === 'oauth_client_credentials_grant'"
           >
