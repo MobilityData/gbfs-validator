@@ -1,8 +1,8 @@
 const fastify = require('fastify')
 
-const version = '3.0-RC'
-const last_updated = 1566224400
-const last_updated_fresh = Math.floor(Date.now() / 1000) - 30
+const version = '3.0-RC2'
+const last_updated = '2019-08-19T10:20:00-04:00'
+const last_updated_fresh = new Date().toISOString()
 
 class MockRequests {
   entry_points() {
@@ -12,7 +12,8 @@ class MockRequests {
       gbfs_versions: this.gbfs_versions,
       system_information: this.system_information,
       vehicle_types: this.vehicle_types,
-      station_status: this.station_status
+      station_status: this.station_status,
+      vehicle_status: this.vehicle_status
     }
   }
 
@@ -27,7 +28,7 @@ class MockRequests {
             system_id: 'example_berlin',
             versions: [
               {
-                version: '3.0-RC',
+                version: '3.0-RC2',
                 url: `${basePath}/gbfs.json`
               }
             ]
@@ -69,7 +70,7 @@ class MockRequests {
       data: {
         versions: [
           {
-            version: '3.0-RC',
+            version: '3.0-RC2',
             url: `${basePath}/gbfs.json`
           }
         ]
@@ -161,7 +162,7 @@ class MockRequests {
         vehicles: [
           {
             vehicle_id: 'bike1',
-            last_reported: 1609866109,
+            last_reported: last_updated,
             lat: 12.345678,
             lon: 56.789012,
             is_reserved: false,
@@ -170,7 +171,7 @@ class MockRequests {
           },
           {
             vehicle_id: 'car1',
-            last_reported: 1609866109,
+            last_reported: last_updated,
             lat: 12.345678,
             lon: 56.789012,
             is_reserved: false,
