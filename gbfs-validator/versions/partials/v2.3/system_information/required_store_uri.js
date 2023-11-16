@@ -1,5 +1,5 @@
 module.exports = ({ android = false, ios = false }) => {
-  const r = {
+  const partial = {
     $id: 'required_ios_store_uri.json#',
     $patch: {
       source: {
@@ -42,20 +42,20 @@ module.exports = ({ android = false, ios = false }) => {
   }
 
   if (ios) {
-    r.$merge.with.properties.data.properties.rental_apps.required.push('ios')
-    r.$merge.with.properties.data.properties.rental_apps.properties.ios.required.push(
+    partial.$merge.with.properties.data.properties.rental_apps.required.push('ios')
+    partial.$merge.with.properties.data.properties.rental_apps.properties.ios.required.push(
       'store_uri'
     )
   }
 
   if (android) {
-    r.$merge.with.properties.data.properties.rental_apps.required.push(
+    partial.$merge.with.properties.data.properties.rental_apps.required.push(
       'android'
     )
-    r.$merge.with.properties.data.properties.rental_apps.properties.android.required.push(
+    partial.$merge.with.properties.data.properties.rental_apps.properties.android.required.push(
       'store_uri'
     )
   }
 
-  return r
+  return partial
 }

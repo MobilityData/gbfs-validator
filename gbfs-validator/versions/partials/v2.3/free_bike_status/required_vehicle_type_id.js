@@ -1,5 +1,5 @@
 module.exports = ({ vehicleTypes }) => {
-  const res = {
+  const partial = {
     $id: 'required_vehicle_type_id.json#'
   }
 
@@ -8,7 +8,7 @@ module.exports = ({ vehicleTypes }) => {
   )
 
   if (motorVehicleTypes.length) {
-    res.$merge = {
+    partial.$merge = {
       source: {
         $ref:
           'https://github.com/NABSA/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
@@ -46,7 +46,7 @@ module.exports = ({ vehicleTypes }) => {
     }
   }
 
-  res.$patch = {
+  partial.$patch = {
     source: {
       $ref:
         'https://github.com/NABSA/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
@@ -60,5 +60,5 @@ module.exports = ({ vehicleTypes }) => {
     ]
   }
 
-  return res
+  return partial
 }
