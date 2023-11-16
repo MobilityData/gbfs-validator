@@ -11,13 +11,13 @@ module.exports = ({ vehicleTypes }) => {
     partial.$merge = {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v2.1/gbfs.md#free_bike_statusjson'
+          'https://github.com/NABSA/gbfs/blob/v3.0-RC2/gbfs.md#vehicle_statusjson'
       },
       with: {
         properties: {
           data: {
             properties: {
-              bikes: {
+              vehicles: {
                 items: {
                   errorMessage: {
                     required: {
@@ -49,12 +49,12 @@ module.exports = ({ vehicleTypes }) => {
   partial.$patch = {
     source: {
       $ref:
-        'https://github.com/NABSA/gbfs/blob/v2.1/gbfs.md#free_bike_statusjson'
+        'https://github.com/NABSA/gbfs/blob/v3.0-RC2/gbfs.md#vehicle_statusjson'
     },
     with: [
       {
         op: 'add',
-        path: '/properties/data/properties/bikes/items/required/0',
+        path: '/properties/data/properties/vehicles/items/required/0',
         value: 'vehicle_type_id'
       }
     ]

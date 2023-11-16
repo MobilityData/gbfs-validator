@@ -25,6 +25,7 @@ const state = reactive({
   },
   versions: [
     { value: null, text: 'auto-detection' },
+    { value: '3.0-RC2', text: 'v3.0-RC2' },
     { value: '3.0-RC', text: 'v3.0-RC' },
     { value: '2.3', text: 'v2.3' },
     { value: '2.2', text: 'v2.2' },

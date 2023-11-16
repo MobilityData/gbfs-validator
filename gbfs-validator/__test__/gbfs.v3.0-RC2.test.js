@@ -27,7 +27,7 @@ describe('default feed', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
-    const { MockRequests } = require('./fixtures/v3.0-RC/default')
+    const { MockRequests } = require('./fixtures/v3.0-RC2/default')
     let mockRequests = new MockRequests()
 
     gbfsFeedServer = mockRequests.build()
@@ -50,7 +50,7 @@ describe('default feed', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          version: { detected: '3.0-RC', validated: '3.0-RC' },
+          version: { detected: '3.0-RC2', validated: '3.0-RC2' },
           validatorVersion: '1.0.0',
           hasErrors: false
         }),
@@ -64,7 +64,7 @@ describe('invalid feed', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
-    const { MockRequests } = require('./fixtures/v3.0-RC/default')
+    const { MockRequests } = require('./fixtures/v3.0-RC2/default')
     class InvalidMockRequests extends MockRequests {
       system_information(...args) {
         const json = super.system_information(...args)
@@ -97,7 +97,7 @@ describe('invalid feed', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          version: { detected: '3.0-RC', validated: '3.0-RC' },
+          version: { detected: '3.0-RC2', validated: '3.0-RC2' },
           validatorVersion: '1.0.0',
           hasErrors: true,
           errorsCount: 1
@@ -116,7 +116,7 @@ describe('exaustive feed', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
-    const { MockRequests } = require('./fixtures/v3.0-RC/exaustive')
+    const { MockRequests } = require('./fixtures/v3.0-RC2/exaustive')
 
     let mockRequests = new MockRequests()
 
@@ -142,7 +142,7 @@ describe('exaustive feed', () => {
 
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          version: { detected: '3.0-RC', validated: '3.0-RC' },
+          version: { detected: '3.0-RC2', validated: '3.0-RC2' },
           validatorVersion: '1.0.0',
           hasErrors: false
         }),

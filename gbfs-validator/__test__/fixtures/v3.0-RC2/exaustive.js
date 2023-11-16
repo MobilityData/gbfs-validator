@@ -1,9 +1,9 @@
 const fastify = require('fastify')
 
-const version = '3.0-RC'
-const last_updated = 1566224400
+const version = '3.0-RC2'
+const last_updated = '2019-08-19T10:20:00-04:00'
 
-const last_updated_fresh = Math.floor(Date.now() / 1000) - 30
+const last_updated_fresh = new Date().toISOString()
 
 class MockRequests {
   entry_points() {
@@ -34,7 +34,7 @@ class MockRequests {
             system_id: 'example_berlin',
             versions: [
               {
-                version: '3.0-RC',
+                version: '3.0-RC2',
                 url: `${basePath}/gbfs.json`
               }
             ]
@@ -104,7 +104,7 @@ class MockRequests {
       data: {
         versions: [
           {
-            version: '3.0-RC',
+            version: '3.0-RC2',
             url: `${basePath}/gbfs.json`
           }
         ]
@@ -227,7 +227,7 @@ class MockRequests {
             cargo_volume_capacity: 50,
             cargo_load_capacity: 100,
             propulsion_type: 'electric',
-            eco_label: [
+            eco_labels: [
               {
                 country_code: 'FR',
                 eco_sticker: 'critair_1'
@@ -330,23 +330,23 @@ class MockRequests {
             parking_hoop: false,
             contact_phone: '+33109874321',
             capacity: 10,
-            vehicle_type_area_capacity: [
+            vehicle_types_capacity: [
               {
-                vehicle_type_id: 'abc123',
+                vehicle_type_ids: ['abc123'],
                 count: 7
               },
               {
-                vehicle_type_id: 'def456',
+                vehicle_type_ids: ['def456'],
                 count: 3
               }
             ],
-            vehicle_type_dock_capacity: [
+            vehicle_docks_capacity: [
               {
-                vehicle_type_id: 'abc123',
+                vehicle_type_ids: ['abc123'],
                 count: 7
               },
               {
-                vehicle_type_id: 'def456',
+                vehicle_type_ids: ['def456'],
                 count: 3
               }
             ],
@@ -376,7 +376,7 @@ class MockRequests {
             is_installed: true,
             is_renting: true,
             is_returning: true,
-            last_reported: 1609866125,
+            last_reported: last_updated,
             num_docks_available: 3,
             num_docks_disabled: 1,
             vehicle_docks_available: [
@@ -407,7 +407,7 @@ class MockRequests {
             is_installed: true,
             is_renting: true,
             is_returning: true,
-            last_reported: 1609866106,
+            last_reported: last_updated,
             num_docks_available: 8,
             num_docks_disabled: 1,
             vehicle_docks_available: [
@@ -459,7 +459,7 @@ class MockRequests {
               web: 'https://www.example.com/app?sid=1234567890'
             },
             vehicle_type_id: 'biketype1',
-            last_reported: 1609866109
+            last_reported: last_updated
           },
           {
             vehicle_id: 'car1',
@@ -468,7 +468,7 @@ class MockRequests {
             is_reserved: false,
             is_disabled: false,
             vehicle_type_id: 'cartype1',
-            last_reported: 1609866109,
+            last_reported: last_updated,
             current_range_meters: 10000,
             current_fuel_percent: 0.5,
             station_id: 'station1',
@@ -627,8 +627,8 @@ class MockRequests {
             type: 'station_closure',
             times: [
               {
-                start: 1604448000,
-                end: 1604674800
+                start: last_updated,
+                end: last_updated_fresh
               }
             ],
             station_ids: ['123', '456', '789'],
@@ -658,7 +658,7 @@ class MockRequests {
                 language: 'en'
               }
             ],
-            last_updated: 1604198100
+            last_updated
           }
         ]
       }
@@ -706,11 +706,11 @@ class MockRequests {
                     language: 'en'
                   }
                 ],
-                start: 1593878400,
-                end: 1593907260,
+                start: last_updated,
+                end: last_updated_fresh,
                 rules: [
                   {
-                    vehicle_type_id: ['moped1', 'car1'],
+                    vehicle_type_ids: ['moped1', 'car1'],
                     ride_start_allowed: false,
                     ride_end_allowed: false,
                     ride_through_allowed: true,
