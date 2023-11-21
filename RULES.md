@@ -18,12 +18,12 @@ The validator will check for the presence of the files depending on the options 
 <img width="350" alt="tick boxes" src="https://user-images.githubusercontent.com/63653518/156194900-bab75f85-f681-43a4-84d3-08c9d6fed4df.png">
 
 
-The Validator also checks the conditional requirement of the file `vehicle_types.json`: as per the [official GBFS specification](https://github.com/NABSA/gbfs/blob/master/gbfs.md#vehicle_typesjson), it is required of systems that include information about vehicle types in the `vehicle_status.json file`.
+The Validator also checks the conditional requirement of the file `vehicle_types.json`: as per the [official GBFS specification](https://github.com/MobilityData/gbfs/blob/master/gbfs.md#vehicle_typesjson), it is required of systems that include information about vehicle types in the `vehicle_status.json file`.
 
 
 # Fields presence and field types
 ## Required fields
-Each file in GBFS has to be structured in a specific [output format](https://github.com/NABSA/gbfs/blob/master/gbfs.md#output-format).
+Each file in GBFS has to be structured in a specific [output format](https://github.com/MobilityData/gbfs/blob/master/gbfs.md#output-format).
 All the fields that are described as **required** in GBFS will be checked by the validator.
 Some fields are required only if the parent field is defined, and this is considered a **conditionally required** field.
 
@@ -68,8 +68,8 @@ The following conditions are all covered by this validator:
 `current_range_meters`
 
 - **conditions that are not covered by this validator**
-`num_docks_available` in station_status.json`: because it depends on something that isn't defined in the GBFS files: the docking capacity. See the official GBFS spec about this field [here](https://github.com/NABSA/gbfs/blob/master/gbfs.md#station_statusjson).\
-`vehicle_docks_available` in station_status.json`: because it depends on something that isn't defined in the GBFS files: *REQUIRED in feeds where [...] certain docks are only able to accept certain vehicle types.* See the official GBFS spec about this field [here](https://github.com/NABSA/gbfs/blob/master/gbfs.md#station_statusjson).\
+`num_docks_available` in station_status.json`: because it depends on something that isn't defined in the GBFS files: the docking capacity. See the official GBFS spec about this field [here](https://github.com/MobilityData/gbfs/blob/master/gbfs.md#station_statusjson).\
+`vehicle_docks_available` in station_status.json`: because it depends on something that isn't defined in the GBFS files: *REQUIRED in feeds where [...] certain docks are only able to accept certain vehicle types.* See the official GBFS spec about this field [here](https://github.com/MobilityData/gbfs/blob/master/gbfs.md#station_statusjson).\
 `system_id` in `free_bike_status.json`
 
 ## Field types

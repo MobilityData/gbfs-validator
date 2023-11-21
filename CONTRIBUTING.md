@@ -36,7 +36,7 @@ The function is only compatible with Netlify Function (https://www.netlify.com/p
 
 - check-systems
 
-Check-systems is a CLI tool to validate the whole “systems.csv” from https://github.com/NABSA/gbfs locally
+Check-systems is a CLI tool to validate the whole “systems.csv” from https://github.com/MobilityData/gbfs locally
 
 # Code convention
 

@@ -37,7 +37,7 @@ const errorsCountFormated = computed(() => {
             Detected version <b>{{ result.summary.version.detected }} </b> and
             validate with
             <a
-              :href="`https://github.com/NABSA/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"
+              :href="`https://github.com/MobilityData/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"
               ><b>{{ result.summary.version.validated }}</b></a
             >
           </b-alert>
