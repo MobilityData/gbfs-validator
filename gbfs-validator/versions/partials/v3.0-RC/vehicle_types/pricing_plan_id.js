@@ -4,7 +4,7 @@ module.exports = ({ pricingPlans }) => {
     $merge: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v3.0-RC/gbfs.md#vehicle_typesjson-added-in-v21-rc'
+          'https://github.com/MobilityData/gbfs/blob/v3.0-RC/gbfs.md#vehicle_typesjson'
       },
       with: {
         properties: {
