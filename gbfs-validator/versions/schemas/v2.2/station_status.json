@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://github.com/NABSA/gbfs/blob/v2.2/gbfs.md#station_statusjson",
+  "$id": "https://github.com/MobilityData/gbfs/blob/v2.2/gbfs.md#station_statusjson",
   "description":
     "Describes the capacity and rental availability of the station",
   "type": "object",
@@ -112,6 +112,7 @@
                       "description":
                         "An array of strings where each string represents a vehicle_type_id that is able to use a particular type of dock at the station (added in v2.1-RC).",
                       "type": "array",
+                      "uniqueItems": true,
                       "items": {
                         "type": "string"
                       }

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://github.com/NABSA/gbfs/blob/v1.0/gbfs.md#system_alertsjson",
+  "$id": "https://github.com/MobilityData/gbfs/blob/v1.0/gbfs.md#system_alertsjson",
   "description": 	"Describes ad-hoc changes to the system.",
   "type": "object",
   "properties": {
@@ -60,6 +60,7 @@
               "station_ids": {
                 "description": "Array of identifiers of the stations for which this alert applies.",
                 "type": "array",
+                "uniqueItems": true,
                 "items": {
                   "type": "string"
                 }
@@ -67,6 +68,7 @@
               "region_ids": {
                 "description": "Array of identifiers of the regions for which this alert applies.",
                 "type": "array",
+                "uniqueItems": true,
                 "items": {
                   "type": "string"
                 }
