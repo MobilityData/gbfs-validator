@@ -7,10 +7,15 @@ const validatorVersion = process.env.COMMIT_REF
 /**
  * @typedef {{
  *            languages: Object,
- *            required: boolean,
- *            exists: boolean,
  *            file: string,
- *            hasErrors: boolean
+ *            url: string,
+ *            required: boolean,
+ *            recommended: boolean,
+ *            exists: boolean,
+ *            hasErrors: boolean,
+ *            errors: Object,
+ *            schema: Object,
+ *            version: string
  *          }} FileValidationResult
  */
 
@@ -25,7 +30,7 @@ const validatorVersion = process.env.COMMIT_REF
   /**
  * This function returns true if the file from a GBFS feed has errors or if the file is required and missing.
  * @param {Object} data - The body of a file from a GBFS feed.
- * @param {boolean} required - True the file is required.
+ * @param {boolean} required - True if the file is required.
  * @returns {boolean}
  */
 function hasErrors(data, required) {
@@ -228,9 +233,9 @@ function isGBFSFileRequire(version) {
 /** Class representing a GBFS feed. */
 class GBFS {
   /**
-   * 
-   * @param {string} url - The URL of the gbfs.json file
-   * @param {Object} param1 - The parameters of the validation
+   * Creates a GBFS feed.
+   * @param {string} url - The URL of the gbfs.json file.
+   * @param {Object} param1 - The parameters of the validation.
    */
   constructor(
     url,
@@ -277,6 +282,11 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns the FileValidationResult of the gbfs.json file from a generated URL.
+   * @param {string} url - The URL of the gbfs.json file.
+   * @returns FileValidationResult
+   */
   alternativeAutoDiscovery(url) {
     return got
       .get(url, this.gotOptions)
@@ -328,6 +338,10 @@ class GBFS {
       })
   }
 
+  /**
+   * This function returns the FileValidationResult of the gbfs.json file.
+   * @returns FileValidationResult
+   */
   checkAutodiscovery() {
     return got
       .get(this.url, this.gotOptions)
@@ -380,6 +394,14 @@ class GBFS {
       })
   }
 
+  /**
+   * This function retrieves the JSON schema and returns the result of the validate function.
+   * @param {string} version - The version of the GBFS feed.
+   * @param {string} file - The type of file from a GBFS feed.
+   * @param {Object} data - The body of a file from a GBFS feed.
+   * @param {Object} options - An Object that contains an array of JSON Patches.
+   * @returns {Object}
+   */
   validateFile(version, file, data, options) {
     let schema
 
@@ -393,6 +415,12 @@ class GBFS {
     return validate(schema, data, options)
   }
 
+  /**
+   * This function returns on Object which contains the body of a file from a GBFS feed.
+   * @param {string} type - The type of file from a GBFS feed.
+   * @param {boolean} required - True if the file is required.
+   * @returns {Object}
+   */
   getFile(type, required) {
     if (this.autoDiscovery) {
       let urls
@@ -469,6 +497,15 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns the FileValidationResult of a file from a GBFS feed.
+   * @param {Object} body - The body of a file from a GBFS feed.
+   * @param {string} version - The version of the GBFS feed.
+   * @param {string} type - The type of file from a GBFS feed.
+   * @param {boolean} required - True if the file is required.
+   * @param {Object} options - An Object that contains an array of JSON Patches.
+   * @returns FileValidationResult
+   */
   validationFile(body, version, type, required, options) {
     if (Array.isArray(body)) {
       body = body
@@ -498,6 +535,10 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns a token to access a GBFS feed.
+   * @returns {Object}
+   */
   getToken() {
     return got
       .post(this.auth.oauthClientCredentialsGrant.tokenUrl, {
@@ -514,6 +555,10 @@ class GBFS {
       })
   }
 
+  /**
+   * This function returns an Object that contains all the files from a GBFS feed and the FileValidationResult of the gbfs.json file.
+   * @returns {Object}
+   */
   async getFiles() {
     if (this.auth && this.auth.type === 'oauth_client_credentials_grant') {
       await this.getToken()
@@ -548,6 +593,10 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns an Object that contains the FileValidationResult of all the files from a GBFS feed.
+   * @returns {Object}
+   */
   async validation() {
     const { gbfsResult, gbfsVersion, files, summary } = await this.getFiles()
 
