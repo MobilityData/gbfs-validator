@@ -11,7 +11,7 @@ module.exports = ({ vehicleTypes }) => {
     partial.$merge = {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
+          'https://github.com/MobilityData/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
       },
       with: {
         properties: {
@@ -49,7 +49,7 @@ module.exports = ({ vehicleTypes }) => {
   partial.$patch = {
     source: {
       $ref:
-        'https://github.com/NABSA/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
+        'https://github.com/MobilityData/gbfs/blob/v2.3/gbfs.md#free_bike_statusjson'
     },
     with: [
       {

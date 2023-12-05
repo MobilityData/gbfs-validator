@@ -4,7 +4,7 @@ module.exports = ({ vehicleTypes }) => {
     $merge: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v3.0-RC/gbfs.md#station_statusjson'
+          'https://github.com/MobilityData/gbfs/blob/v3.0-RC/gbfs.md#station_statusjson'
       },
       with: {
         properties: {
@@ -33,7 +33,7 @@ module.exports = ({ vehicleTypes }) => {
     $patch: {
       source: {
         $ref:
-          'https://github.com/NABSA/gbfs/blob/v3.0-RC/gbfs.md#station_statusjson'
+          'https://github.com/MobilityData/gbfs/blob/v3.0-RC/gbfs.md#station_statusjson'
       },
       with: [
         {
