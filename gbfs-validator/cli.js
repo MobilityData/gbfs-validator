@@ -24,14 +24,14 @@ const isExitOverrided = () => (process.env.EXIT_OVERRIDE === 'true')
 
 /**
  * This function returns true if print report option is set to 'true'.
- * @param {Object} options - The CLI commander options
+ * @param {Object} options - The CLI commander options.
  * @returns {boolean}
  */
 const printingReport = (options) => (options.printReport === 'yes')
 
 /**
  * This function exits the process
- * @param {number} code - The exit process code
+ * @param {number} code - The exit process code.
  */
 const exitProcess = (code) => {
   if (!isExitOverrided && code === 1) {
@@ -63,8 +63,8 @@ parseOptions = () => {
 
 /**
  * This function writes the validation report to a local file.
- * @param {*} report The validation report
- * @param {*} filePath The path to the local file to write
+ * @param {*} report - The validation report.
+ * @param {*} filePath - The path to the local file to write.
  */
 const saveReport = (report, filePath) => {
   const dirname = fsPath.dirname(filePath);
@@ -76,7 +76,7 @@ const saveReport = (report, filePath) => {
 
 /**
  * This asyn function validates the feed and saves the report if requested in the options
- * @param {*} options The options passed by the user to the CLI.
+ * @param {*} options - The options passed by the user to the CLI.
  */
 const processFeedValidation = async (options) => {
   if (options.verbose) {
