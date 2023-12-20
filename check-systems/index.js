@@ -8,6 +8,12 @@ if (!process.argv[2]) {
   process.exit(1)
 }
 
+/**
+ * This function reads the local version of the file systems.csv (must be downloaded manually first),
+ * validates every system in the file and writes the validation report locally.
+ * @param {*} line - A row in the file systems.csv.
+ * @returns 
+ */
 function checkGBFS(line) {
   const gbfs = new gbfsValidator(line[5])
 

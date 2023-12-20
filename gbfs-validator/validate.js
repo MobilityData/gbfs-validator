@@ -4,6 +4,13 @@ const ajvErrors = require('ajv-errors')
 const jsonpatch = require('fast-json-patch')
 const jsonmerge = require('json-merge-patch')
 
+/**
+ * This function validates a file from a GBFS feed using Ajv.
+ * @param {*} schema - The JSON schema for the file to validate.
+ * @param {*} object - The body of a file to validate from a GBFS feed.
+ * @param {*} options - An Object that contains an array of JSON Patches.
+ * @returns {Object} - An Object tthat contains the schema and the errors detected.
+ */
 module.exports = function validate(schema, object, options = {}) {
   const ajv = new Ajv({ allErrors: true, strict: false })
   ajvErrors(ajv)

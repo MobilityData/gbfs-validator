@@ -4,6 +4,35 @@ const validatorVersion = process.env.COMMIT_REF
   ? process.env.COMMIT_REF.substring(0, 7)
   : require('./package.json').version
 
+/**
+ * @typedef {{
+ *            languages: Object,
+ *            file: string,
+ *            url: string,
+ *            required: boolean,
+ *            recommended: boolean,
+ *            exists: boolean,
+ *            hasErrors: boolean,
+ *            errors: Object,
+ *            schema: Object,
+ *            version: string
+ *          }} FileValidationResult
+ */
+
+/**
+ * @typedef {{
+*            vehicle_type_id: string,
+*            form_factor: string,
+*            propulsion_type: string
+*          }} VehicleType
+*/
+
+  /**
+ * This function returns true if the file from a GBFS feed has errors or if the file is required and missing.
+ * @param {Object} data - The body of a file from a GBFS feed.
+ * @param {boolean} required - True if the file is required.
+ * @returns {boolean}
+ */
 function hasErrors(data, required) {
   let hasError = false
 
@@ -22,6 +51,11 @@ function hasErrors(data, required) {
   return hasError
 }
 
+/**
+ * This function returns the number of errors in a file of a GBFS feed.
+ * @param {FileValidationResult} file - The validation result of a file from a GBFS feed.
+ * @returns {number}
+ */
 function countErrors(file) {
   let count = 0
 
@@ -46,6 +80,13 @@ function countErrors(file) {
   return count
 }
 
+/**
+ * This function returns a JSON Patch to modify a GBFS JSON schema.
+ * @param {string} version - The version of the GBFS feed.
+ * @param {string} partial - The path to the JSON Patch file.
+ * @param {Object} data - The params for generating the JSON Patch.
+ * @returns {Object} - A JSON Patch.
+ */
 function getPartialSchema(version, partial, data = {}) {
   let partialSchema
 
@@ -60,6 +101,11 @@ function getPartialSchema(version, partial, data = {}) {
   return partialSchema
 }
 
+/**
+ * This function returns an array of vehicle types defined in vehicle_types.json.
+ * @param {Object} param0 - The vehicle_types.json file.
+ * @returns {VehicleType[]}
+ */
 function getVehicleTypes({ body }) {
   if (Array.isArray(body)) {
     return body.reduce((acc, lang) => {
@@ -84,6 +130,11 @@ function getVehicleTypes({ body }) {
   }
 }
 
+/**
+ * This function returns an array of pricing plans defined in system_pricing_plans.json.
+ * @param {*} param0 - The system_pricing_plans.json file.
+ * @returns {Object[]} - An array of pricing plans.
+ */
 function getPricingPlans({ body }) {
   if (Array.isArray(body)) {
     return body.reduce((acc, lang) => {
@@ -100,6 +151,11 @@ function getPricingPlans({ body }) {
   }
 }
 
+/**
+ * This function returns true if free_bike_status.json contains a vehicle with a vehicle_type_id.
+ * @param {*} param0 - The free_bike_status.json file.
+ * @returns {boolean}
+ */
 function hadVehicleTypeId({ body }) {
   if (Array.isArray(body)) {
     return body.some((lang) =>
@@ -110,6 +166,11 @@ function hadVehicleTypeId({ body }) {
   }
 }
 
+/**
+ * This function returns true if free_bike_status.json contains a vehicle with a pricing_plan_id.
+ * @param {*} param0 - The free_bike_status.json file.
+ * @returns {boolean}
+ */
 function hasPricingPlanId({ body }) {
   if (Array.isArray(body)) {
     return body.some((lang) =>
@@ -120,6 +181,13 @@ function hasPricingPlanId({ body }) {
   }
 }
 
+/**
+ * This function returns true if a file from a GBFS feed contains a specific rental_uri (ios or android).
+ * @param {Object} param0 - A file from a GBFS feed.
+ * @param {string} key - The type of the objects that may contain a rental_uri (bikes or stations).
+ * @param {string} store - The type of store (ios or android).
+ * @returns {boolean}
+ */
 function hasRentalUris({ body }, key, store) {
   if (Array.isArray(body)) {
     return body.some((lang) =>
@@ -130,6 +198,11 @@ function hasRentalUris({ body }, key, store) {
   }
 }
 
+/**
+ * This function returns true if a file from a GBFS feed exists in any language.
+ * @param {Object} file - A file from a GBFS feed.
+ * @returns {boolean}
+ */
 function fileExist(file) {
   if (!file) {
     return false
@@ -144,6 +217,11 @@ function fileExist(file) {
   return false
 }
 
+/**
+ * This function returns true if the gbfs.json file is required.
+ * @param {string} version - The version of the GBFS feed.
+ * @returns {boolean}
+ */
 function isGBFSFileRequire(version) {
   if (!version) {
     return false
@@ -152,7 +230,13 @@ function isGBFSFileRequire(version) {
   }
 }
 
+/** Class representing a GBFS feed. */
 class GBFS {
+  /**
+   * Creates a GBFS feed.
+   * @param {string} url - The URL of the gbfs.json file.
+   * @param {Object} param1 - The parameters of the validation.
+   */
   constructor(
     url,
     { docked = false, freefloating = false, version = null, auth = {} } = {}
@@ -198,6 +282,11 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns the FileValidationResult of the gbfs.json file from a generated URL.
+   * @param {string} url - The URL of the gbfs.json file.
+   * @returns FileValidationResult
+   */
   alternativeAutoDiscovery(url) {
     return got
       .get(url, this.gotOptions)
@@ -249,6 +338,10 @@ class GBFS {
       })
   }
 
+  /**
+   * This function returns the FileValidationResult of the gbfs.json file.
+   * @returns FileValidationResult
+   */
   checkAutodiscovery() {
     return got
       .get(this.url, this.gotOptions)
@@ -301,6 +394,14 @@ class GBFS {
       })
   }
 
+  /**
+   * This function retrieves the JSON schema and returns the result of the validate function.
+   * @param {string} version - The version of the GBFS feed.
+   * @param {string} file - The type of file from a GBFS feed.
+   * @param {Object} data - The body of a file from a GBFS feed.
+   * @param {Object} options - An Object that contains an array of JSON Patches.
+   * @returns {Object}
+   */
   validateFile(version, file, data, options) {
     let schema
 
@@ -314,6 +415,12 @@ class GBFS {
     return validate(schema, data, options)
   }
 
+  /**
+   * This function returns on Object which contains the body of a file from a GBFS feed.
+   * @param {string} type - The type of file from a GBFS feed.
+   * @param {boolean} required - True if the file is required.
+   * @returns {Object}
+   */
   getFile(type, required) {
     if (this.autoDiscovery) {
       let urls
@@ -390,6 +497,15 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns the FileValidationResult of a file from a GBFS feed.
+   * @param {Object} body - The body of a file from a GBFS feed.
+   * @param {string} version - The version of the GBFS feed.
+   * @param {string} type - The type of file from a GBFS feed.
+   * @param {boolean} required - True if the file is required.
+   * @param {Object} options - An Object that contains an array of JSON Patches.
+   * @returns FileValidationResult
+   */
   validationFile(body, version, type, required, options) {
     if (Array.isArray(body)) {
       body = body
@@ -419,6 +535,10 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns a token to access a GBFS feed.
+   * @returns {Object}
+   */
   getToken() {
     return got
       .post(this.auth.oauthClientCredentialsGrant.tokenUrl, {
@@ -435,6 +555,10 @@ class GBFS {
       })
   }
 
+  /**
+   * This function returns an Object that contains all the files from a GBFS feed and the FileValidationResult of the gbfs.json file.
+   * @returns {Object}
+   */
   async getFiles() {
     if (this.auth && this.auth.type === 'oauth_client_credentials_grant') {
       await this.getToken()
@@ -469,6 +593,10 @@ class GBFS {
     }
   }
 
+  /**
+   * This function returns an Object that contains the FileValidationResult of all the files from a GBFS feed.
+   * @returns {Object}
+   */
   async validation() {
     const { gbfsResult, gbfsVersion, files, summary } = await this.getFiles()
 
