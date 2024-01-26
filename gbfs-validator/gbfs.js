@@ -36,19 +36,29 @@ const validatorVersion = process.env.COMMIT_REF
 function hasErrors(data, required) {
   let hasError = false
 
-  data.forEach((el) => {
+  for (let i = 0; i < data.length; i++) {
+    const el = data[i];
+
     if (Array.isArray(el)) {
       if (hasErrors(el, required)) {
-        hasError = true
+        return true
       }
     } else {
-      if (required && !el.exists ? true : !!el.errors || el.hasErrors) {
-        hasError = true
+      if (typeof required === 'undefined') {
+        // If the required boolean is not specified, use the required of each individual file
+        if (el.required && !el.exists) {
+          return true
+        }
+      } else if (required && !el.exists) {
+        return true
+      }
+      // At this point we know there are no errors because a required file does not exists. Now check for json errors
+      if (!!el.errors || el.hasErrors) {
+        return true
       }
     }
-  })
-
-  return hasError
+  }
+  return false
 }
 
 /**
