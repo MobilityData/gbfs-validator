@@ -27,36 +27,88 @@ const validatorVersion = process.env.COMMIT_REF
 *          }} VehicleType
 */
 
-  /**
- * This function returns true if the file from a GBFS feed has errors or if the file is required and missing.
- * @param {Object} data - The body of a file from a GBFS feed.
- * @param {boolean} required - True if the file is required.
+function print(str, obj) {
+  if (obj) {
+  console.log(str, obj)
+  } else {
+  console.log(str)
+  }
+}
+
+/**
+ * Look into the array of files data and return true if any has an error. The presence of an error
+ * should be already determined for each file data item.
+ * @param {FileValidationResult[]} files A list of files data to check for errors.
+ * @returns {boolean} True if any of the files has an error.
+ */
+function filesHaveErrors(files) {
+print('filesHaveErrors', files)
+  if (Array.isArray(files)) {
+  print('filesHaveErrors isArray')
+    return files.some((file) => file.hasErrors);
+  }
+  // If the argument is not an array of file data, we'll say there is no error
+  print('filesHaveErrors not isArray return false')
+  return false;
+}
+
+/**
+ * This function returns true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * Note that a file data can be an array for multi-languages.
+ * @param {Object} data - The body of a file data from a GBFS feed.
  * @returns {boolean}
  */
-function hasErrors(data, required) {
-  let hasError = false
+//function fileHasErrors(fileData, required) {
+//  print('fileHasErrors required = ' + required + " fileData = ", fileData)
+//  if (Array.isArray(fileData)) {
+//    return fileData.some((subBody) => hasErrors(subBody, required))
+//  }
+//  print('fileHasErrors not fileHasMultiLanguages')
+//  // So it's not a multi-language array, just check the data directly.
+//  return hasErrors(fileData, required)
+//}
 
-  for (let i = 0; i < data.length; i++) {
-    const el = data[i];
+function fileHasErrors(fileData, required) {
+print('fileHasErrors required = ' + required + " fileData = ", fileData)
+  if (fileHasMultiLanguages(fileData)) {
+  print('fileHasErrors fileHasMultiLanguages')
+    return fileData.some((languageBody) => hasErrors(languageBody, required))
+  }
+print('fileHasErrors not fileHasMultiLanguages')
+  // So it's not a multi-language array, just check the data directly.
+  return hasErrors(fileData, required)
+}
 
-    if (Array.isArray(el)) {
-      if (hasErrors(el, required)) {
-        return true
-      }
-    } else {
-      if (typeof required === 'undefined') {
-        // If the required boolean is not specified, use the required of each individual file
-        if (el.required && !el.exists) {
-          return true
-        }
-      } else if (required && !el.exists) {
-        return true
-      }
-      // At this point we know there are no errors because a required file does not exists. Now check for json errors
-      if (!!el.errors || el.hasErrors) {
-        return true
-      }
-    }
+/**
+ * This function returns true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * Note that a file data cannot be an array for multi-languages.
+ * @param {Object} data - The body of a file data from a GBFS feed.
+ * @returns {boolean}
+ */
+
+function hasErrors(fileData, required) {
+print('hasErrors required = ' + required + " fileData = ", fileData)
+  if (required && !fileData.exists) {
+  print('hasErrors required && !fileData.exists')
+    return true
+  }
+  print('hasErrors !required && fileData.hasErrors')
+  if (!!fileData.errors || fileData.hasErrors) {
+  print
+    return true
+  }
+  print('hasErrors !required && !fileData.hasErrors')
+  return false
+}
+
+/**
+  * This function returns true if the file data from a GBFS feed is an multi-language array of file data.
+  * @param {Object} data - The body of a file data from a GBFS feed.
+  * @returns {boolean}
+  */
+function fileHasMultiLanguages(fileData) {
+  if (Array.isArray(fileData)) {
+    return fileData.some((languageBody) => languageBody.lang)
   }
   return false
 }
@@ -532,7 +584,7 @@ class GBFS {
           ? body.reduce((acc, l) => acc && l.exists, true)
           : false,
         file: `${type}.json`,
-        hasErrors: hasErrors(body, required)
+        hasErrors: fileHasErrors(body, required)
       }
     } else {
       return {
@@ -801,7 +853,7 @@ class GBFS {
           detected: result[0].version,
           validated: this.options.version || result[0].version
         },
-        hasErrors: hasErrors(result),
+        hasErrors: filesHaveErrors(result),
         errorsCount: filesResult.reduce((acc, file) => {
           acc += file.errorsCount
           return acc
