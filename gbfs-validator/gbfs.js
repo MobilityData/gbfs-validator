@@ -27,28 +27,57 @@ const validatorVersion = process.env.COMMIT_REF
 *          }} VehicleType
 */
 
-  /**
- * This function returns true if the file from a GBFS feed has errors or if the file is required and missing.
- * @param {Object} data - The body of a file from a GBFS feed.
- * @param {boolean} required - True if the file is required.
+/**
+ * Look into the array of files data and return true if any has an error.
+ * @param {FileValidationResult[]} files A list of files data to check for errors.
+ * @returns {boolean} True if any of the files has an error.
+ */
+function filesHaveErrors(files) {
+  if (Array.isArray(files)) {
+    return files.some((file) => hasErrors(file, file.required));
+  }
+  // If the argument is not an array of file data, we'll say there is no error
+  return false;
+}
+
+/**
+ * Return true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * The file data can be an array (e.g. for multi-language) or directly the body from the file.
+ * @param {Object} data - The body of a file data from a GBFS feed.
  * @returns {boolean}
  */
-function hasErrors(data, required) {
-  let hasError = false
+function fileHasErrors(fileData, required) {
+  if (fileHasMultiLanguages(fileData)) {
+    return fileData.some((languageBody) => hasErrors(languageBody, required))
+  }
+  // So it's not a multi-language array, just check the data directly.
+  return hasErrors(fileData, required)
+}
 
-  data.forEach((el) => {
-    if (Array.isArray(el)) {
-      if (hasErrors(el, required)) {
-        hasError = true
-      }
-    } else {
-      if (required && !el.exists ? true : !!el.errors || el.hasErrors) {
-        hasError = true
-      }
-    }
-  })
+/**
+ * This function returns true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * Note that a file data cannot be an array for multi-languages.
+ * @param {Object} data - The body of a file data from a GBFS feed.
+ * @returns {boolean}
+ */
+function hasErrors(fileData, required) {
+  if (required && !fileData.exists) {
+    return true
+  }
+  if (!!fileData.errors || fileData.hasErrors) {
+    return true
+  }
+  return false
+}
 
-  return hasError
+/**
+  * This function returns true if the file data from a GBFS feed is an multi-language array of file data.
+  * @param {Object} data - The body of a file data from a GBFS feed.
+  * @returns {boolean}
+  */
+function fileHasMultiLanguages(fileData) {
+  // Currently the only way we know it's multi-language is if it's an array
+  return Array.isArray(fileData)
 }
 
 /**
@@ -522,7 +551,7 @@ class GBFS {
           ? body.reduce((acc, l) => acc && l.exists, true)
           : false,
         file: `${type}.json`,
-        hasErrors: hasErrors(body, required)
+        hasErrors: fileHasErrors(body, required)
       }
     } else {
       return {
@@ -791,7 +820,7 @@ class GBFS {
           detected: result[0].version,
           validated: this.options.version || result[0].version
         },
-        hasErrors: hasErrors(result),
+        hasErrors: filesHaveErrors(result),
         errorsCount: filesResult.reduce((acc, file) => {
           acc += file.errorsCount
           return acc
