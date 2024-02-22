@@ -1,23 +1,5 @@
-const GBFS = require('gbfs-validator')
-
-getCorsResponse = (event) => {
-  const headers = {
-    "Access-Control-Allow-Origin": "*", // Allow all domains
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Request-Headers": "*"
-    // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  };
-
-  // Handle OPTIONS method for preflight requests
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers,
-    };
-  }
-  return undefined
-}
+const GBFS = require('gbfs-validator');
+const { defaultApplicationResponseHeaders, getCorsResponse } = require('../common/http-utils');
 
 exports.handler = function (event, context, callback) {
   const corsResponse = getCorsResponse(event);
@@ -32,6 +14,7 @@ exports.handler = function (event, context, callback) {
     body = JSON.parse(event.body)
   } catch (err) {
     callback(err, {
+      headers: defaultApplicationResponseHeaders,
       statusCode: 500,
       body: JSON.stringify(err)
     })
@@ -43,12 +26,14 @@ exports.handler = function (event, context, callback) {
     .getFiles()
     .then((result) => {
       callback(null, {
+        headers: defaultApplicationResponseHeaders,
         statusCode: 200,
         body: JSON.stringify(result)
       })
     })
     .catch((err) => {
       callback(null, {
+        headers: defaultApplicationResponseHeaders,
         statusCode: 500,
         body: JSON.stringify(err.message)
       })

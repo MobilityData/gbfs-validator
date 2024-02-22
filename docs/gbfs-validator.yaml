@@ -10,9 +10,12 @@ info:
     name: MobilityData License
     url: https://www.apache.org/licenses/LICENSE-2.0  
 servers:
-  - url: http://localhost:8888/.netlify/functions
   - url: https://gbfs-validator.netlify.app/.netlify/functions
+    description: Production release environment  
+  - url: http://localhost:8888/.netlify/functions
+    description: Local development environment  
   - url: https://deploy-preview-171--gbfs-validator.netlify.app/.netlify/functions
+    description: REMOVE THIS URL BEFORE MERGING
 paths:
   /validator:
     post:
