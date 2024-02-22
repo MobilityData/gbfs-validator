@@ -4,7 +4,8 @@ getCorsResponse = (event) => {
   const headers = {
     "Access-Control-Allow-Origin": "*", // Allow all domains
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    "Access-Control-Allow-Headers": "*"
+    // "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   };
 
   // Handle OPTIONS method for preflight requests
