@@ -12,3 +12,8 @@
   command = "yarn run dev:website"
   autoLaunch = false
   functions = "functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    access-control-allow-origin: *
