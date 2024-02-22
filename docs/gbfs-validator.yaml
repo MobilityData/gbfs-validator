@@ -52,7 +52,7 @@ paths:
         required: true
       responses:
         '200':
-          description: lorem
+          description: The feed content
           content:
             application/json:
               schema:
