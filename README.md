@@ -126,6 +126,12 @@ This project follows the [all-contributors](https://allcontributors.org/docs/en/
 
 :warning: for contributions on schemas, please see [Versions README](gbfs-validator/versions/README.md)
 
-## Acknowledgements
+## OpenAPI Specification
+
+:warning: **Subject to change**: This OpenAPI specification may change at any time. We do not recommend building any production systems that depend on this API directly.
+
+The OpenAPI specification can be viewed at: https://mobilitydata.github.io/gbfs-validator/SwaggerUI/index.html.
+
+## Acknowledgments
 
 This project was originally created by Pierrick Paul ([@PierrickP](https://github.com/PierrickP)) at [fluctuo](https://fluctuo.com/) - MobilityData started maintaining the project in September 2021.
