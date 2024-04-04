@@ -48,6 +48,9 @@ function filesHaveErrors(files) {
  */
 function fileHasErrors(fileData, required) {
   if (fileHasMultiLanguages(fileData)) {
+    if(fileData.length === 0 && required) {
+      return true;
+    }
     return fileData.some((languageBody) => hasErrors(languageBody, required))
   }
   // So it's not a multi-language array, just check the data directly.
@@ -61,7 +64,7 @@ function fileHasErrors(fileData, required) {
  * @returns {boolean}
  */
 function hasErrors(fileData, required) {
-  if (required && !fileData.exists) {
+  if (required && (!fileData || !fileData.exists)) {
     return true
   }
   if (!!fileData.errors || fileData.hasErrors) {
@@ -87,6 +90,10 @@ function fileHasMultiLanguages(fileData) {
  */
 function countErrors(file) {
   let count = 0
+
+  if(file.required && !file.exists) {
+    count++;
+  }
 
   if (file.hasErrors) {
     if (file.errors) {
