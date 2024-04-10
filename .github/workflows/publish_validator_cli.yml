@@ -1,0 +1,49 @@
+name: GBFS Validator CLI - Publish
+
+on:
+    push:
+      branches:
+        - master
+
+jobs:
+    build-and-publish:
+        runs-on: ubuntu-latest
+    
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            
+            - name: Navigate CLI Directory
+              run: cd gbfs-validator
+
+            - name: Get current published version
+              id: get_current_published_version
+              run: echo "::set-output name=get_current_published_version::$(npm info gbfs-validator version)"
+      
+            - name: Get current local version
+              id: get_current_local_version
+              run: echo "::set-output name=get_current_local_version::$(jq -r '.version' package.json)"
+      
+            - name: Check if version changed
+              run: |
+                if [ "${{ steps.get_current_published_version.outputs.get_current_published_version }}" != "${{ steps.get_current_local_version.outputs.get_current_local_version }}" ]; then
+                  echo "Version changed from ${{ steps.get_current_published_version.outputs.get_current_published_version }} to ${{ steps.get_current_local_version.outputs.get_current_local_version }}"
+                else
+                  echo "Version did not change"
+                  exit 0
+                fi
+        
+            - name: Setup Node.js
+              uses: actions/setup-node@v2
+              with:
+                node-version: '18'
+                registry-url: 'https://registry.npmjs.org'
+    
+            - name: Install dependencies
+              run: npm install
+    
+            - name: Publish to npm
+              run: npm publish
+              env:
+                NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+                

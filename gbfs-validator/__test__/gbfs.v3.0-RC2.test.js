@@ -51,7 +51,6 @@ describe('default feed', () => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '3.0-RC2', validated: '3.0-RC2' },
-          validatorVersion: '1.0.0',
           hasErrors: false
         }),
         files: expect.any(Array)
@@ -98,7 +97,6 @@ describe('invalid feed', () => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '3.0-RC2', validated: '3.0-RC2' },
-          validatorVersion: '1.0.0',
           hasErrors: true,
           errorsCount: 1
         }),
@@ -143,7 +141,6 @@ describe('exaustive feed', () => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '3.0-RC2', validated: '3.0-RC2' },
-          validatorVersion: '1.0.0',
           hasErrors: false
         }),
         files: expect.any(Array)

@@ -546,7 +546,6 @@ describe('conditional required vehicle_type_id', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          validatorVersion: '1.0.0',
           version: { detected: '2.2', validated: '2.2' },
           hasErrors: true,
           errorsCount: 2
@@ -603,7 +602,6 @@ describe('conditional no required vehicle_type_id', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          validatorVersion: '1.0.0',
           version: { detected: '2.2', validated: '2.2' }
         }),
         files: expect.arrayContaining([
