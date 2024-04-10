@@ -2,9 +2,13 @@
 
 exports[`initialization should correctly initialize validator per default 1`] = `
 GBFS {
-  "auth": Object {},
-  "gotOptions": Object {},
-  "options": Object {
+  "auth": {},
+  "gotOptions": {
+    "headers": {
+      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+    },
+  },
+  "options": {
     "docked": false,
     "freefloating": false,
     "version": null,
@@ -15,9 +19,13 @@ GBFS {
 
 exports[`initialization should correctly initialize validator with options 1`] = `
 GBFS {
-  "auth": Object {},
-  "gotOptions": Object {},
-  "options": Object {
+  "auth": {},
+  "gotOptions": {
+    "headers": {
+      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+    },
+  },
+  "options": {
     "docked": true,
     "freefloating": true,
     "version": "v2.1",
@@ -30,19 +38,19 @@ exports[`initialization should throw an error without url 1`] = `"Missing URL"`;
 
 exports[`initialization with auth should correctly initialize with \`basic_auth\` 1`] = `
 GBFS {
-  "auth": Object {
-    "basicAuth": Object {
+  "auth": {
+    "basicAuth": {
       "password": "mypassword",
       "user": "myuser",
     },
     "type": "basic_auth",
   },
-  "gotOptions": Object {
-    "headers": Object {
+  "gotOptions": {
+    "headers": {
       "Authorization": "basic bXl1c2VyOm15cGFzc3dvcmQ=",
     },
   },
-  "options": Object {
+  "options": {
     "docked": false,
     "freefloating": false,
     "version": null,
@@ -53,43 +61,18 @@ GBFS {
 
 exports[`initialization with auth should correctly initialize with \`bearer_token\` 1`] = `
 GBFS {
-  "auth": Object {
-    "bearerToken": Object {
+  "auth": {
+    "bearerToken": {
       "token": "mytoken",
     },
     "type": "bearer_token",
   },
-  "gotOptions": Object {
-    "headers": Object {
+  "gotOptions": {
+    "headers": {
       "Authorization": "Bearer mytoken",
     },
   },
-  "options": Object {
-    "docked": false,
-    "freefloating": false,
-    "version": null,
-  },
-  "url": "http://localhost:8888/gbfs.json",
-}
-`;
-
-exports[`initialization with auth should correctly initialize with one \`headers\` 1`] = `
-GBFS {
-  "auth": Object {
-    "headers": Array [
-      Object {
-        "key": "mykey",
-        "value": "myvalue",
-      },
-    ],
-    "type": "headers",
-  },
-  "gotOptions": Object {
-    "headers": Object {
-      "mykey": "myvalue",
-    },
-  },
-  "options": Object {
+  "options": {
     "docked": false,
     "freefloating": false,
     "version": null,
@@ -100,31 +83,58 @@ GBFS {
 
 exports[`initialization with auth should correctly initialize with multiple \`headers\` 1`] = `
 GBFS {
-  "auth": Object {
-    "headers": Array [
-      Object {
+  "auth": {
+    "headers": [
+      {
         "key": "mykey",
         "value": "myvalue",
       },
-      Object {
+      {
         "key": "mysecondkey",
         "value": "mysecondvalue",
       },
-      Object {
+      {
         "key": "mythirdkey",
         "value": "mythirdvalue",
       },
     ],
     "type": "headers",
   },
-  "gotOptions": Object {
-    "headers": Object {
+  "gotOptions": {
+    "headers": {
       "mykey": "myvalue",
       "mysecondkey": "mysecondvalue",
       "mythirdkey": "mythirdvalue",
+      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
     },
   },
-  "options": Object {
+  "options": {
+    "docked": false,
+    "freefloating": false,
+    "version": null,
+  },
+  "url": "http://localhost:8888/gbfs.json",
+}
+`;
+
+exports[`initialization with auth should correctly initialize with one \`headers\` 1`] = `
+GBFS {
+  "auth": {
+    "headers": [
+      {
+        "key": "mykey",
+        "value": "myvalue",
+      },
+    ],
+    "type": "headers",
+  },
+  "gotOptions": {
+    "headers": {
+      "mykey": "myvalue",
+      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+    },
+  },
+  "options": {
     "docked": false,
     "freefloating": false,
     "version": null,
