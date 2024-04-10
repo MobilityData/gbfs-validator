@@ -30,7 +30,7 @@ jobs:
                 | awk -F: '{ print $2 }' \
                 | sed 's/[",]//g')
               
-                echo $PACKAGE_VERSION
+                echo $VERSION
       
             - name: Check if version changed
               env:
