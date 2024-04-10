@@ -23,21 +23,15 @@ jobs:
       
             - name: Get current local version
               id: get_current_local_version
-              run: |
-                echo "VERSION=$(cat package.json \
-                | grep version \
-                | head -1 \
-                | awk -F: '{ print $2 }' \
-                | sed 's/[",]//g')" >> $GITHUB_OUTPUT
+              run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
               
-      
             - name: Check if version changed
               env:
                   CURRENT_VERSION: ${{ steps.get_current_published_version.outputs.VERSION }}
                   LOCAL_VERSION: ${{ steps.get_current_local_version.outputs.VERSION }}
               run: |
                 if [ "$CURRENT_VERSION" != "$LOCAL_VERSION" ]; then
-                  echo "Version changed from $CURRENT_VERSION }} to $LOCAL_VERSION"
+                  echo "Version changed from $CURRENT_VERSION to $LOCAL_VERSION"
                 else
                   echo "Version did not change"
                   exit 0
