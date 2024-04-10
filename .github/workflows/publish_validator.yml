@@ -1,9 +1,10 @@
-name: GBFS Validator CLI - Publish
+name: GBFS Validator Package - Publish
 
 on:
     push:
       branches:
         - master
+        - fix/publish-workflow
 
 jobs:
     build-and-publish:
@@ -18,16 +19,19 @@ jobs:
 
             - name: Get current published version
               id: get_current_published_version
-              run: echo "::set-output name=get_current_published_version::$(npm info gbfs-validator version)"
+              run: echo "VERSION=$(npm info gbfs-validator version)" >> $GITHUB_OUTPUT
       
             - name: Get current local version
               id: get_current_local_version
-              run: echo "::set-output name=get_current_local_version::$(jq -r '.version' package.json)"
+              run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT 
       
             - name: Check if version changed
+              env:
+                  CURRENT_VERSION: ${{ steps.get_current_published_version.outputs.VERSION }}
+                  LOCAL_VERSION: ${{ steps.get_current_local_version.outputs.VERSION }}
               run: |
-                if [ "${{ steps.get_current_published_version.outputs.get_current_published_version }}" != "${{ steps.get_current_local_version.outputs.get_current_local_version }}" ]; then
-                  echo "Version changed from ${{ steps.get_current_published_version.outputs.get_current_published_version }} to ${{ steps.get_current_local_version.outputs.get_current_local_version }}"
+                if [ "${CURRENT_VERSION}" != "${ LOCAL_VERSION }" ]; then
+                  echo "Version changed from $CURRENT_VERSION }} to $LOCAL_VERSION"
                 else
                   echo "Version did not change"
                   exit 0
@@ -40,7 +44,7 @@ jobs:
                 registry-url: 'https://registry.npmjs.org'
     
             - name: Install dependencies
-              run: npm install
+              run: yarn
     
             - name: Publish to npm
               run: npm publish
