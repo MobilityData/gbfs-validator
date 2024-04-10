@@ -9,13 +9,13 @@ on:
 jobs:
     build-and-publish:
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./gbfs-validator
     
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
-            
-            - name: Navigate CLI Directory
-              run: cd gbfs-validator
 
             - name: Get current published version
               id: get_current_published_version
