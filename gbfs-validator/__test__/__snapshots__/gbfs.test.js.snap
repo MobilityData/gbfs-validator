@@ -5,7 +5,7 @@ GBFS {
   "auth": Object {},
   "gotOptions": Object {
     "headers": Object {
-      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
     },
   },
   "options": Object {
@@ -22,7 +22,7 @@ GBFS {
   "auth": Object {},
   "gotOptions": Object {
     "headers": Object {
-      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
     },
   },
   "options": Object {
@@ -105,7 +105,7 @@ GBFS {
       "mykey": "myvalue",
       "mysecondkey": "mysecondvalue",
       "mythirdkey": "mythirdvalue",
-      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
     },
   },
   "options": Object {
@@ -131,7 +131,7 @@ GBFS {
   "gotOptions": Object {
     "headers": Object {
       "mykey": "myvalue",
-      "user-agent": "MobilityData GBFS-Validator/1.0.0 (Node 18.20.0)",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
     },
   },
   "options": Object {
