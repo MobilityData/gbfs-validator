@@ -7,7 +7,8 @@ on:
         - fix/publish-workflow
 
 jobs:
-    build-and-publish:
+    check-versions:
+        name: check-version-job
         runs-on: ubuntu-latest
         defaults:
           run:
@@ -32,11 +33,22 @@ jobs:
               run: |
                 if [ "$CURRENT_VERSION" != "$LOCAL_VERSION" ]; then
                   echo "Version changed from $CURRENT_VERSION to $LOCAL_VERSION"
+                  echo "VERSION_CHANGED=true >> $GITHUB_OUTPUT
                 else
                   echo "Version did not change"
-                  exit 0
+                  echo "VERSION_CHANGED=false >> $GITHUB_OUTPUT
                 fi
-        
+
+    build-publish:
+        name: build-publish-job
+        needs: [check-versions]
+        if: needs.check-versions.outputs.VERSION_CHANGED == 'true'
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./gbfs-validator
+
+        steps:
             - name: Setup Node.js
               uses: actions/setup-node@v2
               with:
