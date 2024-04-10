@@ -1,10 +1,10 @@
 {
   "name": "gbfs-validator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "MobilityData",
   "main": "index.js",
   "license": "MIT",
-  "description": "Node based CLI to validate GBFS feeds",
+  "description": "Node-based libraries to validate GBFS feeds",
   "tags": [
     "gbfs-validator"
   ],

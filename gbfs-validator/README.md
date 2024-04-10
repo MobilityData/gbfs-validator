@@ -1,4 +1,4 @@
-# GBFS-Validator CLI
+# GBFS-Validator
 
 [![npm version](https://badge.fury.io/js/gbfs-validator.svg)](http://badge.fury.io/js/gbfs-validator)
 
@@ -6,21 +6,42 @@ GBFS Validator is a command-line tool for validating General Bikeshare Feed Spec
 
 ## Add the Dependency
 
-To use the `gbfs-validator` cli in your own project, you need to
+To use `gbfs-validator` in your own project, you need to
 first install our [Node.js npm package](https://www.npmjs.com/package/gbfs-validator):
 
 ```
 npm install gbfs-validator
 ```
 
-## Usage
+## Example Code
+```
+const GBFS = require('gbfs-validator');
+
+const feedUrl = "https://gbfs.velobixi.com/gbfs/gbfs.json";
+const feedOptions = {}
+const gbfs = new GBFS(feedUrl, feedOptions)
+
+gbfs.validation().then((reportResults) => {
+    // reportResults: GBFS Validation Report Results in JSON 
+}).catch(error => {
+    // error handling 
+})
+
+gbfs.getFiles().then((gbfsFeedFiles) => {
+    // gbfsFeedFiles: Info about GBFS feed 
+}).catch(error => {
+    // error handling 
+})
+```
+
+## Usage of the Command Line Interface
 
 How to validate a feed and place the report in a located file
 ```
 gbfs-validator -u {http_address_of_gbfs_dataset} -s {local_path_to_output_report_file}
 ```
 
-## Example
+## Example of the CLI
 
 ```
 gbfs-validator -u https://gbfs.velobixi.com/gbfs/gbfs.json -s ~/Documents/log.json

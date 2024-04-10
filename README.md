@@ -107,8 +107,8 @@ Options:
   -h, --help                       display help for command
 ```
 
-### Command line npm package (CLI)
-The gbfs-validator CLI Node.js npm package is now accessible for integration into your projects. To learn how to install and utilize it effectively, please refer to the [README](./gbfs-validator/README.md) for comprehensive guidance.
+### Npm package
+The gbfs-validator Node.js npm package is now accessible for integration into your projects. To learn how to install and utilize it effectively, please refer to the [README](./gbfs-validator/README.md) for comprehensive guidance.
 
 ## Projects based on this validator
 
