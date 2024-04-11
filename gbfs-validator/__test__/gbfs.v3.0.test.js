@@ -131,13 +131,11 @@ describe('exaustive feed', () => {
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
-    console.log("url",url)
     const gbfs = new GBFS(`${url}/gbfs.json`)
 
     expect.assertions(2)
 
     return gbfs.validation().then(result => {
-      console.log("result",result)
       expect(get_errors(result)).toEqual([])
 
       expect(result).toMatchObject({
