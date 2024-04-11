@@ -14,7 +14,7 @@ npm install gbfs-validator
 ```
 
 ## Example Code
-```
+```javascript 
 const GBFS = require('gbfs-validator');
 
 const feedUrl = "https://gbfs.velobixi.com/gbfs/gbfs.json";
