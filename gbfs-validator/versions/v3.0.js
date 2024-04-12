@@ -2,6 +2,7 @@ module.exports = {
   gbfsRequired: true,
   files: options => {
     return [
+      { file: 'manifest', required: false },
       { file: 'gbfs_versions', required: false },
       { file: 'system_information', required: true },
       { file: 'vehicle_types', required: false },
