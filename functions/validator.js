@@ -1,4 +1,4 @@
-const GBFS = require('gbfs-validator')
+const GBFS = require('gbfs-validator');
 const { defaultApplicationResponseHeaders, getCorsResponse } = require('../common/http-utils');
 
 exports.handler = function (event, context, callback) {

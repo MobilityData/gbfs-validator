@@ -463,7 +463,7 @@ class GBFS {
 
       let version = this.options.version || this.autoDiscovery.version
 
-      // 3.0-RC , 3.0 and upcoming minor versions
+      // 3.0 and upcoming minor versions
       if (/^3\.\d/.test(version)) {
         urls =
           this.autoDiscovery.data.feeds?.filter((f) => f.name === type) || []

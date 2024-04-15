@@ -7,7 +7,7 @@ A [General Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) d
 ## Introduction
 
 The Canonical GBFS Validator is a tool to check the conformity of a GBFS feed against the [official specification](https://github.com/MobilityData/gbfs/blob/master/gbfs.md).
-It validates feeds up to GBFS version 3.0-RC2.
+It validates feeds up to GBFS version 3.0.
 This tool is built using the [JSON Schemas](https://github.com/MobilityData/gbfs-json-schema), and the site is powered by [Netlify](https://www.netlify.com/).
 
 ![interface](https://github.com/MobilityData/gbfs-validator/assets/2423604/11206e7a-dd64-4133-bb32-eaa391815e60)
