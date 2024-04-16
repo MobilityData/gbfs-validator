@@ -1,4 +1,5 @@
 const GBFS = require('../gbfs')
+const pjson = require('../package.json')
 
 const serverOpts = {
   port: 0,
@@ -6,6 +7,14 @@ const serverOpts = {
 }
 
 describe('initialization', () => {
+
+  beforeAll(() => {
+    // mocks process and pacakge.json for consistent tests
+    const originalProcess = process
+    global.process = {...originalProcess, versions: {node: '16.0.1'}}
+    pjson.version = '1.1.1'
+  })
+
   test('should correctly initialize validator per default', () => {
     expect(new GBFS('http://localhost:8888/gbfs.json')).toMatchSnapshot()
   })

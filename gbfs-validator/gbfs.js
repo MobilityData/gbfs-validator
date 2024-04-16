@@ -1,5 +1,6 @@
 const got = require('got')
 const validate = require('./validate')
+var packageJson = require('./package.json');
 const validatorVersion = process.env.COMMIT_REF
   ? process.env.COMMIT_REF.substring(0, 7)
   : require('./package.json').version
@@ -281,6 +282,8 @@ class GBFS {
       throw new Error('Missing URL')
     }
 
+    const userAgent = `MobilityData GBFS-Validator/${packageJson?.version} (Node ${process?.versions['node']})`
+
     this.url = url
     this.options = {
       docked,
@@ -289,7 +292,11 @@ class GBFS {
     }
     this.auth = auth
 
-    this.gotOptions = {}
+    this.gotOptions = {
+      headers: {
+        'user-agent': userAgent
+      }
+    }
 
     if (this.auth && this.auth.type) {
       if (this.auth.type === 'basic_auth' && this.auth.basicAuth) {
@@ -308,7 +315,9 @@ class GBFS {
       }
 
       if (this.auth.type === 'headers') {
-        this.gotOptions.headers = {}
+        this.gotOptions.headers = {
+          'user-agent': userAgent
+        }
         for (var header of this.auth.headers) {
           if (header && header.value) {
             this.gotOptions.headers[header.key] = header.value
