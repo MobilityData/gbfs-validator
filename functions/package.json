@@ -7,9 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "gbfs-validator": "~1.0.0"
-  },
-  "devDependencies": {
-    "gbfs-validator": "file:../gbfs-validator" 
+    "gbfs-validator": "^1.0.0"
   }
 }
