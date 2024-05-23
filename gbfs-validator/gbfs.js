@@ -790,7 +790,22 @@ class GBFS {
             if (partial) {
               addSchema.push(partial)
             }
+            const pricingPlansIdsWithReservationPrice = pricingPlans.filter(p => p.reservation_price_flat_rate || p.reservation_price_per_min).map(p => p.plan_id)
+            if(pricingPlansIdsWithReservationPrice && pricingPlansIdsWithReservationPrice.length > 0) {
+              const partialReserveTime = getPartialSchema(
+                gbfsVersion,
+                'vehicle_types/default_reserve_time_require',
+                {
+                  pricingPlansIdsWithReservationPrice
+                }
+              )
+  
+              if (partialReserveTime) {
+                addSchema.push(partialReserveTime)
+              }
+            }
           }
+
 
           break
         case 'system_pricing_plans':
