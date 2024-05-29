@@ -19,6 +19,7 @@
     "gbfs-validator": "./cli.js"
   },
   "scripts": {
+    "test": "jest",
     "postinstall": "git submodule update --init --recursive"
   },
   "dependencies": {
