@@ -1,0 +1,3 @@
+[submodule "gbfs-validator/versions/gbfs-json-schema"]
+	path = gbfs-validator/versions/gbfs-json-schema
+	url = https://github.com/MobilityData/gbfs-json-schema.git
