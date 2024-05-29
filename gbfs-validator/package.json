@@ -43,6 +43,9 @@
       "!**/coverage/**",
       "!**/__test__/**",
       "!**/schema/**"
+    ],
+    "testPathIgnorePatterns": [
+      "versions/gbfs-json-schema/"
     ]
   }
 }
