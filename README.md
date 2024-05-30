@@ -12,7 +12,7 @@ This tool is built using the [JSON Schemas](https://github.com/MobilityData/gbfs
 
 ![interface](https://github.com/MobilityData/gbfs-validator/assets/2423604/11206e7a-dd64-4133-bb32-eaa391815e60)
 
-The schemas in `gbfs-validator/versions/schemas` is a git subtree of https://github.com/MobilityData/gbfs-json-schema. For more details, see [`gbfs-validator/versions/schemas/README.md`](https://github.com/MobilityData/gbfs-validator/tree/master/gbfs-validator/versions).
+The schemas in `gbfs-validator/versions/gbfs-json-schema` is a git submodule of https://github.com/MobilityData/gbfs-json-schema.
 
 Questions? Please open an issue or reach out on the #gbfs channel on the [MobilityData Slack](https://mobilitydata-io.slack.com/).
 

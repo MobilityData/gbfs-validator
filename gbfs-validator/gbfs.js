@@ -451,7 +451,7 @@ class GBFS {
     let schema
 
     try {
-      schema = require(`./versions/schemas/v${version}/${file}`)
+      schema = require(`./versions/gbfs-json-schema/v${version}/${file}`)
     } catch (e) {
       console.log(e)
       throw new Error('can not require')

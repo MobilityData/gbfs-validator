@@ -4,17 +4,13 @@ This folder contains json schemas from `MobilityData/gbfs-json-schema` and addit
 
 ## JSON schemas
 
-The `schemas` folder contains a [git subtree](https://www.atlassian.com/git/tutorials/git-subtree) of https://github.com/MobilityData/gbfs-json-schema.
+The `schemas` folder contains a [git submodule](https://www.atlassian.com/git/tutorials/git-submodule) of https://github.com/MobilityData/gbfs-json-schema.
 
-You can pull schema update by using the command `git subtree pull --prefix gbfs-validator/versions/schemas https://github.com/MobilityData/gbfs-json-schema.git master --squash`
+You can pull schema update by using the command `git submodule update --init --recursive`
 
-### Contributing back
+## gbfs-json-schema
 
-If you want to push a contribution to the schemas sub-project (`MobilityData/gbfs-json-schema`), you can use the command
+This directory is a git submodule, making changes in this directory is not recommended 
 
-```
-git subtree push --prefix=gbfs-validator/versions/schemas/ https://github.com/MobilityData/gbfs-json-schema.git BRANCH
-```
+If you would like to make changes to `gbfs-json-schema` it is recommended to make a pull request from the original repository [gbfs-json-schema](https://github.com/MobilityData/gbfs-json-schema)
 
-:warning: You probably don't have write access on `MobilityData/gbfs-json-schema`.
-Please, fork it before and replace the repository url with your forked repository url.
