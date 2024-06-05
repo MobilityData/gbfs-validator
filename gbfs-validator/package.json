@@ -1,6 +1,6 @@
 {
   "name": "gbfs-validator",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "MobilityData",
   "main": "index.js",
   "license": "MIT",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "test": "jest",
-    "postinstall": "git submodule update --init --recursive"
+    "prepare": "git submodule update --init --recursive"
   },
   "dependencies": {
     "ajv": "^8.9.0",
