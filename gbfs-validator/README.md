@@ -13,6 +13,16 @@ first install our [Node.js npm package](https://www.npmjs.com/package/gbfs-valid
 npm install gbfs-validator
 ```
 
+## Supported GBFS Versions
+- 3.1-RC
+- 3.0
+- 2.3
+- 2.2
+- 2.1
+- 2.0
+- 1.1
+- 1.0
+
 ## Example Code
 ```javascript 
 const GBFS = require('gbfs-validator');
