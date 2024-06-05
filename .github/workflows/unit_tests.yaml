@@ -17,4 +17,4 @@ jobs:
         run: npm install -g node-gyp@latest
    
       - name: Run tests
-        run: yarn install && yarn run prepare && yarn workspaces run test
+        run: yarn install && yarn workspaces run test
