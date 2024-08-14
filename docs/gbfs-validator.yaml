@@ -8,12 +8,12 @@ info:
     email: api@mobilitydata.org
   license:
     name: MobilityData License
-    url: https://www.apache.org/licenses/LICENSE-2.0  
+    url: https://www.apache.org/licenses/LICENSE-2.0
 servers:
   - url: https://gbfs-validator.netlify.app/.netlify/functions
-    description: Production release environment  
+    description: Production release environment
   - url: http://localhost:8888/.netlify/functions
-    description: Local development environment  
+    description: Local development environment
 paths:
   /validator:
     post:
@@ -41,7 +41,7 @@ paths:
   /feed:
     post:
       summary: Get feed content
-      description: Get content of all GBFS's files. Usefull to avoid CORS errors.
+      description: Get content of all GBFS's files. Useful to avoid CORS errors.
       requestBody:
         content:
           application/json:
@@ -55,6 +55,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feed'
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /validator-summary:
+    post:
+      summary: Get a summary of the validation results
+      description: Returns a summary from the validator's response, including grouped error details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidatorRequest'
+        required: true
+      responses:
+        '200':
+          description: Validation summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSummary'
         '500':
           description: Error
           content:
@@ -162,7 +185,7 @@ components:
                     tokenUrl:
                       type: string
       required:
-        - url                      
+        - url
     FeedRequest:
       required:
         - url
@@ -183,3 +206,42 @@ components:
           type: array
           items:
             type: object
+    ValidationSummary:
+      type: object
+      properties:
+        summary:
+          type: object
+        filesSummary:
+          type: array
+          items:
+            type: object
+            properties:
+              required:
+                type: boolean
+              exists:
+                type: boolean
+              file:
+                type: string
+              hasErrors:
+                type: boolean
+              errorsCount:
+                type: number
+              groupedErrors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    keyword:
+                      type: string
+                    message:
+                      type: string
+                    schemaPath:
+                      type: string
+                    count:
+                      type: number
+            required:
+              - required
+              - exists
+              - file
+              - hasErrors
+              - errorsCount
