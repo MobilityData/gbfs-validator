@@ -7,7 +7,7 @@ const GBFS = require('gbfs-validator')
  *               errorsCount: number,
  *               version: {
  *                 detected: string,
- *                 validated: string  
+ *                 validated: string
  *                }
  *               filesSummary: [
  *                {
@@ -15,7 +15,15 @@ const GBFS = require('gbfs-validator')
  *                  exists: boolean,
  *                  hasErrors: boolean,
  *                  file: string,
- *                  errorsCount: number
+ *                  errorsCount: number,
+ *                  groupedErrors: [
+ *                    {
+ *                      keyword: string,
+ *                      message: string,
+ *                      schemaPath: string,
+ *                      count: number
+ *                    }
+ *                  ]
  *                }
  *               ]
  *              }
@@ -23,8 +31,8 @@ const GBFS = require('gbfs-validator')
  */
 
 /**
- * This function returns a summary from the validator's response stripping out the notices.
- * 
+ * This function returns a summary from the validator's response, stripping out the notices and grouping errors by message, keyword, and schemaPath.
+ *
  * @param validationResult from the GBFS validator class
  * @returns { Summary }
  */
@@ -37,10 +45,38 @@ const getSummary = (validationResult) => (
       exists: item.exists,
       file: item.file,
       hasErrors: item.hasErrors,
-      errorsCount: item.errorsCount
+      errorsCount: item.errorsCount,
+      groupedErrors: item.exists ? groupErrors(item.languages[0]?.errors || []) : []
     }))
   }
 )
+
+/**
+ * Groups errors by keyword, message, and schemaPath, adding a count for each group.
+ *
+ * @param errors array of error objects
+ * @returns {Array} grouped errors with count
+ */
+const groupErrors = (errors) => {
+  const errorMap = {};
+
+  errors.forEach(error => {
+    const key = `${error.keyword}-${error.message}-${error.schemaPath}`;
+    if (errorMap[key]) {
+      errorMap[key].count += 1;
+    } else {
+      errorMap[key] = {
+        keyword: error.keyword,
+        message: error.message,
+        schemaPath: error.schemaPath,
+        count: 1
+      };
+    }
+  });
+
+  return Object.values(errorMap);
+};
+
 
   /**
    * call the callback function with {@link Summary}

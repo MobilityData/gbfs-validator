@@ -5,7 +5,7 @@ const validatorVersion = process.env.COMMIT_REF
 module.exports = {
   openapi: '3.0.3',
   info: {
-    title: 'GBFS validator',
+    title: 'GBFS Validator',
     version: `${validatorVersion}`
   },
   servers: [
@@ -55,8 +55,7 @@ module.exports = {
     '/feed': {
       post: {
         summary: 'Get feed content',
-        description:
-          "Get content of all GBFS's files. Usefull to avoid CORS errors.",
+        description: "Get content of all GBFS's files. Useful to avoid CORS errors.",
         requestBody: {
           content: {
             'application/json': {
@@ -69,11 +68,49 @@ module.exports = {
         },
         responses: {
           200: {
-            description: 'lorem',
+            description: 'Feed content',
             content: {
               'application/json': {
                 schema: {
                   $ref: '#/components/schemas/Feed'
+                }
+              }
+            }
+          },
+          500: {
+            description: 'Error',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Error'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/validator-summary': {
+      post: {
+        summary: 'Get a summary of the validation results',
+        description: 'Returns a summary from the validator\'s response, including grouped error details.',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/ValidatorRequest'
+              }
+            }
+          },
+          required: true
+        },
+        responses: {
+          200: {
+            description: 'Validation summary',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/ValidationSummary'
                 }
               }
             }
@@ -260,6 +297,58 @@ module.exports = {
             type: 'array',
             items: {
               type: 'object'
+            }
+          }
+        }
+      },
+      ValidationSummary: {
+        type: 'object',
+        properties: {
+          summary: {
+            type: 'object'
+          },
+          filesSummary: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                required: {
+                  type: 'boolean'
+                },
+                exists: {
+                  type: 'boolean'
+                },
+                file: {
+                  type: 'string'
+                },
+                hasErrors: {
+                  type: 'boolean'
+                },
+                errorsCount: {
+                  type: 'number'
+                },
+                groupedErrors: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      keyword: {
+                        type: 'string'
+                      },
+                      message: {
+                        type: 'string'
+                      },
+                      schemaPath: {
+                        type: 'string'
+                      },
+                      count: {
+                        type: 'number'
+                      }
+                    }
+                  }
+                }
+              },
+              required: ['required', 'exists', 'file', 'hasErrors', 'errorsCount']
             }
           }
         }
