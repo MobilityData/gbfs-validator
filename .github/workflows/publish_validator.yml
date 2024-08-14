@@ -1,0 +1,81 @@
+name: GBFS Validator Package - Publish
+
+on:
+    push:
+      branches:
+        - master
+
+jobs:
+    check-versions:
+        name: check-version-job
+        runs-on: ubuntu-latest
+        outputs:
+          has-version-changed: ${{ steps.version-change-check.outputs.VERSION_CHANGED }}
+        defaults:
+          run:
+            working-directory: ./gbfs-validator
+    
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Get current published version
+              id: get_current_published_version
+              run: echo "VERSION=$(npm info gbfs-validator version)" >> $GITHUB_OUTPUT
+      
+            - name: Get current local version
+              id: get_current_local_version
+              run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+              
+            - name: Check if version changed
+              id: version-change-check
+              env:
+                  CURRENT_VERSION: ${{ steps.get_current_published_version.outputs.VERSION }}
+                  LOCAL_VERSION: ${{ steps.get_current_local_version.outputs.VERSION }}
+              run: |
+                if [ "$CURRENT_VERSION" != "$LOCAL_VERSION" ]; then
+                  echo "Version changed from $CURRENT_VERSION to $LOCAL_VERSION"
+                  echo "VERSION_CHANGED=true" >> $GITHUB_OUTPUT
+                else
+                  echo "Version did not change"
+                  echo "VERSION_CHANGED=false" >> $GITHUB_OUTPUT
+                fi
+
+    build-publish:
+        name: build-publish-job
+        needs: [check-versions]
+        if: needs.check-versions.outputs.has-version-changed == 'true'
+        runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./gbfs-validator
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+              with:
+                submodules: true
+                fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v2
+              with:
+                node-version: '18'
+                registry-url: 'https://registry.npmjs.org'
+    
+            - name: Install dependencies
+              run: yarn
+            
+            - name: Load secrets from 1Password
+              uses: 1password/load-secrets-action@v2.0.0
+              with:
+                export-env: true # Export loaded secrets as environment variables
+              env:
+                OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+                NODE_AUTH_TOKEN: "op://TECHNOLOGIES/vwhmodynvelkwrqbpel45ncve4/credential"
+    
+            - name: Publish to npm
+              run: npm publish
+              env:
+                NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+                

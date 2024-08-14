@@ -6,7 +6,8 @@
     "start": "yarn run dev",
     "lint": "eslint --ext .js,.vue website/src",
     "build": "yarn workspace website build",
-    "build:website": "cd website && yarn run build"
+    "build:website": "cd website && yarn run build",
+    "postinstall": "git submodule update --init --recursive"
   },
   "devDependencies": {
     "eslint": "^8.41.0",

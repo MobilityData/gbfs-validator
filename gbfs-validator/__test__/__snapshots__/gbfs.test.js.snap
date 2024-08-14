@@ -3,7 +3,11 @@
 exports[`initialization should correctly initialize validator per default 1`] = `
 GBFS {
   "auth": Object {},
-  "gotOptions": Object {},
+  "gotOptions": Object {
+    "headers": Object {
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
+    },
+  },
   "options": Object {
     "docked": false,
     "freefloating": false,
@@ -16,7 +20,11 @@ GBFS {
 exports[`initialization should correctly initialize validator with options 1`] = `
 GBFS {
   "auth": Object {},
-  "gotOptions": Object {},
+  "gotOptions": Object {
+    "headers": Object {
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
+    },
+  },
   "options": Object {
     "docked": true,
     "freefloating": true,
@@ -73,31 +81,6 @@ GBFS {
 }
 `;
 
-exports[`initialization with auth should correctly initialize with one \`headers\` 1`] = `
-GBFS {
-  "auth": Object {
-    "headers": Array [
-      Object {
-        "key": "mykey",
-        "value": "myvalue",
-      },
-    ],
-    "type": "headers",
-  },
-  "gotOptions": Object {
-    "headers": Object {
-      "mykey": "myvalue",
-    },
-  },
-  "options": Object {
-    "docked": false,
-    "freefloating": false,
-    "version": null,
-  },
-  "url": "http://localhost:8888/gbfs.json",
-}
-`;
-
 exports[`initialization with auth should correctly initialize with multiple \`headers\` 1`] = `
 GBFS {
   "auth": Object {
@@ -122,6 +105,33 @@ GBFS {
       "mykey": "myvalue",
       "mysecondkey": "mysecondvalue",
       "mythirdkey": "mythirdvalue",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
+    },
+  },
+  "options": Object {
+    "docked": false,
+    "freefloating": false,
+    "version": null,
+  },
+  "url": "http://localhost:8888/gbfs.json",
+}
+`;
+
+exports[`initialization with auth should correctly initialize with one \`headers\` 1`] = `
+GBFS {
+  "auth": Object {
+    "headers": Array [
+      Object {
+        "key": "mykey",
+        "value": "myvalue",
+      },
+    ],
+    "type": "headers",
+  },
+  "gotOptions": Object {
+    "headers": Object {
+      "mykey": "myvalue",
+      "user-agent": "MobilityData GBFS-Validator/1.1.1 (Node 16.0.1)",
     },
   },
   "options": Object {

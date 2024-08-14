@@ -1,5 +1,6 @@
 const got = require('got')
 const validate = require('./validate')
+var packageJson = require('./package.json');
 const validatorVersion = process.env.COMMIT_REF
   ? process.env.COMMIT_REF.substring(0, 7)
   : require('./package.json').version
@@ -27,28 +28,60 @@ const validatorVersion = process.env.COMMIT_REF
 *          }} VehicleType
 */
 
-  /**
- * This function returns true if the file from a GBFS feed has errors or if the file is required and missing.
- * @param {Object} data - The body of a file from a GBFS feed.
- * @param {boolean} required - True if the file is required.
+/**
+ * Look into the array of files data and return true if any has an error.
+ * @param {FileValidationResult[]} files A list of files data to check for errors.
+ * @returns {boolean} True if any of the files has an error.
+ */
+function filesHaveErrors(files) {
+  if (Array.isArray(files)) {
+    return files.some((file) => hasErrors(file, file.required));
+  }
+  // If the argument is not an array of file data, we'll say there is no error
+  return false;
+}
+
+/**
+ * Return true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * The file data can be an array (e.g. for multi-language) or directly the body from the file.
+ * @param {Object} data - The body of a file data from a GBFS feed.
  * @returns {boolean}
  */
-function hasErrors(data, required) {
-  let hasError = false
-
-  data.forEach((el) => {
-    if (Array.isArray(el)) {
-      if (hasErrors(el, required)) {
-        hasError = true
-      }
-    } else {
-      if (required && !el.exists ? true : !!el.errors || el.hasErrors) {
-        hasError = true
-      }
+function fileHasErrors(fileData, required) {
+  if (fileHasMultiLanguages(fileData)) {
+    if(fileData.length === 0 && required) {
+      return true;
     }
-  })
+    return fileData.some((languageBody) => hasErrors(languageBody, required))
+  }
+  // So it's not a multi-language array, just check the data directly.
+  return hasErrors(fileData, required)
+}
 
-  return hasError
+/**
+ * This function returns true if the file data from a GBFS feed has errors or if the file is required and missing.
+ * Note that a file data cannot be an array for multi-languages.
+ * @param {Object} data - The body of a file data from a GBFS feed.
+ * @returns {boolean}
+ */
+function hasErrors(fileData, required) {
+  if (required && (!fileData || !fileData.exists)) {
+    return true
+  }
+  if (!!fileData.errors || fileData.hasErrors) {
+    return true
+  }
+  return false
+}
+
+/**
+  * This function returns true if the file data from a GBFS feed is an multi-language array of file data.
+  * @param {Object} data - The body of a file data from a GBFS feed.
+  * @returns {boolean}
+  */
+function fileHasMultiLanguages(fileData) {
+  // Currently the only way we know it's multi-language is if it's an array
+  return Array.isArray(fileData)
 }
 
 /**
@@ -58,6 +91,10 @@ function hasErrors(data, required) {
  */
 function countErrors(file) {
   let count = 0
+
+  if(file.required && !file.exists) {
+    count++;
+  }
 
   if (file.hasErrors) {
     if (file.errors) {
@@ -245,6 +282,8 @@ class GBFS {
       throw new Error('Missing URL')
     }
 
+    const userAgent = `MobilityData GBFS-Validator/${packageJson?.version} (Node ${process?.versions['node']})`
+
     this.url = url
     this.options = {
       docked,
@@ -253,7 +292,11 @@ class GBFS {
     }
     this.auth = auth
 
-    this.gotOptions = {}
+    this.gotOptions = {
+      headers: {
+        'user-agent': userAgent
+      }
+    }
 
     if (this.auth && this.auth.type) {
       if (this.auth.type === 'basic_auth' && this.auth.basicAuth) {
@@ -272,7 +315,9 @@ class GBFS {
       }
 
       if (this.auth.type === 'headers') {
-        this.gotOptions.headers = {}
+        this.gotOptions.headers = {
+          'user-agent': userAgent
+        }
         for (var header of this.auth.headers) {
           if (header && header.value) {
             this.gotOptions.headers[header.key] = header.value
@@ -406,7 +451,7 @@ class GBFS {
     let schema
 
     try {
-      schema = require(`./versions/schemas/v${version}/${file}`)
+      schema = require(`./versions/gbfs-json-schema/v${version}/${file}`)
     } catch (e) {
       console.log(e)
       throw new Error('can not require')
@@ -427,7 +472,7 @@ class GBFS {
 
       let version = this.options.version || this.autoDiscovery.version
 
-      // 3.0-RC , 3.0 and upcoming minor versions
+      // 3.0 and upcoming minor versions
       if (/^3\.\d/.test(version)) {
         urls =
           this.autoDiscovery.data.feeds?.filter((f) => f.name === type) || []
@@ -522,7 +567,7 @@ class GBFS {
           ? body.reduce((acc, l) => acc && l.exists, true)
           : false,
         file: `${type}.json`,
-        hasErrors: hasErrors(body, required)
+        hasErrors: fileHasErrors(body, required)
       }
     } else {
       return {
@@ -745,7 +790,22 @@ class GBFS {
             if (partial) {
               addSchema.push(partial)
             }
+            const pricingPlansIdsWithReservationPrice = pricingPlans.filter(p => p.reservation_price_flat_rate || p.reservation_price_per_min).map(p => p.plan_id)
+            if(pricingPlansIdsWithReservationPrice && pricingPlansIdsWithReservationPrice.length > 0) {
+              const partialReserveTime = getPartialSchema(
+                gbfsVersion,
+                'vehicle_types/default_reserve_time_require',
+                {
+                  pricingPlansIdsWithReservationPrice
+                }
+              )
+  
+              if (partialReserveTime) {
+                addSchema.push(partialReserveTime)
+              }
+            }
           }
+
 
           break
         case 'system_pricing_plans':
@@ -791,7 +851,7 @@ class GBFS {
           detected: result[0].version,
           validated: this.options.version || result[0].version
         },
-        hasErrors: hasErrors(result),
+        hasErrors: filesHaveErrors(result),
         errorsCount: filesResult.reduce((acc, file) => {
           acc += file.errorsCount
           return acc

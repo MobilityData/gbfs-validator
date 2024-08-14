@@ -1,4 +1,4 @@
-This project validates feeds up to version 3.0-RC2 of the [JSON Schemas](https://github.com/MobilityData/gbfs-json-schema).
+This project validates feeds up to version 3.1-RC of the [JSON Schemas](https://github.com/MobilityData/gbfs-json-schema).
 # Files presence
 The validator will flag any missing file. It will inform the user if the missing file is required or not, as per the conditions in the GBFS version that it detects.
 

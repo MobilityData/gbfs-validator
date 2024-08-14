@@ -7,12 +7,12 @@ A [General Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) d
 ## Introduction
 
 The Canonical GBFS Validator is a tool to check the conformity of a GBFS feed against the [official specification](https://github.com/MobilityData/gbfs/blob/master/gbfs.md).
-It validates feeds up to GBFS version 3.0-RC2.
+It validates feeds up to GBFS version 3.0.
 This tool is built using the [JSON Schemas](https://github.com/MobilityData/gbfs-json-schema), and the site is powered by [Netlify](https://www.netlify.com/).
 
 ![interface](https://github.com/MobilityData/gbfs-validator/assets/2423604/11206e7a-dd64-4133-bb32-eaa391815e60)
 
-The schemas in `gbfs-validator/versions/schemas` is a git subtree of https://github.com/MobilityData/gbfs-json-schema. For more details, see [`gbfs-validator/versions/schemas/README.md`](https://github.com/MobilityData/gbfs-validator/tree/master/gbfs-validator/versions).
+The schemas in `gbfs-validator/versions/gbfs-json-schema` is a git submodule of https://github.com/MobilityData/gbfs-json-schema.
 
 Questions? Please open an issue or reach out on the #gbfs channel on the [MobilityData Slack](https://mobilitydata-io.slack.com/).
 
@@ -107,6 +107,9 @@ Options:
   -h, --help                       display help for command
 ```
 
+### Npm package
+The gbfs-validator Node.js npm package is now accessible for integration into your projects. To learn how to install and utilize it effectively, please refer to the [README](./gbfs-validator/README.md) for comprehensive guidance.
+
 ## Projects based on this validator
 
 [transport.data.gouv.fr GBFS validator tool](https://transport.data.gouv.fr/validation?type=gbfs) - Tool displaying interactive geofencing, station, and vehicle maps, the validation results, and metadata of GBFS feeds.
@@ -126,6 +129,12 @@ This project follows the [all-contributors](https://allcontributors.org/docs/en/
 
 :warning: for contributions on schemas, please see [Versions README](gbfs-validator/versions/README.md)
 
-## Acknowledgements
+## OpenAPI Specification
+
+:warning: **Subject to change**: This OpenAPI specification may change at any time. We do not recommend building any production systems that depend on this API directly.
+
+The OpenAPI specification can be viewed at: https://mobilitydata.github.io/gbfs-validator/SwaggerUI/index.html.
+
+## Acknowledgments
 
 This project was originally created by Pierrick Paul ([@PierrickP](https://github.com/PierrickP)) at [fluctuo](https://fluctuo.com/) - MobilityData started maintaining the project in September 2021.

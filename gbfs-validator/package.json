@@ -1,12 +1,26 @@
 {
   "name": "gbfs-validator",
-  "version": "1.0.0",
-  "author": "Pierrick <mulotmail@gmail.com>",
+  "version": "1.0.12",
+  "author": "MobilityData",
   "main": "index.js",
   "license": "MIT",
-  "bin": "./cli.js",
+  "description": "Node-based libraries to validate GBFS feeds",
+  "tags": [
+    "gbfs-validator"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MobilityData/gbfs-validator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MobilityData/gbfs-validator/issues"
+  },
+  "bin": {
+    "gbfs-validator": "./cli.js"
+  },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepare": "git submodule update --init --recursive"
   },
   "dependencies": {
     "ajv": "^8.9.0",
@@ -29,6 +43,9 @@
       "!**/coverage/**",
       "!**/__test__/**",
       "!**/schema/**"
+    ],
+    "testPathIgnorePatterns": [
+      "versions/gbfs-json-schema/"
     ]
   }
 }

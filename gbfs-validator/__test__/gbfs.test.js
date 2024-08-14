@@ -1,4 +1,5 @@
 const GBFS = require('../gbfs')
+const pjson = require('../package.json')
 
 const serverOpts = {
   port: 0,
@@ -6,6 +7,14 @@ const serverOpts = {
 }
 
 describe('initialization', () => {
+
+  beforeAll(() => {
+    // mocks process and pacakge.json for consistent tests
+    const originalProcess = process
+    global.process = {...originalProcess, versions: {node: '16.0.1'}}
+    pjson.version = '1.1.1'
+  })
+
   test('should correctly initialize validator per default', () => {
     expect(new GBFS('http://localhost:8888/gbfs.json')).toMatchSnapshot()
   })
@@ -520,6 +529,80 @@ describe('conditional vehicle_types file', () => {
   })
 })
 
+describe('required default_reserve_time on reservation price existing v3.1-RC', () => {
+  
+  beforeAll(async () => {
+    gbfsFeedServer = require('./fixtures/conditional_default_reserve_time')()
+
+    await gbfsFeedServer.listen(serverOpts)
+
+    return gbfsFeedServer
+  });
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('default_reserve_time should be required when reservation price is set', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`);
+
+    expect.assertions(1);
+
+    return gbfs.validation().then(result => {
+      
+      expect(result).toMatchObject({
+        summary: expect.objectContaining({
+          version: { detected: '3.1-RC', validated: '3.1-RC' },
+          hasErrors: true,
+          errorsCount: 3
+        }),
+        files: expect.arrayContaining([
+          expect.objectContaining(
+            {
+              file: 'vehicle_types.json',
+              languages: expect.arrayContaining([
+                expect.objectContaining({
+                  errors: expect.arrayContaining([
+                    expect.objectContaining({
+                      instancePath: '/data/vehicle_types/0',
+                      message:
+                        "must have required property 'default_reserve_time'"
+                    })
+                  ])
+                })
+              ])
+            },
+            {
+              file: 'system_pricing_plans.json',
+              languages: expect.arrayContaining([
+                expect.objectContaining({
+                  errors: expect.arrayContaining([
+                    expect.objectContaining(
+                      {
+                        instancePath: '/data/plans/3',
+                        schemaPath: '#/properties/data/properties/plans/items/dependencies/reservation_price_flat_rate/not',
+                        message: "must NOT be valid"
+                      },
+                      {
+                        instancePath: '/data/plans/3',
+                        schemaPath: '#/properties/data/properties/plans/items/dependencies/reservation_price_per_min/not',
+                        message: "must NOT be valid"
+                      }
+                    )
+                  ])
+                })
+              ])
+            }
+          )
+        ])
+      })
+    })
+  });
+});
+
 describe('conditional required vehicle_type_id', () => {
   let gbfsFeedServer
 
@@ -546,7 +629,6 @@ describe('conditional required vehicle_type_id', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          validatorVersion: '1.0.0',
           version: { detected: '2.2', validated: '2.2' },
           hasErrors: true,
           errorsCount: 2
@@ -603,7 +685,6 @@ describe('conditional no required vehicle_type_id', () => {
     return gbfs.validation().then(result => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          validatorVersion: '1.0.0',
           version: { detected: '2.2', validated: '2.2' }
         }),
         files: expect.arrayContaining([
