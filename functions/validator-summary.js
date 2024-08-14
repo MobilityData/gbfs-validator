@@ -46,7 +46,9 @@ const getSummary = (validationResult) => (
       file: item.file,
       hasErrors: item.hasErrors,
       errorsCount: item.errorsCount,
-      groupedErrors: item.exists ? groupErrors(item.languages[0]?.errors || []) : []
+      groupedErrors: item.exists && item.languages && item.languages[0] && item.languages[0].errors
+        ? groupErrors(item.languages[0].errors)
+        : []
     }))
   }
 )
