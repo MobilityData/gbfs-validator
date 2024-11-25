@@ -146,7 +146,7 @@ class MockRequests {
         email: 'customerservice@example.com',
         feed_contact_email: 'datafeed@example.com',
         manifest_url: `${basePath}/manifest.json`,
-        timezone: 'America/Chicago',
+        timezone: 'America/Montreal',
         license_id: 'CC-BY-4.0',
         attribution_organization_name: [
           {
