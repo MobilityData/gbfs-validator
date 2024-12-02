@@ -25,21 +25,20 @@ const errorsCountFormated = computed(() => {
       <div v-if="result.summary">
         <h3 class="mt-4 mb-4">Result</h3>
 
-        <b-alert
-          v-if="result.summary.versionUnimplemented"
-          variant="danger"
-          show
-        >
-          Sorry, this version is not yet implemented or not detectable !
+        <b-alert v-if="result.summary.versionUnimplemented" variant="danger" show>
+          Sorry, the validator failed to parse this file. Please check that the URL is available and points to a
+          <a href="https://github.com/MobilityData/gbfs/blob/master/gbfs.md#gbfsjson" target='_blank'
+            rel='noreferrer'>gbfs.json</a> file. If you have any questions, please write to <a
+            href='mailto:sharedmobility@mobilitydata.org' target='_blank' rel='noreferrer'>
+            sharedmobility@mobilitydata.org
+          </a>. Thank you
         </b-alert>
         <div v-else>
           <b-alert variant="info" show>
             Detected version <b>{{ result.summary.version.detected }} </b> and
             validate with
-            <a
-              :href="`https://github.com/MobilityData/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"
-              ><b>{{ result.summary.version.validated }}</b></a
-            >
+            <a :href="`https://github.com/MobilityData/gbfs/blob/v${result.summary.version.validated}/gbfs.md`"><b>{{
+              result.summary.version.validated }}</b></a>
           </b-alert>
 
           <div>

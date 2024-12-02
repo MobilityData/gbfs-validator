@@ -469,29 +469,23 @@ provide('map', map)
   <div>
     <b-row>
       <b-col>
-        <b-form-input
-          type="url"
-          v-model="url"
-          placeholder="https://exemple.com/gbfs.json"
-        ></b-form-input>
+        <b-form-input type="url" v-model="url" placeholder="https://exemple.com/gbfs.json"></b-form-input>
       </b-col>
       <b-col class="flex-grow-0">
-        <b-button
-          @click="visualize"
-          variant="success"
-          style="white-space: nowrap"
-          :disabled="isLoading"
-          >Visualize !</b-button
-        >
+        <b-button @click="visualize" variant="success" style="white-space: nowrap" :disabled="isLoading">Visualize
+          !</b-button>
       </b-col>
     </b-row>
-    <b-row class="mt-3" v-if="summary.versionUnimplemented"
-      ><b-col>
+    <b-row class="mt-3" v-if="summary.versionUnimplemented"><b-col>
         <b-alert variant="danger" show class="mb-0">
-          Sorry, this version is not yet implemented or not detectable !
+          Sorry, the validator failed to parse this file. Please check that the URL is available and points to a
+          <a href="https://github.com/MobilityData/gbfs/blob/master/gbfs.md#gbfsjson" target='_blank'
+            rel='noreferrer'>gbfs.json</a> file. If you have any questions, please write to <a
+            href='mailto:sharedmobility@mobilitydata.org' target='_blank' rel='noreferrer'>
+            sharedmobility@mobilitydata.org
+          </a>. Thank you
         </b-alert>
-      </b-col></b-row
-    >
+      </b-col></b-row>
     <b-row class="mt-3">
       <b-col cols="6">
         <b-alert variant="primary" show>
@@ -499,7 +493,7 @@ provide('map', map)
             {{ stations ? stations.length : '-' }}
             <small v-if="hasStationsDetails" class="text-muted">{{
               vehiclesInStations
-            }}</small>
+              }}</small>
           </h4>
           <span>Stations</span>
         </b-alert>
@@ -508,11 +502,7 @@ provide('map', map)
         <b-alert variant="primary" show>
           <h4 class="alert-heading">
             {{ vehicles ? vehicles.length : '-' }}
-            <small
-              v-if="vehicleTypes && vehicleTypes.length > 1"
-              class="text-muted"
-              >{{ vehiclesCountByType }}</small
-            >
+            <small v-if="vehicleTypes && vehicleTypes.length > 1" class="text-muted">{{ vehiclesCountByType }}</small>
           </h4>
           <span>Dockless vehicles</span>
         </b-alert>
@@ -526,25 +516,15 @@ provide('map', map)
           <div class="map-overlay top left">
             <div class="map-overlay-inner">
               <ul class="list-unstyled mb-0">
-                <b-form-checkbox-group
-                  id="checkbox-group-2"
-                  v-model="selected"
-                  name="flavour-2"
-                >
+                <b-form-checkbox-group id="checkbox-group-2" v-model="selected" name="flavour-2">
                   <li>
-                    <b-form-checkbox name="selected-stations" value="stations"
-                      >&nbsp;Stations</b-form-checkbox
-                    >
+                    <b-form-checkbox name="selected-stations" value="stations">&nbsp;Stations</b-form-checkbox>
                   </li>
                   <li>
-                    <b-form-checkbox name="selected-stations" value="vehicles"
-                      >&nbsp;Dockless</b-form-checkbox
-                    >
+                    <b-form-checkbox name="selected-stations" value="vehicles">&nbsp;Dockless</b-form-checkbox>
                   </li>
                   <li>
-                    <b-form-checkbox name="selected-stations" value="geofencing"
-                      >&nbsp;Geofencing</b-form-checkbox
-                    >
+                    <b-form-checkbox name="selected-stations" value="geofencing">&nbsp;Geofencing</b-form-checkbox>
                   </li>
                 </b-form-checkbox-group>
               </ul>
@@ -555,21 +535,12 @@ provide('map', map)
             <div class="map-overlay-inner" v-if="vehicles">
               <h5>Dockless vehicles</h5>
               <ul class="list-unstyled mb-0">
-                <li
-                  v-for="vtff in vehicleTypesFormFactor"
-                  :key="vtff"
-                  class="d-flex align-items-center"
-                >
-                  <span
-                    class="vehicle-type d-inline-block"
-                    :class="`vehicle-type-${vtff.toLowerCase()}`"
-                  ></span>
+                <li v-for="vtff in vehicleTypesFormFactor" :key="vtff" class="d-flex align-items-center">
+                  <span class="vehicle-type d-inline-block" :class="`vehicle-type-${vtff.toLowerCase()}`"></span>
                   {{ vtff }}
                 </li>
                 <li v-if="!vehicleTypesFormFactor">
-                  <span
-                    class="vehicle-type d-inline-block vehicle-type-unknown"
-                  ></span>
+                  <span class="vehicle-type d-inline-block vehicle-type-unknown"></span>
                   unknown
                 </li>
               </ul>
@@ -628,6 +599,7 @@ provide('map', map)
   &.left {
     left: 0;
   }
+
   &.top {
     top: 0;
   }
