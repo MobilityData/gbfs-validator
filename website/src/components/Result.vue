@@ -27,8 +27,9 @@ const errorsCountFormated = computed(() => {
 
         <b-alert v-if="result.summary.versionUnimplemented" variant="danger" show>
           Sorry, the validator failed to parse this file. Please check that the URL is available and points to a
-          gbfs.json file. If you have any questions, please write to <a href='mailto:sharedmobility@mobilitydata.org'
-            target='_blank' rel='noreferrer'>
+          <a href="https://github.com/MobilityData/gbfs/blob/master/gbfs.md#gbfsjson" target='_blank'
+            rel='noreferrer'>gbfs.json</a> file. If you have any questions, please write to <a
+            href='mailto:sharedmobility@mobilitydata.org' target='_blank' rel='noreferrer'>
             sharedmobility@mobilitydata.org
           </a>. Thank you
         </b-alert>

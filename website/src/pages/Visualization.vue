@@ -479,8 +479,9 @@ provide('map', map)
     <b-row class="mt-3" v-if="summary.versionUnimplemented"><b-col>
         <b-alert variant="danger" show class="mb-0">
           Sorry, the validator failed to parse this file. Please check that the URL is available and points to a
-          gbfs.json file. If you have any questions, please write to <a href='mailto:sharedmobility@mobilitydata.org'
-            target='_blank' rel='noreferrer'>
+          <a href="https://github.com/MobilityData/gbfs/blob/master/gbfs.md#gbfsjson" target='_blank'
+            rel='noreferrer'>gbfs.json</a> file. If you have any questions, please write to <a
+            href='mailto:sharedmobility@mobilitydata.org' target='_blank' rel='noreferrer'>
             sharedmobility@mobilitydata.org
           </a>. Thank you
         </b-alert>
