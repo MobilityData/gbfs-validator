@@ -28,7 +28,7 @@ onMounted(() => {
         <b-form-input
           type="url"
           v-model="state.url"
-          placeholder="https://exemple.com/gbfs.json"
+          placeholder="https://example.com/gbfs.json"
           size="lg"
         ></b-form-input>
       </b-col>
