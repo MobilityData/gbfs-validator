@@ -1,6 +1,6 @@
 {
   "name": "gbfs-validator",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "author": "MobilityData",
   "main": "index.js",
   "license": "MIT",
