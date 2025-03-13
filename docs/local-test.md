@@ -38,7 +38,7 @@ If successful, you’ll see **Server now ready on http://localhost:8888**
 
 ![image.png](./local-test2.png)
 
-2. Replace the feed URL
+2. Replace the feed URLs in the local gbfs.json file with the local URLs.
 
 Replace `https://mds.bolt.eu/gbfs/3/336/gbfs` with `http://localhost:800/gbfs/3/336/gbfs`.
 
