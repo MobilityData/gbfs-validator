@@ -3,15 +3,14 @@ const pjson = require('../package.json')
 
 const serverOpts = {
   port: 0,
-  host: '127.0.0.1',
+  host: '127.0.0.1'
 }
 
 describe('initialization', () => {
-
   beforeAll(() => {
     // mocks process and pacakge.json for consistent tests
     const originalProcess = process
-    global.process = {...originalProcess, versions: {node: '16.0.1'}}
+    global.process = { ...originalProcess, versions: { node: '16.0.1' } }
     pjson.version = '1.1.1'
   })
 
@@ -125,7 +124,7 @@ describe('checkAutodiscovery method', () => {
       }/gbfs.json`
     )
 
-    return gbfs.checkAutodiscovery().then(result => {
+    return gbfs.checkAutodiscovery().then((result) => {
       expect(result).toMatchObject({
         errors: false,
         exists: true,
@@ -147,7 +146,7 @@ describe('checkAutodiscovery method', () => {
       }/`
     )
 
-    return gbfs.checkAutodiscovery().then(result => {
+    return gbfs.checkAutodiscovery().then((result) => {
       expect(result).toMatchObject({
         errors: false,
         exists: true,
@@ -169,7 +168,7 @@ describe('checkAutodiscovery method', () => {
       }/v2/`
     )
 
-    return gbfs.checkAutodiscovery().then(result => {
+    return gbfs.checkAutodiscovery().then((result) => {
       expect(result).toMatchObject({
         errors: false,
         exists: false,
@@ -192,7 +191,7 @@ describe('checkAutodiscovery method', () => {
       { version: '2.0' }
     )
 
-    return gbfs.checkAutodiscovery().then(result => {
+    return gbfs.checkAutodiscovery().then((result) => {
       expect(result).toMatchObject({
         errors: false,
         exists: false,
@@ -242,14 +241,14 @@ describe('getFile method', () => {
       }
     }
 
-    return gbfs.getFile('system_information', true).then(result => {
+    return gbfs.getFile('system_information', true).then((result) => {
       expect(result).toMatchObject({
         body: expect.any(Array),
         required: true,
         type: 'system_information'
       })
 
-      result.body.forEach(l => {
+      result.body.forEach((l) => {
         expect(l).toMatchObject({
           exists: true,
           lang: 'en',
@@ -278,14 +277,14 @@ describe('getFile method', () => {
       }
     }
 
-    return gbfs.getFile('do_not_exist', true).then(result => {
+    return gbfs.getFile('do_not_exist', true).then((result) => {
       expect(result).toMatchObject({
         body: expect.any(Array),
         required: true,
         type: 'do_not_exist'
       })
 
-      result.body.forEach(l => {
+      result.body.forEach((l) => {
         expect(l).toMatchObject({
           body: null,
           exists: false,
@@ -302,7 +301,7 @@ describe('getFile method', () => {
     }`
     const gbfs = new GBFS(`${url}`)
 
-    return gbfs.getFile('system_information', true).then(result => {
+    return gbfs.getFile('system_information', true).then((result) => {
       expect(result).toMatchObject({
         required: true,
         exists: true,
@@ -318,7 +317,7 @@ describe('getFile method', () => {
     }`
     const gbfs = new GBFS(`${url}/gbfs.json`)
 
-    return gbfs.getFile('do_not_exist', true).then(result => {
+    return gbfs.getFile('do_not_exist', true).then((result) => {
       expect(result).toMatchObject({
         body: null,
         required: true,
@@ -442,7 +441,7 @@ describe('validationFile method', () => {
       hasErrors: false
     })
 
-    result.languages.forEach(l => {
+    result.languages.forEach((l) => {
       expect(l).toMatchObject({
         body: expect.any(Object),
         exists: true,
@@ -476,7 +475,7 @@ describe('validation method', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
+    return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '2.2', validated: '2.2' },
@@ -512,7 +511,7 @@ describe('conditional vehicle_types file', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
+    return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '2.2', validated: '2.2' }
@@ -529,15 +528,14 @@ describe('conditional vehicle_types file', () => {
   })
 })
 
-describe('required default_reserve_time on reservation price existing v3.1-RC', () => {
-  
+describe('required default_reserve_time on reservation price existing v3.1-RC2', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/conditional_default_reserve_time')()
 
     await gbfsFeedServer.listen(serverOpts)
 
     return gbfsFeedServer
-  });
+  })
 
   afterAll(() => {
     return gbfsFeedServer.close()
@@ -547,15 +545,14 @@ describe('required default_reserve_time on reservation price existing v3.1-RC', 
     const url = `http://${gbfsFeedServer.server.address().address}:${
       gbfsFeedServer.server.address().port
     }`
-    const gbfs = new GBFS(`${url}/gbfs.json`);
+    const gbfs = new GBFS(`${url}/gbfs.json`)
 
-    expect.assertions(1);
+    expect.assertions(1)
 
-    return gbfs.validation().then(result => {
-      
+    return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          version: { detected: '3.1-RC', validated: '3.1-RC' },
+          version: { detected: '3.1-RC2', validated: '3.1-RC2' },
           hasErrors: true,
           errorsCount: 3
         }),
@@ -583,13 +580,15 @@ describe('required default_reserve_time on reservation price existing v3.1-RC', 
                     expect.objectContaining(
                       {
                         instancePath: '/data/plans/3',
-                        schemaPath: '#/properties/data/properties/plans/items/dependencies/reservation_price_flat_rate/not',
-                        message: "must NOT be valid"
+                        schemaPath:
+                          '#/properties/data/properties/plans/items/dependencies/reservation_price_flat_rate/not',
+                        message: 'must NOT be valid'
                       },
                       {
                         instancePath: '/data/plans/3',
-                        schemaPath: '#/properties/data/properties/plans/items/dependencies/reservation_price_per_min/not',
-                        message: "must NOT be valid"
+                        schemaPath:
+                          '#/properties/data/properties/plans/items/dependencies/reservation_price_per_min/not',
+                        message: 'must NOT be valid'
                       }
                     )
                   ])
@@ -600,8 +599,8 @@ describe('required default_reserve_time on reservation price existing v3.1-RC', 
         ])
       })
     })
-  });
-});
+  })
+})
 
 describe('conditional required vehicle_type_id', () => {
   let gbfsFeedServer
@@ -626,7 +625,7 @@ describe('conditional required vehicle_type_id', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
+    return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '2.2', validated: '2.2' },
@@ -682,7 +681,7 @@ describe('conditional no required vehicle_type_id', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
+    return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
           version: { detected: '2.2', validated: '2.2' }
@@ -703,7 +702,8 @@ describe('conditional required vehicle_types_available', () => {
   let gbfsFeedServer
 
   beforeAll(async () => {
-    gbfsFeedServer = require('./fixtures/conditionnal_vehicle_types_available')()
+    gbfsFeedServer =
+      require('./fixtures/conditionnal_vehicle_types_available')()
 
     await gbfsFeedServer.listen(serverOpts)
 
@@ -722,9 +722,9 @@ describe('conditional required vehicle_types_available', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
-      const file = result.files.find(f => f.file === 'station_status.json')
-      const errors = file.languages.map(l => l.errors)
+    return gbfs.validation().then((result) => {
+      const file = result.files.find((f) => f.file === 'station_status.json')
+      const errors = file.languages.map((l) => l.errors)
 
       expect(errors).toMatchObject([
         [
@@ -766,9 +766,9 @@ describe('conditional plan_id', () => {
 
     expect.assertions(1)
 
-    return gbfs.validation().then(result => {
-      const file = result.files.find(f => f.file === 'vehicle_types.json')
-      const errors = file.languages.map(l => l.errors)
+    return gbfs.validation().then((result) => {
+      const file = result.files.find((f) => f.file === 'vehicle_types.json')
+      const errors = file.languages.map((l) => l.errors)
 
       expect(errors).toMatchObject([
         [
