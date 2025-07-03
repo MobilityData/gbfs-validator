@@ -3,15 +3,14 @@ module.exports = ({ vehicleTypes }) => {
     $id: 'required_vehicle_type_id.json#'
   }
 
-  const motorVehicleTypes = vehicleTypes.filter(vt =>
+  const motorVehicleTypes = vehicleTypes.filter((vt) =>
     ['electric_assist', 'electric', 'combustion'].includes(vt.propulsion_type)
   )
 
   if (motorVehicleTypes.length) {
     partial.$merge = {
       source: {
-        $ref:
-          'https://github.com/MobilityData/gbfs/blob/v3.1-RC/gbfs.md#vehicle_statusjson'
+        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_statusjson'
       },
       with: {
         properties: {
@@ -28,7 +27,7 @@ module.exports = ({ vehicleTypes }) => {
                   if: {
                     properties: {
                       vehicle_type_id: {
-                        enum: motorVehicleTypes.map(vt => vt.vehicle_type_id)
+                        enum: motorVehicleTypes.map((vt) => vt.vehicle_type_id)
                       }
                     },
                     // "required" so it only trigger "then" when "vehicle_type_id" is present.
@@ -48,8 +47,7 @@ module.exports = ({ vehicleTypes }) => {
 
   partial.$patch = {
     source: {
-      $ref:
-        'https://github.com/MobilityData/gbfs/blob/v3.1-RC/gbfs.md#vehicle_statusjson'
+      $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_statusjson'
     },
     with: [
       {
