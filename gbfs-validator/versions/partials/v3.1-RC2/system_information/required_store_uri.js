@@ -3,7 +3,7 @@ module.exports = ({ android = false, ios = false }) => {
     $id: 'required_ios_store_uri.json#',
     $patch: {
       source: {
-        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#system_informationjson'
+        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#system_information.json'
       },
       with: [
         {
@@ -15,7 +15,7 @@ module.exports = ({ android = false, ios = false }) => {
     },
     $merge: {
       source: {
-        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#system_informationjson'
+        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#system_information.json'
       },
       with: {
         properties: {

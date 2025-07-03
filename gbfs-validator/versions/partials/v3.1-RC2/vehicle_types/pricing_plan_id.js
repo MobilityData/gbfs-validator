@@ -3,7 +3,7 @@ module.exports = ({ pricingPlans }) => {
     $id: 'pricing_plan_id.json#',
     $merge: {
       source: {
-        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_typesjson'
+        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_types.json'
       },
       with: {
         properties: {

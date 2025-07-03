@@ -10,7 +10,7 @@ module.exports = ({ vehicleTypes }) => {
   if (motorVehicleTypes.length) {
     partial.$merge = {
       source: {
-        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_statusjson'
+        $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_status.json'
       },
       with: {
         properties: {
@@ -47,7 +47,7 @@ module.exports = ({ vehicleTypes }) => {
 
   partial.$patch = {
     source: {
-      $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_statusjson'
+      $ref: 'https://github.com/MobilityData/gbfs/blob/v3.1-RC2/gbfs.md#vehicle_status.json'
     },
     with: [
       {
