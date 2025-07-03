@@ -36,7 +36,7 @@ function build(opts = {}) {
     return {
       last_updated: "2024-05-23T15:30:00Z",
       ttl: 0,
-      version: '3.1-RC',
+      version: '3.1-RC2',
       data: {
         system_id: 'shared_bike',
         name: [
