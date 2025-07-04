@@ -3,8 +3,7 @@ module.exports = ({ vehicleTypes }) => {
     $id: 'required_vehicle_types_available.json#',
     $merge: {
       source: {
-        $ref:
-          'https://github.com/MobilityData/gbfs/blob/v3.1-RC/gbfs.md#station_statusjson'
+        $ref: 'https://github.com/MobilityData/gbfs-json-schema/blob/master/v3.1-RC2/station_status.json'
       },
       with: {
         properties: {
@@ -17,7 +16,7 @@ module.exports = ({ vehicleTypes }) => {
                       items: {
                         properties: {
                           vehicle_type_id: {
-                            enum: vehicleTypes.map(vt => vt.vehicle_type_id)
+                            enum: vehicleTypes.map((vt) => vt.vehicle_type_id)
                           }
                         }
                       }
@@ -32,8 +31,7 @@ module.exports = ({ vehicleTypes }) => {
     },
     $patch: {
       source: {
-        $ref:
-          'https://github.com/MobilityData/gbfs/blob/v3.1-RC/gbfs.md#station_statusjson'
+        $ref: 'https://github.com/MobilityData/gbfs-json-schema/blob/master/v3.1-RC2/station_status.json'
       },
       with: [
         {

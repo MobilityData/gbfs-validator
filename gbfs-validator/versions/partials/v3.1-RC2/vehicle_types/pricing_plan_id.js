@@ -1,10 +1,9 @@
 module.exports = ({ pricingPlans }) => {
-  const partial =  {
+  const partial = {
     $id: 'pricing_plan_id.json#',
     $merge: {
       source: {
-        $ref:
-          'https://github.com/MobilityData/gbfs/blob/v3.1-RC/gbfs.md#vehicle_typesjson'
+        $ref: 'https://github.com/MobilityData/gbfs-json-schema/blob/master/v3.1-RC2/vehicle_types.json'
       },
       with: {
         properties: {
@@ -14,9 +13,9 @@ module.exports = ({ pricingPlans }) => {
                 items: {
                   properties: {
                     default_pricing_plan_id: {
-                      enum: pricingPlans.map(p => p.plan_id)
+                      enum: pricingPlans.map((p) => p.plan_id)
                     }
-                  },
+                  }
                 }
               }
             }
@@ -26,5 +25,5 @@ module.exports = ({ pricingPlans }) => {
     }
   }
 
-  return partial;
+  return partial
 }

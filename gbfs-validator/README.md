@@ -14,7 +14,7 @@ npm install gbfs-validator
 ```
 
 ## Supported GBFS Versions
-- 3.1-RC
+- 3.1-RC2
 - 3.0
 - 2.3
 - 2.2
