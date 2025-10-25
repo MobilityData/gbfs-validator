@@ -11,7 +11,7 @@ import {
   watch
 } from 'vue'
 import { get, set } from '@vueuse/core'
-import { Map, NavigationControl, Popup, LngLat } from 'maplibre-gl'
+import { Map as MapLibre, NavigationControl, Popup, LngLat } from 'maplibre-gl'
 import { MapboxOverlay as DeckOverlay } from '@deck.gl/mapbox'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import bboxPolygon from '@turf/bbox'
@@ -50,7 +50,7 @@ const transformRequest = (url = '', resourceType = '') => {
 onMounted(() => {
   const initialState = { lng: 2.349014, lat: 48.864716, zoom: 11 }
 
-  mapInstance = new Map({
+  mapInstance = new MapLibre({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v12',
     transformRequest,
@@ -143,21 +143,18 @@ const vehicles = computed(() => {
 })
 
 const vehiclesCountByType = computed(() => {
-  if (get(vehicles)) {
-    const countByType = get(vehicles).reduce((acc, v) => {
-      if (acc[v.vehicle_type_id]) {
-        acc[v.vehicle_type_id]++
-      } else {
-        acc[v.vehicle_type_id] = 1
-      }
+  const vehiclesData = get(vehicles)
+  const vehicleTypesData = get(vehicleTypes)
 
+  if (vehiclesData && vehicleTypesData) {
+    const countByType = vehiclesData.reduce((acc, v) => {
+      const k = vehicleTypesData.find(el => el.vehicle_type_id === v.vehicle_type_id)
+      acc.set(k.form_factor, (acc.get(k.form_factor) || 0) + 1)
       return acc
-    }, {})
+    }, new Map())
 
-    const types = Object.keys(countByType)
-
-    return types
-      .map((t) => `${countByType[t]} ${getVehicleType(t).form_factor}`)
+    return Object.keys(countByType)
+      .map((k) => `${countByType[k]} ${k}`)
       .join(' / ')
   } else {
     return null
