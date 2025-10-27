@@ -154,7 +154,7 @@ const vehiclesCountByType = computed(() => {
     }, new Map())
 
     return [...countByType.entries()]
-      .map(([k, count]) => `${count} ${k}`)
+      .map(([type, count]) => `${count} ${type}`)
       .join(' / ')
   } else {
     return null
