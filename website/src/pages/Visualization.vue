@@ -147,9 +147,9 @@ const vehiclesCountByType = computed(() => {
   const vehicleTypesData = get(vehicleTypes)
 
   if (vehiclesData && vehicleTypesData) {
-    const countByType = vehiclesData.reduce((acc, v) => {
-      const k = vehicleTypesData.find(el => el.vehicle_type_id === v.vehicle_type_id)
-      acc.set(k.form_factor, (acc.get(k.form_factor) || 0) + 1)
+    const countByType = vehiclesData.reduce((acc, vehicle) => {
+      const currentVehicleType = vehicleTypesData.find(el => el.vehicle_type_id === vehicle.vehicle_type_id)
+      acc.set(currentVehicleType.form_factor, (acc.get(currentVehicleType.form_factor) || 0) + 1)
       return acc
     }, new Map())
 
