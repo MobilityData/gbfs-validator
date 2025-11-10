@@ -38,7 +38,6 @@ let stationsOverlay
 let geofencingOverlay
 
 const MAPBOX_KEY = import.meta.env.VITE_MAPBOX_API_KEY
-
 // https://github.com/rowanwins/maplibregl-mapbox-request-transformer
 const transformRequest = (url = '', resourceType = '') => {
   if (isMapboxURL(url)) {
@@ -191,7 +190,7 @@ const hasStationsDetails = computed(() => {
 const vehiclesInStations = computed(() => {
   if (get(stations)) {
     return `${get(stations).reduce((acc, s) => {
-      acc += getStationStatus(s.station_id)?.num_bikes_available || 0
+      acc += getStationStatus(s.station_id)?.num_bikes_available || getStationStatus(s.station_id)?.num_vehicles_available || 0 // num_bikes_available changed name in V3
 
       return acc
     }, 0)} vehicles`
@@ -421,9 +420,13 @@ function populateData() {
       pointRadiusMinPixels: 3,
       stroked: false,
       getFillColor: (info) => {
-        if (info.properties._info.num_bikes_available > 5) {
+        const vehiclesAvailable =
+          info.properties._info.num_bikes_available ||
+          info.properties._info.num_vehicles_available || // changed name in V3
+          0
+        if (vehiclesAvailable > 5) {
           return [6, 156, 86]
-        } else if (info.properties._info.num_bikes_available > 0) {
+        } else if (vehiclesAvailable > 0) {
           return [255, 152, 14]
         } else {
           return [211, 33, 44]
