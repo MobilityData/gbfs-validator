@@ -3,7 +3,7 @@ name: GBFS Validator Package - Publish
 on:
     push:
       branches:
-        - feat/trusted-publisher-publishing
+        - master
 
 # Npm authentication via OpenID Connect (OIDC)
 # https://docs.npmjs.com/trusted-publishers

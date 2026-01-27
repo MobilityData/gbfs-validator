@@ -2,7 +2,7 @@
 
 [![All Contributors](https://img.shields.io/github/all-contributors/MobilityData/gbfs-validator?color=blue&style=flat)](#contributors)
 
-A [General Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) dataset validator.
+A [General Bikeshare Feed Specification](https://github.com/MobilityData/gbfs) dataset validator
 
 ## Introduction
 
