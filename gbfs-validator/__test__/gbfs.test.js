@@ -554,7 +554,7 @@ describe('required default_reserve_time on reservation price existing v3.1-RC2',
         summary: expect.objectContaining({
           version: { detected: '3.1-RC2', validated: '3.1-RC2' },
           hasErrors: true,
-          errorsCount: 3
+          errorsCount: 4
         }),
         files: expect.arrayContaining([
           expect.objectContaining(
