@@ -262,6 +262,15 @@ const getStationStatus = function (stationId) {
   }
 }
 
+function fitBoundsForGeojson(geojson) {
+  if (geojson.features.length === 1 && geojson.features[0].geometry.type === 'Point') {
+    const [lng, lat] = geojson.features[0].geometry.coordinates
+    mapInstance.flyTo({ center: [lng, lat], zoom: 11 })
+  } else {
+    mapInstance.fitBounds(bboxPolygon(geojson))
+  }
+}
+
 function populateData() {
   if (get(selected).includes('geofencing') && get(geofencingZone)) {
     const geojson = {
@@ -309,7 +318,7 @@ function populateData() {
       layers: [geofencingLayer]
     })
 
-    mapInstance.fitBounds(bboxPolygon(geojson))
+    fitBoundsForGeojson(geojson)
     mapInstance.addControl(geofencingOverlay)
   }
 
@@ -384,7 +393,7 @@ function populateData() {
       layers: [vehiclesLayer]
     })
 
-    mapInstance.fitBounds(bboxPolygon(geojson))
+    fitBoundsForGeojson(geojson)
     mapInstance.addControl(vehiclesOverlay)
   }
 
@@ -449,7 +458,7 @@ function populateData() {
       layers: [stationLayer]
     })
 
-    mapInstance.fitBounds(bboxPolygon(geojson))
+    fitBoundsForGeojson(geojson)
     mapInstance.addControl(stationsOverlay)
   }
 }
