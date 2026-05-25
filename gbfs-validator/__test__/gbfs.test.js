@@ -528,7 +528,7 @@ describe('conditional vehicle_types file', () => {
   })
 })
 
-describe('required default_reserve_time on reservation price existing v3.1-RC2', () => {
+describe('required default_reserve_time on reservation price existing v3.1-RC3', () => {
   beforeAll(async () => {
     gbfsFeedServer = require('./fixtures/conditional_default_reserve_time')()
 
@@ -552,7 +552,7 @@ describe('required default_reserve_time on reservation price existing v3.1-RC2',
     return gbfs.validation().then((result) => {
       expect(result).toMatchObject({
         summary: expect.objectContaining({
-          version: { detected: '3.1-RC2', validated: '3.1-RC2' },
+          version: { detected: '3.1-RC3', validated: '3.1-RC3' },
           hasErrors: true,
           errorsCount: 4
         }),
