@@ -787,3 +787,52 @@ describe('conditional plan_id', () => {
     })
   })
 })
+
+describe('vehicle_status vehicle_type_id reference', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    gbfsFeedServer =
+      require('./fixtures/invalid_vehicle_type_reference')()
+
+    await gbfsFeedServer.listen(serverOpts)
+
+    return gbfsFeedServer
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should reject vehicle_type_id not defined in vehicle_types.json', () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(1)
+
+    return gbfs.validation().then((result) => {
+      const file = result.files.find(
+        f => f.file === 'vehicle_status.json'
+      )
+
+      const errors = file.languages.flatMap(
+        language => language.errors || []
+      )
+
+      expect(errors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            instancePath:
+              '/data/vehicles/0/vehicle_type_id',
+            keyword: 'enum',
+            message:
+              'must be equal to one of the allowed values'
+          })
+        ])
+      )
+    })
+  })
+})
