@@ -80,35 +80,33 @@ const groupErrors = (errors) => {
 };
 
 
-  /**
-   * call the callback function with {@link Summary}
-   */
-  exports.handler = function (event, context, callback) {
-    let body
+/**
+ * Netlify function handler returning a {@link Summary}
+ */
+exports.handler = async function (event) {
+  let body
 
-    try {
-      body = JSON.parse(event.body)
-    } catch (err) {
-      callback(err, {
-        statusCode: 500,
-        body: JSON.stringify(err)
-      })
+  try {
+    body = JSON.parse(event.body)
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify(err.message)
     }
-
-    const gbfs = new GBFS(body.url, body.options)
-
-    gbfs
-      .validation()
-      .then(result => {
-        callback(null, {
-          statusCode: 200,
-          body: JSON.stringify(getSummary(result))
-        })
-      })
-      .catch(err => {
-        callback(null, {
-          statusCode: 500,
-          body: JSON.stringify(err.message)
-        })
-      })
   }
+
+  try {
+    const gbfs = new GBFS(body.url, body.options)
+    const result = await gbfs.validation()
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(getSummary(result))
+    }
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify(err.message)
+    }
+  }
+}
