@@ -1,11 +1,10 @@
 const GBFS = require('gbfs-validator');
 const { defaultApplicationResponseHeaders, getCorsResponse } = require('../common/http-utils');
 
-exports.handler = function (event, context, callback) {
+exports.handler = async function (event) {
   const corsResponse = getCorsResponse(event);
   if (corsResponse !== undefined) {
-    callback(null, corsResponse)    
-    return;
+    return corsResponse
   }
 
   let body
@@ -13,29 +12,27 @@ exports.handler = function (event, context, callback) {
   try {
     body = JSON.parse(event.body)
   } catch (err) {
-    callback(err, {
+    return {
       headers: defaultApplicationResponseHeaders,
       statusCode: 500,
-      body: JSON.stringify(err)
-    })
+      body: JSON.stringify(err.message)
+    }
   }
 
-  const gbfs = new GBFS(body.url)
+  try {
+    const gbfs = new GBFS(body.url)
+    const result = await gbfs.getFiles()
 
-  gbfs
-    .getFiles()
-    .then((result) => {
-      callback(null, {
-        headers: defaultApplicationResponseHeaders,
-        statusCode: 200,
-        body: JSON.stringify(result)
-      })
-    })
-    .catch((err) => {
-      callback(null, {
-        headers: defaultApplicationResponseHeaders,
-        statusCode: 500,
-        body: JSON.stringify(err.message)
-      })
-    })
+    return {
+      headers: defaultApplicationResponseHeaders,
+      statusCode: 200,
+      body: JSON.stringify(result)
+    }
+  } catch (err) {
+    return {
+      headers: defaultApplicationResponseHeaders,
+      statusCode: 500,
+      body: JSON.stringify(err.message)
+    }
+  }
 }
