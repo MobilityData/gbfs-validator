@@ -59,6 +59,54 @@ describe('default feed', () => {
   })
 })
 
+describe('DL-DE-ZERO-2.0 licence', () => {
+  let gbfsFeedServer
+
+  beforeAll(async () => {
+    const { MockRequests } = require('./fixtures/v3.0/default')
+    class LicensedMockRequests extends MockRequests {
+      system_information(...args) {
+        const json = super.system_information(...args)
+
+        json.data.license_id = 'DL-DE-ZERO-2.0'
+
+        return json
+      }
+    }
+
+    let mockRequests = new LicensedMockRequests()
+
+    gbfsFeedServer = mockRequests.build()
+
+    await gbfsFeedServer.listen(serverOpts)
+  })
+
+  afterAll(() => {
+    return gbfsFeedServer.close()
+  })
+
+  test('should validate feed', async () => {
+    const url = `http://${gbfsFeedServer.server.address().address}:${
+      gbfsFeedServer.server.address().port
+    }`
+    const gbfs = new GBFS(`${url}/gbfs.json`)
+
+    expect.assertions(2)
+
+    return gbfs.validation().then(result => {
+      expect(get_errors(result)).toEqual([])
+
+      expect(result).toMatchObject({
+        summary: expect.objectContaining({
+          version: { detected: '3.0', validated: '3.0' },
+          hasErrors: false
+        }),
+        files: expect.any(Array)
+      })
+    })
+  })
+})
+
 describe('invalid feed', () => {
   let gbfsFeedServer
 
